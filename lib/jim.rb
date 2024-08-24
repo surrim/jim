@@ -1,18 +1,29 @@
 class Jim
 	Dir[File.join(__dir__, "jim", "*.rb")].each { |file| require_relative file }
 
-	attr_reader :src, :alt, :fallback_width
+	attr_reader :src, :alt, :fallback_format, :fallback_width
 
-	def initialize(src, alt = nil, fallback_width: nil)
+	def initialize(src, alt = nil, fallback_format: nil, fallback_width: nil)
 		@src = src.to_s
 		@alt = alt&.to_s
+		fallback_format(fallback_format)
 		fallback_width(fallback_width)
+	end
+
+	def fallback_format(fallback_format)
+		@fallback_format = fallback_format&.to_s&.downcase
+		self
 	end
 
 	def fallback_width(fallback_width)
 		@fallback_width = fallback_width&.to_i \
 			if Validator::checkNilOrGreaterThanZero(fallback_width, "fallback_width")
 		self
+	end
+
+	def fallback(fallback_format, fallback_width)
+		fallback_format(fallback_format)
+		fallback_width(fallback_width)
 	end
 
 	def render
