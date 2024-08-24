@@ -14,6 +14,7 @@ class Jim
 			:fallback_width => @fallback_width,
 			:filename_pattern => @filename_pattern,
 			:svg_filename_pattern => @svg_filename_pattern,
+			:formats => @formats
 		}
 	end
 

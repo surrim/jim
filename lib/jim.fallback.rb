@@ -8,7 +8,7 @@ class Jim
 
 	def fallback_width(fallback_width)
 		@fallback_width = fallback_width&.to_i \
-			if Validator::checkNilOrGreaterThanZero(fallback_width, "fallback_width")
+			if Validator.checkNilOrGreaterThanZero(fallback_width, "fallback_width")
 		self
 	end
 

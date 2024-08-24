@@ -3,7 +3,7 @@ class Jim
 
 	DEFAULT_FILENAME_PATTERN = "%{pathname}/%{basename}-%{width}.%{format}".freeze
 	DEFAULT_SVG_FILENAME_PATTERN = "%{pathname}/%{basename}.%{format}".freeze
-	
+
 	def filename_pattern(filename_pattern)
 		@filename_pattern = filename_pattern.nil? \
 			? DEFAULT_FILENAME_PATTERN \
