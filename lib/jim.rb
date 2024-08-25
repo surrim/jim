@@ -22,5 +22,5 @@ class Jim
 
 	def to_liquid = self
 
-	def to_json = to_h.to_json
+	def to_json(opts = nil) = to_h.to_json(opts)
 end
