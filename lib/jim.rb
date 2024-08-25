@@ -18,7 +18,7 @@ class Jim
 		h
 	end
 
-	def to_s = to_h.transform_keys(&:to_s).to_s
+	def to_s = Utils.deep_stringify_keys(to_h).to_s
 
 	def to_liquid = self
 
