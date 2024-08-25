@@ -11,9 +11,9 @@ class Jim
 		self.class.constants.filter do |constant|
 			constant.start_with? "DEFAULT_"
 		end.each do |constant|
-			method_name = constant[:DEFAULT_.length..-1].downcase
-			value = self.instance_variable_get("@#{constant}")
-			h[method_name.to_sym] = value
+			name = constant[:DEFAULT_.length..-1].downcase
+			value = self.instance_variable_get("@#{name}")
+			h[name.to_sym] = value
 		end
 		h
 	end
