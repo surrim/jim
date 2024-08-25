@@ -1,21 +1,23 @@
 module Jim::Validator
+	PRIMITIVE_TYPES = [NilClass, TrueClass, FalseClass, Integer, Float, String, Symbol].freeze
+
 	module_function
 
-	def checkNilOrGreaterThanZero(parameter, parameter_name)
-		return true if parameter.nil? || parameter&.to_i.positive?
-		Jim::System.warn "ArgumentError: #{parameter_name} must be nil or greater than zero, but was #{parameter}"
+	def check_nil_or_greater_than_zero(parameter, parameter_name)
+		return true if parameter.nil? || parameter.to_i.positive?
+		Jim::System.warn "ArgumentError: #{parameter_name} must be nil or greater than zero, but was #{parameter.inspect}"
 		false
 	end
 
-	def checkSymbolType(parameter, parameter_name)
+	def check_is_symbol(parameter, parameter_name)
 		return true if parameter.respond_to?(:to_sym)
-		Jim::System.warn "ArgumentError: #{parameter_name} must be a symbol type, but was #{parameter}"
+		Jim::System.warn "ArgumentError: #{parameter_name} must be a symbol type, but was #{parameter.inspect}"
 		false
 	end
 
-	def checkPrimitiveType(parameter, parameter_name)
-		return true unless parameter.respond_to?(:each)
-		Jim::System.warn "ArgumentError: #{parameter_name} must be a primitive type, but was #{parameter}"
+	def check_is_primitive(parameter, parameter_name)
+		return true if PRIMITIVE_TYPES.include?(parameter.class)
+		Jim::System.warn "ArgumentError: #{parameter_name} must be a primitive type, but was #{parameter.inspect}"
 		false
 	end
 end
