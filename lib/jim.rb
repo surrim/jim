@@ -7,15 +7,15 @@ class Jim
 	Liquid::Template.register_filter(LiquidFilters)
 
 	def to_h
-		{
-			:src => @src,
-			:alt => @alt,
-			:fallback_format => @fallback_format,
-			:fallback_width => @fallback_width,
-			:filename_pattern => @filename_pattern,
-			:svg_filename_pattern => @svg_filename_pattern,
-			:formats => @formats
-		}
+		h = {:src => @src, :alt => @alt}
+		self.class.constants.filter do |constant|
+			constant.start_with? "DEFAULT_"
+		end.each do |constant|
+			method_name = constant[:DEFAULT_.length..-1].downcase
+			value = self.instance_variable_get("@#{constant}")
+			h[method_name.to_sym] = value
+		end
+		h
 	end
 
 	def to_s

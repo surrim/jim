@@ -1,6 +1,9 @@
 class Jim
 	attr_reader :fallback_format, :fallback_width
 
+	DEFAULT_FALLBACK_FORMAT = nil
+	DEFAULT_FALLBACK_WIDTH = nil
+
 	def fallback_format(fallback_format)
 		@fallback_format = fallback_format&.to_s&.downcase
 		self
