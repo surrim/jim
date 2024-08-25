@@ -31,24 +31,10 @@ class Jim
 	end
 
 	module LiquidFilters
-		def jim_formats(jim, *formats)
-			jim.formats(formats)
-		end
-
-		def jim_append_formats(jim, *formats)
-			jim.append_formats(formats)
-		end
-
-		def jim_prepend_formats(jim, *formats)
-			jim.prepend_formats(formats)
-		end
-
-		def jim_rm_formats(jim, *formats)
-			jim.rm_formats(formats)
-		end
-
-		def jim_rm_all_formats(jim)
-			jim.rm_all_formats()
-		end
+		def jim_formats(jim, *formats) = jim.formats(formats)
+		def jim_append_formats(jim, *formats) = jim.append_formats(formats)
+		def jim_prepend_formats(jim, *formats) = jim.prepend_formats(formats)
+		def jim_rm_formats(jim, *formats)= jim.rm_formats(formats)
+		def jim_rm_all_formats(jim) = jim.rm_all_formats()
 	end
 end

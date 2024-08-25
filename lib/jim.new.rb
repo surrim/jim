@@ -18,8 +18,6 @@ class Jim
 	end
 
 	module LiquidFilters
-		def jim_new(src, alt = nil, *presets)
-			Jim.new(src, alt, **{}.merge(*presets.compact))
-		end
+		def jim_new(src, alt = nil, *presets) = Jim.new(src, alt, **{}.merge(*presets.compact))
 	end
 end

@@ -18,15 +18,9 @@ class Jim
 		h
 	end
 
-	def to_s
-		to_h.transform_keys(&:to_s).to_s
-	end
+	def to_s = to_h.transform_keys(&:to_s).to_s
 
-	def to_liquid
-		self
-	end
+	def to_liquid = self
 
-	def to_json
-		to_h.to_json
-	end
+	def to_json = to_h.to_json
 end
