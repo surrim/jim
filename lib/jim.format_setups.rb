@@ -11,7 +11,7 @@ class Jim
 	}
 
 	def format_setups(*format_setups)
-		@format_setups = {}
+		@format_setups = Hash.new { |h, k| h[k] = Hash.new(&h.default_proc) }
 		{}.merge(DEFAULT_FORMAT_SETUPS, *format_setups.compact).each do |format, setup|
 			add_format_setup(format, setup)
 		end
@@ -26,7 +26,7 @@ class Jim
 	end
 
 	def add_format_setting(format, key, value)
-		(@format_setups[format.to_sym.downcase] ||= {})[key.to_sym.downcase] = value \
+		@format_setups[format.to_sym.downcase][key.to_sym.downcase] = value \
 			if Validator.check_is_symbol(format, :format) \
 			and Validator.check_is_symbol(key, :key) \
 			and Validator.check_is_primitive(value, :value)
