@@ -5,9 +5,9 @@ class Jim
 
 	def img_attrs(*img_attrs)
 		rm_img_attrs()
-		{}.merge(*img_attrs.flatten.compact).each { |key, value|
+		{}.merge(*img_attrs.flatten.compact).each do |key, value|
 			add_img_attr(key, value)
-		}
+		end
 		self
 	end
 

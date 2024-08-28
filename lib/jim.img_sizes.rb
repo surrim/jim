@@ -6,9 +6,9 @@ class Jim
 
 	def img_sizes(*img_sizes)
 		rm_img_sizes()
-		{}.merge(*img_sizes.flatten.compact).each { |media_condition, size|
+		{}.merge(*img_sizes.flatten.compact).each do |media_condition, size|
 			add_img_size(media_condition, size)
-		}
+		end
 		self
 	end
 
