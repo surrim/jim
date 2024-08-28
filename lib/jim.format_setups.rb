@@ -21,7 +21,8 @@ class Jim
 	def add_format_setup(format, setup)
 		setup.each do |key, value|
 			add_format_setting(format, key, value)
-		end
+		end \
+			if Validator.check_is_hash(setup, :setup)
 		self
 	end
 

@@ -15,6 +15,12 @@ module Jim::Validator
 		false
 	end
 
+	def check_is_hash(parameter, parameter_name)
+		return true if parameter.is_a?(Hash)
+		Jim::System.warn "ArgumentError: #{parameter_name} must be a hash, but was #{parameter.inspect}"
+		false
+	end
+
 	def check_is_primitive(parameter, parameter_name)
 		return true if PRIMITIVE_TYPES.include?(parameter.class)
 		Jim::System.warn "ArgumentError: #{parameter_name} must be a primitive type, but was #{parameter.inspect}"
