@@ -9,6 +9,12 @@ module Jim::Validator
 		false
 	end
 
+	def check_nil_or_between_0_and_1(parameter, parameter_name)
+		return true if parameter.nil? || parameter.to_f.between?(0, 1)
+		Jim::System.warn "ArgumentError: #{parameter_name} must be nil or between 0 and 1, but was #{parameter.inspect}"
+		false
+	end
+
 	def check_is_symbol(parameter, parameter_name)
 		return true if parameter.respond_to?(:to_sym)
 		Jim::System.warn "ArgumentError: #{parameter_name} must be a symbol type, but was #{parameter.inspect}"
