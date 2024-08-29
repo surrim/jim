@@ -2,12 +2,12 @@ class Jim
 	attr_reader :format_setups
 
 	DEFAULT_FORMAT_SETUPS = {
-		:bmp  => {:background => "white", :lossless => true},
-		:jpeg => {:background => "white"},
-		:jpg  => {:background => "white"},
-		:png  => {:lossless => true},
-		:svg  => {:lossless => true},
-		:svgz => {:lossless => true},
+		bmp:  {background: "white", lossless: true},
+		jpeg: {background: "white"},
+		jpg:  {background: "white"},
+		png:  {lossless: true},
+		svg:  {lossless: true},
+		svgz: {lossless: true}
 	}
 
 	def format_setups(*format_setups)
