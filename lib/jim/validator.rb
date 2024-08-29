@@ -4,7 +4,7 @@ module Jim::Validator
 	module_function
 
 	def check_nil_or_greater_than_zero(parameter, parameter_name)
-		return true if parameter.nil? || parameter.to_i.positive?
+		return true if parameter.nil? || parameter.to_f.positive?
 		Jim::System.warn "ArgumentError: #{parameter_name} must be nil or greater than zero, but was #{parameter.inspect}"
 		false
 	end
