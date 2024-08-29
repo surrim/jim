@@ -11,8 +11,8 @@ class Jim
 	}
 
 	def format_setups(*format_setups)
-		@format_setups = Hash.new { |h, k| h[k] = Hash.new(&h.default_proc) }
-		{}.merge(DEFAULT_FORMAT_SETUPS, *format_setups.compact).each do |format, setup|
+		reset_format_setups()
+		{}.merge(*format_setups.compact).each do |format, setup|
 			add_format_setup(format, setup)
 		end
 		self
@@ -35,7 +35,11 @@ class Jim
 	end
 
 	def reset_format_setups()
-		format_setups()
+		@format_setups = Hash.new { |h, k| h[k] = Hash.new(&h.default_proc) }
+		DEFAULT_FORMAT_SETUPS.each do |format, setup|
+			add_format_setup(format, setup)
+		end
+		self
 	end
 
 	module LiquidFilters
