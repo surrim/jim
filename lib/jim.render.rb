@@ -1,7 +1,7 @@
 class Jim
-	def render = raise NotImplementedError
-	
+	def render(render = true) = raise(NotImplementedError)
+
 	module LiquidFilters
-		def jim_render(jim) = jim.render()
+		def jim_render(jim, render = true) = jim.render(render)
 	end
 end
