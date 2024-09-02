@@ -4,7 +4,5 @@ module Jim::System
 
 	module_function
 
-	def warn(text)
-		Bridgetown.logger.warn("Jim", text)
-	end
+	def warn(text) = Bridgetown.logger.warn("Jim", text)
 end if Module.const_defined?(:Bridgetown)
