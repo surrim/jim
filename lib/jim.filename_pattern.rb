@@ -12,9 +12,7 @@ class Jim
 	end
 
 	def svg_filename_pattern(svg_filename_pattern)
-		@svg_filename_pattern = svg_filename_pattern.nil? \
-			? DEFAULT_SVG_FILENAME_PATTERN \
-			: svg_filename_pattern.to_s
+		@svg_filename_pattern = svg_filename_pattern&.to_s
 		self
 	end
 
