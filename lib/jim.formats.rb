@@ -25,7 +25,7 @@ class Jim
 		self
 	end
 
-	def rm_all_formats(*formats)
+	def rm_all_formats
 		@formats = []
 		self
 	end
@@ -34,7 +34,7 @@ class Jim
 		def jim_formats(jim, *formats) = jim.formats(formats)
 		def jim_append_formats(jim, *formats) = jim.append_formats(formats)
 		def jim_prepend_formats(jim, *formats) = jim.prepend_formats(formats)
-		def jim_rm_formats(jim, *formats)= jim.rm_formats(formats)
-		def jim_rm_all_formats(jim) = jim.rm_all_formats()
+		def jim_rm_formats(jim, *formats) = jim.rm_formats(formats)
+		def jim_rm_all_formats(jim) = jim.rm_all_formats
 	end
 end

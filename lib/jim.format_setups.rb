@@ -2,16 +2,16 @@ class Jim
 	attr_reader :format_setups
 
 	DEFAULT_FORMAT_SETUPS = {
-		bmp:  {background: "white", lossless: true},
-		jpeg: {background: "white"},
-		jpg:  {background: "white"},
-		png:  {lossless: true},
-		svg:  {lossless: true},
-		svgz: {lossless: true}
+		bmp: { background: "white", lossless: true },
+		jpeg: { background: "white" },
+		jpg: { background: "white" },
+		png: { lossless: true },
+		svg: { lossless: true },
+		svgz: { lossless: true }
 	}
 
 	def format_setups(*format_setups)
-		reset_format_setups()
+		reset_format_setups
 		{}.merge(*format_setups.compact).each do |format, setup|
 			add_format_setup(format, setup)
 		end
@@ -34,7 +34,7 @@ class Jim
 		self
 	end
 
-	def reset_format_setups()
+	def reset_format_setups
 		@format_setups = Hash.new { |h, k| h[k] = Hash.new(&h.default_proc) }
 		DEFAULT_FORMAT_SETUPS.each do |format, setup|
 			add_format_setup(format, setup)
@@ -45,7 +45,7 @@ class Jim
 	module LiquidFilters
 		def jim_format_setups(jim, *format_setups) = jim.format_setups(format_setups)
 		def jim_add_format_setup(jim, format, setup) = jim.add_format_setup(format, setup)
-		def jim_add_format_setting(format, key, value) = jim.add_format_setting(format, key, value)
-		def jim_reset_format_setups(jim) = jim.reset_format_setups()
+		def jim_add_format_setting(jim, format, key, value) = jim.add_format_setting(format, key, value)
+		def jim_reset_format_setups(jim) = jim.reset_format_setups
 	end
 end

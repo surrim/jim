@@ -4,7 +4,7 @@ class Jim
 	DEFAULT_STYLES = {}
 
 	def styles(*styles)
-		rm_styles()
+		rm_styles
 		{}.merge(*styles.flatten.compact).each do |property, values|
 			add_style(property, values)
 		end
@@ -22,8 +22,8 @@ class Jim
 	end
 
 	def rm_style(property) = add_style(property)
-	
-	def rm_styles()
+
+	def rm_styles
 		@styles = {}
 		self
 	end
@@ -32,6 +32,6 @@ class Jim
 		def jim_styles(jim, *styles) = jim.styles(styles)
 		def jim_add_style(jim, property, *values) = jim.add_style(property, values)
 		def jim_rm_style(jim, property) = jim.rm_style(property)
-		def jim_rm_styles(jim) = jim.rm_styles()
+		def jim_rm_styles(jim) = jim.rm_styles
 	end
 end

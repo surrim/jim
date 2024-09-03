@@ -19,7 +19,7 @@ class Jim
 		fallback_format(fallback_format)
 		fallback_width(fallback_width)
 	end
-	
+
 	module LiquidFilters
 		def jim_fallback_format(jim, fallback_format) = jim.fallback_format(fallback_format)
 		def jim_fallback_width(jim, fallback_width) = jim.fallback_width(fallback_width)

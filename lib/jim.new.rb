@@ -13,7 +13,7 @@ class Jim
 			self.method(method_name).call(default_value)
 		end
 		presets.each do |method_name, value|
-			self.method(method_name)&.call(value)
+			self.method(method_name).call(value)
 		end
 	end
 

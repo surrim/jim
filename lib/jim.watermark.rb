@@ -46,7 +46,7 @@ class Jim
 		self
 	end
 
-	def rm_watermark() = watermark_filename(nil)
+	def rm_watermark = watermark_filename(nil)
 
 	module LiquidFilters
 		def jim_watermark(jim, watermark_filename, watermark_size = nil, watermark_x = nil, watermark_y = nil, watermark_opacity = nil) = jim.watermark(watermark_filename, watermark_size, watermark_x, watermark_y, watermark_opacity)
@@ -55,6 +55,6 @@ class Jim
 		def jim_watermark_x(jim, watermark_x) = jim.watermark_x(watermark_x)
 		def jim_watermark_y(jim, watermark_y) = jim.watermark_y(watermark_y)
 		def jim_watermark_opacity(jim, watermark_opacity) = jim.watermark_opacity(watermark_opacity)
-		def jim_rm_watermark(jim) = jim.rm_watermark()
+		def jim_rm_watermark(jim) = jim.rm_watermark
 	end
 end

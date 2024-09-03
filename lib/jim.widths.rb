@@ -4,7 +4,7 @@ class Jim
 	DEFAULT_WIDTHS = []
 
 	def widths(*widths)
-		rm_widths()
+		rm_widths
 		widths.flatten.uniq.each { |width|
 			add_width(width)
 		}
@@ -12,7 +12,7 @@ class Jim
 	end
 
 	def add_width(width)
-		if !@widths.include?(width&.to_i)
+		unless @widths.include?(width&.to_i)
 			@widths.push(width&.to_i)
 			@widths.sort! { |a, b| (a || Float::INFINITY) <=> (b || Float::INFINITY) }
 		end
@@ -24,7 +24,7 @@ class Jim
 		self
 	end
 
-	def rm_widths()
+	def rm_widths
 		@widths = []
 		self
 	end
@@ -33,6 +33,6 @@ class Jim
 		def jim_widths(jim, *widths) = jim.widths(widths)
 		def jim_add_width(jim, width) = jim.add_width(width)
 		def jim_rm_width(jim, width) = jim.rm_width(width)
-		def jim_rm_widths(jim) = jim.rm_widths()
+		def jim_rm_widths(jim) = jim.rm_widths
 	end
 end
