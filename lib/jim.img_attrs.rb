@@ -12,8 +12,9 @@ class Jim
 	end
 
 	def add_img_attr(key, value)
-		@img_attrs[key.to_sym] = value.to_s \
-			if Validator.check_is_symbol(key, :key)
+		@img_attrs[key.to_s] = value.to_s \
+			if Validator.check_is_primitive(key, :key) \
+			and Validator.check_is_primitive(value, :value)
 		self
 	end
 

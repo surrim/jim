@@ -27,9 +27,9 @@ class Jim
 	end
 
 	def add_format_setting(format, key, value)
-		@format_setups[format.to_sym.downcase][key.to_sym.downcase] = value \
-			if Validator.check_is_symbol(format, :format) \
-			and Validator.check_is_symbol(key, :key) \
+		@format_setups[format.to_s.downcase][key.to_s.downcase] = value \
+			if Validator.check_is_primitive(format, :format) \
+			and Validator.check_is_primitive(key, :key) \
 			and Validator.check_is_primitive(value, :value)
 		self
 	end

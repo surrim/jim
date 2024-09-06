@@ -15,12 +15,6 @@ module Jim::Validator
 		false
 	end
 
-	def check_is_symbol(parameter, parameter_name)
-		return true if parameter.respond_to?(:to_sym)
-		Jim::System.warn "ArgumentError: #{parameter_name} must be a symbol type, but was #{parameter.inspect}"
-		false
-	end
-
 	def check_is_hash(parameter, parameter_name)
 		return true if parameter.is_a?(Hash)
 		Jim::System.warn "ArgumentError: #{parameter_name} must be a hash, but was #{parameter.inspect}"
