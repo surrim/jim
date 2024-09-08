@@ -10,8 +10,8 @@ module Jim::Utils
 		result = {}
 		hash.each do |key, value|
 			result[key.to_s] = value.is_a?(Hash) \
-				? deep_stringify_keys(value) \
-				: value
+													 ? deep_stringify_keys(value) \
+													 : value
 		end
 		result
 	end
@@ -35,5 +35,14 @@ module Jim::Utils
 		image
 	end
 
-	def mime_type(format) = MIME::Types.type_for(format.to_s)&.first&.content_type
+	def mime_type(filename)
+		return nil if filename.nil?
+		types = MIME::Types.type_for(filename.to_s)
+		types.present? ? types.first.content_type : Jim::System.error("No MIME type available for #{filename}")
+	end
+
+	def auto_convert_mime_type(format)
+		return nil if format.nil?
+		format.to_s.include?("/") ? format.to_s : mime_type(".#{format}")
+	end
 end

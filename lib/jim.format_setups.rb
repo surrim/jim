@@ -2,12 +2,10 @@ class Jim
 	attr_reader :format_setups
 
 	DEFAULT_FORMAT_SETUPS = {
-		bmp: { background: "white", lossless: true },
-		jpeg: { background: "white" },
-		jpg: { background: "white" },
-		png: { lossless: true },
-		svg: { lossless: true },
-		svgz: { lossless: true }
+		"image/bmp": { background: "white", lossless: true },
+		"image/jpeg": { background: "white" },
+		"image/png": { lossless: true },
+		"image/svg+xml": { lossless: true }
 	}
 
 	def format_setups(*format_setups)
@@ -27,7 +25,17 @@ class Jim
 	end
 
 	def add_format_setting(format, key, value)
-		@format_setups[format.to_s.downcase][key.to_s.downcase] = value \
+		begin
+			format = Jim::Utils.auto_convert_mime_type(format)
+			if value.nil?
+				@format_setups[format].delete(key.to_s.downcase)
+				if @format_setups[format].empty?
+					@format_setups.delete(format)
+				end
+			else
+				@format_setups[format][key.to_s.downcase] = value
+			end
+		end \
 			if Validator.check_is_primitive(format, :format) \
 			and Validator.check_is_primitive(key, :key) \
 			and Validator.check_is_primitive(value, :value)

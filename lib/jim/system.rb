@@ -1,9 +1,11 @@
 module Jim::System
 	module_function
 
-	def info(text) = @logger.info("Jim:", text)
+	def info(text) = @logger.info("Jim:", text) && nil
 
-	def warn(text) = @logger.warn("Jim:", text)
+	def warn(text) = @logger.warn("Jim:", text) && nil
+
+	def error(text) = @logger.error("Jim:", text) && nil
 
 	def config = @site.config
 
