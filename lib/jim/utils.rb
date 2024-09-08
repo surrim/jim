@@ -1,6 +1,8 @@
 module Jim::Utils
 	module_function
 
+	JSON_MODE = JSON::PRETTY_STATE_PROTOTYPE.dup
+
 	def deep_stringify_keys(hash)
 		result = {}
 		hash.each do |key, value|
@@ -21,4 +23,6 @@ module Jim::Utils
 			filename.write(content)
 		end
 	end
+
+	def write_json_file(filename, content, use_tmp: true) = write_file(filename, JSON.generate(content, JSON_MODE), use_tmp: use_tmp)
 end

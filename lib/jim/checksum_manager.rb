@@ -4,7 +4,6 @@ class Jim::ChecksumManager
 	include Singleton
 
 	CHECKSUMS_JSON = "checksums.json"
-	JSON_MODE = JSON::PRETTY_STATE_PROTOTYPE.dup
 
 	def initialize
 		@checksums_json = Jim::System.local_cache_path(CHECKSUMS_JSON)
@@ -34,7 +33,7 @@ class Jim::ChecksumManager
 
 	def self.sha256(filename) = instance.sha256(filename)
 
-	def finalize = Jim::Utils.write_file(@checksums_json, JSON.generate(@checksums.sort.to_h, JSON_MODE))
+	def finalize = Jim::Utils.write_json_file(@checksums_json, @checksums.sort.to_h)
 
 	def self.finalize(_object_id) = instance.finalize
 end
