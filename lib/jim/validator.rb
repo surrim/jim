@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jim::Validator
 	PRIMITIVE_TYPES = [NilClass, TrueClass, FalseClass, Integer, Float, String, Symbol].freeze
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Jim
 	attr_reader :img_sizes, :default_img_size
 

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class Jim
 	attr_reader :filename_pattern, :svg_filename_pattern
 
-	DEFAULT_FILENAME_PATTERN = "%{pathname}/%{basename}-%{width}.%{format}".freeze
-	DEFAULT_SVG_FILENAME_PATTERN = "%{pathname}/%{basename}.%{format}".freeze
+	DEFAULT_FILENAME_PATTERN = "%{pathname}/%{basename}-%{width}.%{format}"
+	DEFAULT_SVG_FILENAME_PATTERN = "%{pathname}/%{basename}.%{format}"
 
 	def filename_pattern(filename_pattern)
 		@filename_pattern = filename_pattern.nil? \

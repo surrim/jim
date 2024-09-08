@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jim::ImageMetadataManager
 	module_function
 

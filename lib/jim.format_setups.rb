@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Jim
 	attr_reader :format_setups
 
@@ -6,7 +8,7 @@ class Jim
 		"image/jpeg": { background: "white" },
 		"image/png": { lossless: true },
 		"image/svg+xml": { lossless: true }
-	}
+	}.freeze
 
 	def format_setups(*format_setups)
 		reset_format_setups

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Jim
 	attr_reader :watermark_filename, :watermark_size, :watermark_x, :watermark_y, :watermark_opacity
 

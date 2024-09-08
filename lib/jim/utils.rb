@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'mime-types'
 require "rmagick"
 
 module Jim::Utils
 	module_function
 
-	JSON_MODE = JSON::PRETTY_STATE_PROTOTYPE.dup
+	JSON_MODE = JSON::PRETTY_STATE_PROTOTYPE
 
 	def deep_stringify_keys(hash)
 		result = {}
