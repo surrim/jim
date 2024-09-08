@@ -4,6 +4,7 @@ class Jim::ImageMetadataManager
 	include Singleton
 
 	IMAGE_METADATA_JSON_PATTERN = "metadata/%{sha256}.json"
+	RATIONALIZE_TOLERANCE = 0.005
 
 	def initialize
 		@image_metadata_cache = {}
@@ -21,9 +22,16 @@ class Jim::ImageMetadataManager
 		end
 
 		image = Jim::Utils::load_image(filename)
+		width = image.columns
+		height = image.rows
+		ratio = (width.to_f / height).rationalize(RATIONALIZE_TOLERANCE)
+		simplified_width = ratio.numerator
+		simplified_height = ratio.denominator
 		image_metadata = {
-			width: image.columns,
-			height: image.rows,
+			width: width,
+			height: height,
+			simplified_width: simplified_width,
+			simplified_height: simplified_height,
 			mime_type: Jim::Utils.mime_type(filename),
 			avg_color: image
 									 .resize(1, 1)
@@ -39,6 +47,10 @@ class Jim::ImageMetadataManager
 
 	def height(filename) = all_data(filename)[:height]
 
+	def simplified_width(filename) = all_data(filename)[:simplified_width]
+
+	def simplified_height(filename) = all_data(filename)[:simplified_height]
+
 	def mime_type(filename) = all_data(filename)[:mime_type]
 
 	def avg_color(filename) = all_data(filename)[:avg_color]
@@ -48,6 +60,10 @@ class Jim::ImageMetadataManager
 	def self.width(filename) = instance.width(filename)
 
 	def self.height(filename) = instance.height(filename)
+
+	def self.simplified_width(filename) = instance.simplified_width(filename)
+
+	def self.simplified_height(filename) = instance.simplified_height(filename)
 
 	def self.mime_type(filename) = instance.mime_type(filename)
 
