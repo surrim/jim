@@ -7,6 +7,16 @@ module Jim::System
 
 	def config = @site.config
 
+	def path(*src) = Pathname.new(".").join(*src).expand_path(@site.root_dir)
+
+	def source_path(*src) = Pathname.new(@site.in_source_dir(*src))
+
+	def destination_path(*src) = Pathname.new(@site.in_destination_dir(*src))
+
+	def local_cache_path(*src) = Pathname.new(@site.in_cache_dir("jimcache", *src))
+
+	def cache_path(*src) = config[:jim_cache] ? path(config[:jim_cache], *src) : local_cache_path(*src)
+
 	def init(site, logger)
 		@site = site
 		@logger = logger
