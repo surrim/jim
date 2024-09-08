@@ -5,13 +5,13 @@ module Jim::System
 
 	def warn(text) = @logger.warn("Jim:", text)
 
-	def config(key) = @site.config[key.to_s]
+	def config = @site.config
 
 	def init(site, logger)
 		@site = site
 		@logger = logger
-		if config(:jim_cache)
-			info("using file://#{File.expand_path(config(:jim_cache))}")
+		if config[:jim_cache]
+			info("using file://#{File.expand_path(config[:jim_cache])}")
 		else
 			warn("jim_cache not configured")
 		end
