@@ -51,4 +51,10 @@ module Jim::Utils
 		return nil if format.nil?
 		format.to_s.include?("/") ? format.to_s : mime_type(".#{format}")
 	end
+
+	def color(color)
+		Magick::Pixel.from_color(color).to_color(Magick::AllCompliance, false, 8, true).downcase
+	end
+
+	def extension_from_mime_type(mime_type) = MIME::Types[mime_type]&.first&.preferred_extension
 end
