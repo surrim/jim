@@ -9,7 +9,7 @@ class Jim::ChecksumManager
 
 	def initialize
 		@checksums_json = Jim::System.local_cache_path(CHECKSUMS_JSON)
-		@checksums = @checksums_json.exist? ? JSON.parse(@checksums_json.read) : {}
+		@checksums = @checksums_json.exist? ? JSON.parse(@checksums_json.read, { symbolize_names: true }) : {}
 		ObjectSpace.define_finalizer(self, self.class.method(:finalize))
 	end
 
@@ -24,12 +24,12 @@ class Jim::ChecksumManager
 		size = stat.size
 
 		checksum_entry = @checksums[filename.to_s] || {}
-		if checksum_entry.has_key?("sha256") && checksum_entry["mtime"] == mtime && checksum_entry["size"] == size
-			return checksum_entry["sha256"]
+		if checksum_entry.has_key?(:sha256) && checksum_entry[:mtime] == mtime && checksum_entry[:size] == size
+			return checksum_entry[:sha256]
 		end
 
 		sha256 = Digest::SHA256.file(filename).hexdigest
-		@checksums[filename.to_s] = { "mtime" => mtime, "size" => size, "sha256" => sha256 }
+		@checksums[filename.to_s] = { mtime: mtime, size: size, sha256: sha256 }
 		sha256
 	end
 
