@@ -7,6 +7,8 @@ module Jim::Utils
 	module_function
 
 	JSON_MODE = JSON::PRETTY_STATE_PROTOTYPE
+	SPRINTF_SUBSTITUTION_REGEX = /%{ *(?<identifier>[a-zA-Z_]\w*) *(\[ *(?<from>-?\d+)( *(?<mode>,|..) *(?<to>-?\d+))? *\])? *}/
+	SPRINTF_SUBSTITUTION_LIMIT = 16
 
 	def deep_stringify_keys(hash)
 		result = {}
@@ -44,7 +46,7 @@ module Jim::Utils
 	def mime_type(filename)
 		return nil if filename.nil?
 		types = MIME::Types.type_for(filename.to_s)
-		types.present? ? types.first.content_type : Jim::System.error("No MIME type available for #{filename}")
+		types.empty? ? Jim::System.error("No MIME type available for #{filename}") : types.first.content_type
 	end
 
 	def auto_convert_mime_type(format)
@@ -57,4 +59,38 @@ module Jim::Utils
 	end
 
 	def extension_from_mime_type(mime_type) = MIME::Types[mime_type]&.first&.preferred_extension
+
+	def sprintf(format_string, **substitutions)
+		i = 0
+		cycle_counter = 0
+		while i < format_string.length do
+			break unless format_string.match(SPRINTF_SUBSTITUTION_REGEX, i) do |match|
+				match_begin, match_end = match.offset(0)
+				identifier = match[:identifier].to_sym
+				if !substitutions.has_key?(identifier)
+					Jim::System.warn("KeyError: %{#{identifier}} not found, skipping substitution")
+					format_string = format_string[0, match_begin] + format_string[match_end..-1]
+				elsif cycle_counter >= SPRINTF_SUBSTITUTION_LIMIT
+					Jim::System.warn("SubstitutionError: %{#{identifier}} probably causes cyclic dependency, skipping substitution")
+					return format_string
+				else
+					substitution = substitutions[identifier].to_s
+					from, mode, to = match[:from], match[:mode], match[:to]
+					value = if from.nil?
+										substitution
+									else
+										case mode
+										when "," then substitution[from.to_i, to.to_i]
+										when ".." then substitution[from.to_i..to.to_i]
+										else substitution[from.to_i]
+										end
+									end
+					format_string = format_string[0, match_begin] + value.to_s + format_string[match_end..-1]
+				end
+				i = match_begin
+				cycle_counter += 1
+			end
+		end
+		format_string
+	end
 end

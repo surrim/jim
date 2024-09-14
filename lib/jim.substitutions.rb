@@ -15,9 +15,9 @@ class Jim
 
 	def add_substitution(key, value)
 		if value.nil?
-			@substitutions.delete(key.to_s)
+			@substitutions.delete(key.to_sym)
 		else
-			@substitutions[key.to_s] = value.to_s
+			@substitutions[key.to_sym] = value
 		end
 		self
 	end
