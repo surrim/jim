@@ -5,10 +5,14 @@ class Jim
 
 	DEFAULT_FORMAT_SETUPS = {
 		"image/bmp": { background: "white", lossless: true },
-		"image/jpeg": { background: "white" },
+		"image/gif": { lossless: true },
+		"image/jpeg": { background: "white", extension: "jpg" },
 		"image/png": { lossless: true },
-		"image/svg+xml": { lossless: true }
+		"image/svg+xml": { lossless: true },
+		"image/tiff": { background: "white", lossless: true },
+		"image/vnd.microsoft.icon": { lossless: true }
 	}.freeze
+	# quality: 50
 
 	def format_setups(*format_setups)
 		reset_format_setups
