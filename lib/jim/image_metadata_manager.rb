@@ -3,14 +3,13 @@
 module Jim::ImageMetadataManager
 	module_function
 
-	IMAGE_METADATA_JSON_PATTERN = "metadata/%{sha256}.json"
 	RATIONALIZE_TOLERANCE = 0.005
 
 	def metadata(filename)
 		sha256 = Jim::ChecksumManager.sha256(filename)
 		return {} if sha256.nil?
 
-		image_metadata_json = Jim::System.cache_path(IMAGE_METADATA_JSON_PATTERN % { sha256: sha256 })
+		image_metadata_json = Jim::PathManager.image_metadata_json_pattern(sha256)
 		if image_metadata_json.exist?
 			FileUtils.touch(image_metadata_json)
 			return JSON.parse(image_metadata_json.read, { symbolize_names: true })

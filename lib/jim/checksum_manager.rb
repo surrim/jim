@@ -5,10 +5,8 @@ require 'singleton'
 class Jim::ChecksumManager
 	include Singleton
 
-	CHECKSUMS_JSON = "checksums.json"
-
 	def initialize
-		@checksums_json = Jim::System.local_cache_path(CHECKSUMS_JSON)
+		@checksums_json = Jim::PathManager.checksums_json
 		@checksums = @checksums_json.exist? ? JSON.parse(@checksums_json.read, { symbolize_names: true }) : {}
 		ObjectSpace.define_finalizer(self, self.class.method(:finalize))
 	end
@@ -35,7 +33,13 @@ class Jim::ChecksumManager
 
 	def self.sha256(filename) = instance.sha256(filename)
 
-	def finalize = Jim::Utils.write_json_file(@checksums_json, @checksums.sort.to_h)
+	def finalize
+		if @checksums.empty?
+			@checksums_json.delete if @checksums_json.exist?
+		else
+			Jim::Utils.write_json_file(@checksums_json, @checksums.sort.to_h)
+		end
+	end
 
 	def self.finalize(_object_id) = instance.finalize
 end
