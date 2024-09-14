@@ -11,9 +11,9 @@ module Jim::System
 
 	def config = @site.config
 
-	def path(*src) = Pathname.new(".").join(*src).expand_path(@site.root_dir)
+	def path(*src) = Pathname.new(".").join(*src).expand_path(@site_root_dir ||= config["root_dir"])
 
-	def source_path(*src) = Pathname.new(@site.in_source_dir(*src))
+	def source_path(*src) = Pathname.new(".").join(*src).expand_path(@site_source_dir ||= config["source"])
 
 	def destination_path(*src) = Pathname.new(@site.in_destination_dir(*src))
 
