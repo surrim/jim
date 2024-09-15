@@ -15,7 +15,7 @@ module Jim::System
 
 	def source_path(*src) = Pathname.new(".").join(*src).expand_path(@site_source_dir ||= config["source"])
 
-	def destination_path(*src) = Pathname.new(@site.in_destination_dir(*src))
+	def destination_path(*src) = Pathname.new(@site.in_dest_dir(*src))
 
 	def local_cache_path(*src) = Pathname.new(@site.in_cache_dir("jimcache", *src))
 

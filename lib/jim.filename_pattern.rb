@@ -3,8 +3,8 @@
 class Jim
 	attr_reader :filename_pattern, :svg_filename_pattern
 
-	DEFAULT_FILENAME_PATTERN = "%{pathname}/%{basename}-%{width}.%{format}"
-	DEFAULT_SVG_FILENAME_PATTERN = "%{pathname}/%{basename}.%{format}"
+	DEFAULT_FILENAME_PATTERN = "%{dirname}/%{basename}-%{width}.%{extension}"
+	DEFAULT_SVG_FILENAME_PATTERN = "%{dirname}/%{basename}.%{extension}"
 
 	def filename_pattern(filename_pattern)
 		@filename_pattern = filename_pattern.nil? \

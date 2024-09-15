@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'mime-types'
+require "mime-types"
 require "rmagick"
 
 module Jim::Utils
@@ -60,6 +60,22 @@ module Jim::Utils
 
 	def extension_from_mime_type(mime_type) = MIME::Types[mime_type]&.first&.preferred_extension
 
+	def replace_filename_pattern(filename_pattern, source_image, **substitutions)
+		pathname = Pathname.new(source_image.src)
+		image_substitutions = {
+			sha256: source_image.sha256,
+			basename: clean_basename(pathname.basename(pathname.extname).to_s),
+			dirname: clean_dirname(pathname.dirname).to_s,
+			extension: extension_from_mime_type(source_image.mime_type),
+			width: source_image.width,
+			height: source_image.height,
+			original_dirname: pathname.dirname.to_s,
+			original_basename: pathname.basename(pathname.extname).to_s,
+			original_extension: pathname.extname[1..-1],
+		}
+		Jim::System.destination_path(sprintf(filename_pattern, **substitutions, **image_substitutions))
+	end
+
 	def sprintf(format_string, **substitutions)
 		i = 0
 		cycle_counter = 0
@@ -92,5 +108,19 @@ module Jim::Utils
 			end
 		end
 		format_string
+	end
+
+	private_class_method
+
+	def clean_dirname(dirname) = Pathname.new(".").join(*dirname.each_filename.map do |basename|
+		clean_basename(basename)
+	end)
+
+	def clean_basename(basename)
+		if %w[_ _. _..].include?(basename)
+			Jim::System.warn("SubstitutionError: Preserving leading underscore from \"#{basename}\"")
+			return basename
+		end
+		basename.chr == "_" ? basename[1..-1] : basename
 	end
 end
