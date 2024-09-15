@@ -13,7 +13,7 @@ class Jim::ChecksumManager
 
 	def sha256(filename)
 		unless filename.exist?
-			@checksums.delete(filename.to_s)
+			@checksums.delete(filename.to_s.to_sym)
 			return nil
 		end
 
@@ -21,13 +21,13 @@ class Jim::ChecksumManager
 		mtime = (10 ** 9) * stat.mtime.tv_sec + stat.mtime.tv_nsec
 		size = stat.size
 
-		checksum_entry = @checksums[filename.to_s] || {}
+		checksum_entry = @checksums[filename.to_s.to_sym] || {}
 		if checksum_entry.has_key?(:sha256) && checksum_entry[:mtime] == mtime && checksum_entry[:size] == size
 			return checksum_entry[:sha256]
 		end
 
 		sha256 = Digest::SHA256.file(filename).hexdigest
-		@checksums[filename.to_s] = { mtime: mtime, size: size, sha256: sha256 }
+		@checksums[filename.to_s.to_sym] = { mtime: mtime, size: size, sha256: sha256 }
 		sha256
 	end
 
