@@ -4,12 +4,11 @@ class Jim
 	attr_reader :filename_pattern, :svg_filename_pattern
 
 	DEFAULT_FILENAME_PATTERN = "%{dirname}/%{basename}-%{width}.%{extension}"
-	DEFAULT_SVG_FILENAME_PATTERN = "%{dirname}/%{basename}.%{extension}"
+	DEFAULT_SVG_FILENAME_PATTERN = "%{dirname}/%{basename}.svgz"
 
 	def filename_pattern(filename_pattern)
-		@filename_pattern = filename_pattern.nil? \
-			? DEFAULT_FILENAME_PATTERN \
-			: filename_pattern.to_s
+		@filename_pattern = filename_pattern.to_s \
+			if Validator.check_is_string(filename_pattern, :filename_pattern)
 		self
 	end
 

@@ -17,6 +17,12 @@ module Jim::Validator
 		false
 	end
 
+	def check_is_string(parameter, parameter_name)
+		return true if !parameter.nil? && parameter.respond_to?(:to_s)
+		Jim::System.warn "ArgumentError: #{parameter_name} must be a string, but was #{parameter.inspect}"
+		false
+	end
+
 	def check_is_hash(parameter, parameter_name)
 		return true if parameter.is_a?(Hash)
 		Jim::System.warn "ArgumentError: #{parameter_name} must be a hash, but was #{parameter.inspect}"
