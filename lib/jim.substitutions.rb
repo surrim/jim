@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
+require_relative "jim.version"
+
 class Jim
 	attr_reader :substitutions
 
-	DEFAULT_SUBSTITUTIONS = {}
+	DEFAULT_SUBSTITUTIONS = { jim_version: Jim::VERSION }
 
 	def substitutions(*substitutions)
 		rm_substitutions
