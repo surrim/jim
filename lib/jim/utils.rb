@@ -31,6 +31,19 @@ module Jim::Utils
 		end
 	end
 
+	def cp_file(source_filename, destination_filename, use_tmp: true)
+		prepare_folder(destination_filename)
+		if use_tmp
+			tmp_filename = tmp_filename(destination_filename)
+			FileUtils.cp(source_filename, tmp_filename)
+			FileUtils.mv(tmp_filename, destination_filename)
+		else
+			FileUtils.cp(source_filename, destination_filename)
+		end
+	end
+
+
+
 	def tmp_filename(filename) = filename.dirname + ".#{filename.basename}.tmp"
 
 	def prepare_folder(filename) = FileUtils.mkdir_p(filename.dirname)
