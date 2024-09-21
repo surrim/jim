@@ -6,7 +6,7 @@ class Jim::ChecksumManager
 	include Singleton
 
 	def initialize
-		@checksums_json = Jim::PathManager.checksums_json
+		@checksums_json = Jim::CacheManager.checksums_json
 		@checksums = @checksums_json.exist? ? JSON.parse(@checksums_json.read, { symbolize_names: true }) : {}
 		ObjectSpace.define_finalizer(self, self.class.method(:finalize))
 	end

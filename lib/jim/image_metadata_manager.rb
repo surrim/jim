@@ -9,7 +9,7 @@ module Jim::ImageMetadataManager
 		sha256 = Jim::ChecksumManager.sha256(filename)
 		return {} if sha256.nil?
 
-		image_metadata_json = Jim::PathManager.image_metadata_json_pattern(sha256)
+		image_metadata_json = Jim::CacheManager.image_metadata_json_pattern(sha256)
 		if image_metadata_json.exist?
 			FileUtils.touch(image_metadata_json)
 			return JSON.parse(image_metadata_json.read, { symbolize_names: true })
