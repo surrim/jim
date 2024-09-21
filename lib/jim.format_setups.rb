@@ -35,10 +35,9 @@ class Jim
 			format = Jim::Utils.auto_convert_mime_type(format)
 			if value.nil?
 				@format_setups[format].delete(key.to_s.downcase)
-				if @format_setups[format].empty?
-					@format_setups.delete(format)
-				end
+				@format_setups.delete(format) if @format_setups[format].empty?
 			else
+				@format_setups[format] ||= {}
 				@format_setups[format][key.to_s.downcase] = value
 			end
 		end \
@@ -49,7 +48,7 @@ class Jim
 	end
 
 	def reset_format_setups
-		@format_setups = Hash.new { |h, k| h[k] = Hash.new(&h.default_proc) }
+		@format_setups = {}
 		DEFAULT_FORMAT_SETUPS.each do |format, setup|
 			add_format_setup(format, setup)
 		end

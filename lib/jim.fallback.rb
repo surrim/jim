@@ -7,7 +7,7 @@ class Jim
 	DEFAULT_FALLBACK_WIDTH = nil
 
 	def fallback_format(fallback_format)
-		@fallback_format = fallback_format&.to_s&.downcase
+		@fallback_format = Jim::Utils.auto_convert_mime_type(fallback_format&.to_s&.downcase)
 		self
 	end
 
