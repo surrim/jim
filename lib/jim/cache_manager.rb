@@ -15,15 +15,15 @@ module Jim::CacheManager
 
 	def image_metadata_json_pattern(sha256) = Jim::System.cache_path(IMAGE_METADATA_JSON_PATTERN % { sha256: sha256 })
 
-	def image_filename(source_image, width, height, mime_type, watermark = nil, format_setup = nil)
+	def image_filename(sha256, size_property, format_property)
 		Jim::System.cache_path(IMAGE_FILENAME_PATTERN % {
-			extension: format_setup&.dig("extension") || Jim::Utils.extension_from_mime_type(mime_type),
-			quality: format_setup&.dig("lossless") ? nil : format_setup&.dig("quality"),
-			width: width,
-			height: height,
-			optional_background_postfix: optional_background_postfix(format_setup&.dig("background")),
-			optional_watermark_folder: optional_watermark_folder(watermark),
-			sha256: source_image.sha256
+			extension: format_property[:extension],
+			quality: format_property[:lossless] ? nil : format_property[:quality],
+			width: size_property[:width],
+			height: size_property[:height],
+			optional_background_postfix: optional_background_postfix(format_property[:background]),
+			optional_watermark_folder: optional_watermark_folder(size_property[:watermark]),
+			sha256: sha256
 		})
 	end
 
@@ -42,14 +42,14 @@ module Jim::CacheManager
 		} if background
 	end
 
-	def optional_watermark_folder(watermark)
+	def optional_watermark_folder(size_watermark_property)
 		OPTIONAL_WATERMARK_FOLDER_PATTERN % {
-			sha256: watermark[:source_image].hash,
-			width: watermark[:width],
-			height: watermark[:height],
-			x: watermark[:x],
-			y: watermark[:y],
-			opacity: watermark[:opacity]
-		} if watermark
+			sha256: size_watermark_property[:source_image].sha256,
+			width: size_watermark_property[:width],
+			height: size_watermark_property[:height],
+			x: size_watermark_property[:x],
+			y: size_watermark_property[:y],
+			opacity: size_watermark_property[:opacity]
+		} if size_watermark_property
 	end
 end

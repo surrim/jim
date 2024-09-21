@@ -67,15 +67,15 @@ module Jim::Utils
 
 	def extension_from_mime_type(mime_type) = MIME::Types[mime_type]&.first&.preferred_extension
 
-	def replace_filename_pattern(filename_pattern, source_image, **substitutions)
-		pathname = Pathname.new(source_image.src)
+	def replace_filename_pattern(filename_pattern, src:, sha256:, extension:, width: nil, height: nil, **substitutions)
+		pathname = Pathname.new(src)
 		image_substitutions = {
-			sha256: source_image.sha256,
+			sha256: sha256,
 			basename: clean_basename(pathname.basename(pathname.extname).to_s),
 			dirname: clean_dirname(pathname.dirname).to_s,
-			extension: extension_from_mime_type(source_image.mime_type),
-			width: source_image.width,
-			height: source_image.height,
+			extension: extension,
+			width: width,
+			height: height,
 			original_dirname: pathname.dirname.to_s,
 			original_basename: pathname.basename(pathname.extname).to_s,
 			original_extension: pathname.extname[1..-1],
