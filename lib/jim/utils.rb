@@ -18,35 +18,23 @@ module Jim::Utils
 		result
 	end
 
-	def write_file(filename, content, use_tmp: true)
+	def write_file(filename, content = nil)
 		prepare_folder(filename)
-		if use_tmp
-			tmp_filename = tmp_filename(filename)
-			tmp_filename.write(content)
-			FileUtils.mv(tmp_filename, filename)
-		else
-			filename.write(content)
-		end
+		tmp_filename = tmp_filename(filename)
+		block_given? ? yield(tmp_filename) : tmp_filename.write(content)
+		FileUtils.mv(tmp_filename, filename)
 	end
 
-	def cp_file(source_filename, destination_filename, use_tmp: true)
+	def cp_file(source_filename, destination_filename)
 		prepare_folder(destination_filename)
-		if use_tmp
-			tmp_filename = tmp_filename(destination_filename)
-			FileUtils.cp(source_filename, tmp_filename)
-			FileUtils.mv(tmp_filename, destination_filename)
-		else
-			FileUtils.cp(source_filename, destination_filename)
-		end
+		tmp_filename = tmp_filename(destination_filename)
+		FileUtils.cp(source_filename, tmp_filename)
+		FileUtils.mv(tmp_filename, destination_filename)
 	end
-
-	def tmp_filename(filename) = filename.dirname + ".#{filename.basename}.tmp"
-
-	def prepare_folder(filename) = FileUtils.mkdir_p(filename.dirname)
 
 	def read_json_file(filename) = JSON.parse(filename.read, { symbolize_names: true })
 
-	def write_json_file(filename, content, use_tmp: true) = write_file(filename, JSON.generate(content, JSON_MODE), use_tmp: use_tmp)
+	def write_json_file(filename, content) = write_file(filename, JSON.generate(content, JSON_MODE))
 
 	def load_image(filename)
 		image = Magick::ImageList.new(filename) { |info| info.channel }.auto_orient
@@ -96,6 +84,10 @@ module Jim::Utils
 	end
 
 	private_class_method
+
+	def tmp_filename(filename) = filename.dirname + ".#{filename.basename}.tmp"
+
+	def prepare_folder(filename) = FileUtils.mkdir_p(filename.dirname)
 
 	def sprintf(format_string, **substitutions)
 		i = 0
