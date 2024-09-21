@@ -32,7 +32,7 @@ class Jim
 		self
 	end
 
-	def default_img_size(default_img_size) = add_img_size("", default_img_size)
+	def default_img_size(default_img_size) = add_img_size(nil, default_img_size)
 
 	def rm_default_img_size = default_img_size(nil)
 
