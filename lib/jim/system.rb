@@ -3,7 +3,7 @@
 module Jim::System
 	module_function
 
-	def info(text) = @logger.info("Jim:", text)
+	def info(tag = "Jim", text) = @logger.info("#{tag}:", text)
 
 	def warn(text) = @logger.warn("Jim:", text)
 
