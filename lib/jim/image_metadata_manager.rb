@@ -12,7 +12,7 @@ module Jim::ImageMetadataManager
 		image_metadata_json = Jim::CacheManager.image_metadata_json_pattern(sha256)
 		if image_metadata_json.exist?
 			FileUtils.touch(image_metadata_json)
-			return JSON.parse(image_metadata_json.read, { symbolize_names: true })
+			return Jim::Utils.read_json_file(image_metadata_json)
 		end
 
 		image = Jim::Utils::load_image(filename)
@@ -27,11 +27,7 @@ module Jim::ImageMetadataManager
 			simplified_width: simplified_width,
 			simplified_height: simplified_height,
 			mime_type: Jim::Utils.mime_type(filename),
-			avg_color: image
-									 .resize(1, 1)
-									 .pixel_color(0, 0)
-									 .to_color(Magick::AllCompliance, true, 8, true)
-									 .downcase
+			avg_color: Jim::Utils.image_avg_color(image)
 		}
 		Jim::Utils.write_json_file(image_metadata_json, image_metadata)
 		image_metadata

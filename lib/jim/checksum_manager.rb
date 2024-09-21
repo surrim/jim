@@ -7,7 +7,7 @@ class Jim::ChecksumManager
 
 	def initialize
 		@checksums_json = Jim::CacheManager.checksums_json
-		@checksums = @checksums_json.exist? ? JSON.parse(@checksums_json.read, { symbolize_names: true }) : {}
+		@checksums = @checksums_json.exist? ? Jim::Utils.read_json_file(@checksums_json) : {}
 		ObjectSpace.define_finalizer(self, self.class.method(:finalize))
 	end
 

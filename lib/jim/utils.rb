@@ -13,9 +13,7 @@ module Jim::Utils
 	def deep_stringify_keys(hash)
 		result = {}
 		hash.each do |key, value|
-			result[key.to_s] = value.is_a?(Hash) \
-													 ? deep_stringify_keys(value) \
-													 : value
+			result[key.to_s] = value.is_a?(Hash) ? deep_stringify_keys(value) : value
 		end
 		result
 	end
@@ -42,11 +40,11 @@ module Jim::Utils
 		end
 	end
 
-
-
 	def tmp_filename(filename) = filename.dirname + ".#{filename.basename}.tmp"
 
 	def prepare_folder(filename) = FileUtils.mkdir_p(filename.dirname)
+
+	def read_json_file(filename) = JSON.parse(filename.read, { symbolize_names: true })
 
 	def write_json_file(filename, content, use_tmp: true) = write_file(filename, JSON.generate(content, JSON_MODE), use_tmp: use_tmp)
 
@@ -54,6 +52,18 @@ module Jim::Utils
 		image = Magick::ImageList.new(filename) { |info| info.channel }.auto_orient
 		image.strip!
 		image
+	end
+
+	def color(color)
+		Magick::Pixel.from_color(color).to_color(Magick::AllCompliance, false, 8, true).downcase
+	end
+
+	def image_avg_color(image)
+		image
+			.resize(1, 1)
+			.pixel_color(0, 0)
+			.to_color(Magick::AllCompliance, true, 8, true)
+			.downcase
 	end
 
 	def mime_type(filename)
@@ -65,10 +75,6 @@ module Jim::Utils
 	def auto_convert_mime_type(format)
 		return nil if format.nil?
 		format.to_s.include?("/") ? format.to_s : mime_type(".#{format}")
-	end
-
-	def color(color)
-		Magick::Pixel.from_color(color).to_color(Magick::AllCompliance, false, 8, true).downcase
 	end
 
 	def extension_from_mime_type(mime_type) = MIME::Types[mime_type]&.first&.preferred_extension
@@ -88,6 +94,8 @@ module Jim::Utils
 		}
 		Jim::System.destination_path(sprintf(filename_pattern, **substitutions, **image_substitutions))
 	end
+
+	private_class_method
 
 	def sprintf(format_string, **substitutions)
 		i = 0
@@ -122,8 +130,6 @@ module Jim::Utils
 		end
 		format_string
 	end
-
-	private_class_method
 
 	def clean_dirname(dirname) = Pathname.new(".").join(*dirname.each_filename.map do |basename|
 		clean_basename(basename)
