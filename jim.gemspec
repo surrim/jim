@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
+require_relative "lib/jim.version"
+
 Gem::Specification.new do |spec|
 	spec.name          = "jim"
-	spec.version       = "0.3"
+	spec.version       = Jim::VERSION
 	spec.author        = "surrim"
 	spec.email         = "root@surrim.org"
-
 	spec.summary       = "Image batch transformations and template-based output for Jekyll and Bridgetown"
 	spec.description   =  %q{
 		Superior image processing and responsive HTML5 outputs for
@@ -18,9 +19,11 @@ Gem::Specification.new do |spec|
 	spec.homepage      = "https://surrim.org/"
 	spec.license       = "GPLv3"
 
-	spec.files         = `git ls-files -z`.split("\x0").select { |f| f.match(%r!^(lib|LICENSE|README|)!i) }
+	spec.files         = `git ls-files -z`.split("\x0").select { |f| f.match(%r!^(lib|LICENSE|README|)!) }
 	spec.require_paths = ["lib"]
 
-	spec.add_runtime_dependency "rmagick", "~> 5.2"
 	spec.add_runtime_dependency "mime-types", "~> 3.4"
+	spec.add_runtime_dependency "rmagick", "~> 5.2"
+	spec.add_development_dependency "rspec", "~> 3.0"
+	spec.add_runtime_dependency "zlib", "~> 3.1"
 end
