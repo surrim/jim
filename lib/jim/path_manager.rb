@@ -7,6 +7,7 @@ module Jim::PathManager
 	IMAGE_METADATA_JSON_PATTERN = "metadata/%{sha256}.json"
 	CACHED_IMAGE_FILENAME_PATTERN =
 		"%{extension}%{quality}-%{width}x%{height}%{optional_background_postfix}/%{optional_watermark_folder}/%{sha256}.%{extension}"
+	CACHED_SVG_IMAGE_FILENAME_PATTERN = "svg/%{sha256}.%{extension}"
 	OPTIONAL_BACKGROUND_POSTFIX_PATTERN = "-b%{background}"
 	OPTIONAL_WATERMARK_FOLDER_PATTERN = "%{sha256}}-%{width}x%{height}-%{x}-%{y}}-%{opacity}"
 
@@ -22,6 +23,13 @@ module Jim::PathManager
 			height: height,
 			optional_background_postfix: optional_background_postfix(format_setup&.dig("background")),
 			optional_watermark_folder: optional_watermark_folder(watermark),
+			sha256: source_image.sha256
+		})
+	end
+
+	def cached_svg_image_filename(source_image, extension)
+		Jim::System.cache_path(CACHED_SVG_IMAGE_FILENAME_PATTERN % {
+			extension: extension,
 			sha256: source_image.sha256
 		})
 	end
