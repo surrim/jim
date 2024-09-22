@@ -14,6 +14,7 @@ class Jim::ChecksumManager
 	def sha256(filename)
 		unless filename.exist?
 			@checksums.delete(filename.to_s.to_sym)
+			Jim::System.error("FilesystemError: #{filename} not found")
 			return nil
 		end
 

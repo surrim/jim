@@ -22,5 +22,5 @@ class Jim
 
 	def to_s = Jim::Utils.deep_stringify_keys(to_h).to_s
 	def to_liquid = self
-	def to_json(opts = nil) = to_h.to_json(opts)
+	def to_json(opts = JSON::PRETTY_STATE_PROTOTYPE) = to_h.to_json(opts)
 end

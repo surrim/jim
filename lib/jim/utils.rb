@@ -7,6 +7,7 @@ module Jim::Utils
 	module_function
 
 	JSON_MODE = JSON::PRETTY_STATE_PROTOTYPE
+	LOSSLESS_MIME_TYPES = %w[image/bmp image/gif image/png image/svg+xml image/tiff image/vnd.microsoft.icon].freeze
 	SPRINTF_SUBSTITUTION_REGEX = /%{ *(?<identifier>[a-zA-Z_]\w*) *(\[ *(?<from>-?\d+)( *(?<mode>,|..) *(?<to>-?\d+))? *\])? *}/
 	SPRINTF_SUBSTITUTION_LIMIT = 16
 
@@ -25,11 +26,13 @@ module Jim::Utils
 		FileUtils.mv(tmp_filename, filename)
 	end
 
-	def cp_file(source_filename, destination_filename)
-		prepare_folder(destination_filename)
-		tmp_filename = tmp_filename(destination_filename)
-		FileUtils.cp(source_filename, tmp_filename)
-		FileUtils.mv(tmp_filename, destination_filename)
+	def write_file_if_not_exist(filename, content = nil, &block)
+		if filename.exist?
+			FileUtils.touch(filename)
+		else
+			block_given? ? write_file(filename, content, &block) : write_file(filename, content)
+		end
+		filename
 	end
 
 	def read_json_file(filename) = JSON.parse(filename.read, { symbolize_names: true })
@@ -43,44 +46,42 @@ module Jim::Utils
 	end
 
 	def color(color)
+		return nil if color.nil?
 		Magick::Pixel.from_color(color).to_color(Magick::AllCompliance, false, 8, true).downcase
-	end
-
-	def image_avg_color(image)
-		image
-			.resize(1, 1)
-			.pixel_color(0, 0)
-			.to_color(Magick::AllCompliance, true, 8, true)
-			.downcase
 	end
 
 	def mime_type(filename)
 		return nil if filename.nil?
 		types = MIME::Types.type_for(filename.to_s)
-		types.empty? ? Jim::System.error("No MIME type available for #{filename}") : types.first.content_type
+		types.empty? ? Jim::System.error("MimeTypeError: No type available for #{filename}") : types.first.content_type
 	end
 
-	def auto_convert_mime_type(format)
-		return nil if format.nil?
-		format.to_s.include?("/") ? format.to_s : mime_type(".#{format}")
-	end
+	def is_lossless_mime_type?(mime_type) = LOSSLESS_MIME_TYPES.include?(mime_type)
 
-	def extension_from_mime_type(mime_type) = MIME::Types[mime_type]&.first&.preferred_extension
+	def preferred_extension_for_mime_type(mime_type) = MIME::Types[mime_type]&.first&.preferred_extension
 
-	def replace_filename_pattern(filename_pattern, src:, sha256:, extension:, width: nil, height: nil, **substitutions)
-		pathname = Pathname.new(src)
-		image_substitutions = {
-			sha256: sha256,
-			basename: clean_basename(pathname.basename(pathname.extname).to_s),
-			dirname: clean_dirname(pathname.dirname).to_s,
-			extension: extension,
-			width: width,
-			height: height,
-			original_dirname: pathname.dirname.to_s,
-			original_basename: pathname.basename(pathname.extname).to_s,
-			original_extension: pathname.extname[1..-1],
+	def auto_convert_mime_type(format) = format.include?("/") ? format : mime_type(".#{format}")
+
+	def replace_filename_pattern(
+		filename_pattern, user_substitutions,
+		source_sha256:, source_extension:, source_dirname:, source_basename:,
+		resizing_width:, resizing_height:,
+		output_extension:, output_background:, output_is_lossless:, output_quality:
+	)
+		substitutions = {
+			sha256: source_sha256,
+			dirname: clean_dirname(source_dirname),
+			basename: clean_basename(source_basename),
+			original_dirname: source_dirname,
+			original_basename: source_basename,
+			original_extension: source_extension,
+			width: resizing_width,
+			height: resizing_height,
+			extension: output_extension,
+			background: output_background,
+			quality: output_is_lossless ? nil : output_quality,
 		}
-		Jim::System.destination_path(sprintf(filename_pattern, **substitutions, **image_substitutions))
+		Jim::System.destination_path(sprintf(filename_pattern, **user_substitutions, **substitutions))
 	end
 
 	private_class_method
@@ -88,6 +89,18 @@ module Jim::Utils
 	def tmp_filename(filename) = filename.dirname + ".#{filename.basename}.tmp"
 
 	def prepare_folder(filename) = FileUtils.mkdir_p(filename.dirname)
+
+	def clean_dirname(dirname) = Pathname.new(".").join(*Pathname.new(dirname).each_filename.map do |basename|
+		clean_basename(basename)
+	end).to_s
+
+	def clean_basename(basename)
+		if %w[_ _. _..].include?(basename)
+			Jim::System.warn("SubstitutionError: Preserving leading underscore from \"#{basename}\"")
+			return basename
+		end
+		basename.chr == "_" ? basename[1..-1] : basename
+	end
 
 	def sprintf(format_string, **substitutions)
 		i = 0
@@ -121,17 +134,5 @@ module Jim::Utils
 			end
 		end
 		format_string
-	end
-
-	def clean_dirname(dirname) = Pathname.new(".").join(*dirname.each_filename.map do |basename|
-		clean_basename(basename)
-	end)
-
-	def clean_basename(basename)
-		if %w[_ _. _..].include?(basename)
-			Jim::System.warn("SubstitutionError: Preserving leading underscore from \"#{basename}\"")
-			return basename
-		end
-		basename.chr == "_" ? basename[1..-1] : basename
 	end
 end

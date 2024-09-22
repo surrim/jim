@@ -4,14 +4,10 @@ class Jim
 	attr_reader :format_setups
 
 	DEFAULT_FORMAT_SETUPS = {
-		"": {quality: 75},
-		"image/bmp": { background: "white", lossless: true },
-		"image/gif": { lossless: true },
+		"": { quality: 75 },
+		"image/bmp": { background: "white" },
 		"image/jpeg": { background: "white", extension: "jpg" },
-		"image/png": { lossless: true },
-		"image/svg+xml": { lossless: true },
-		"image/tiff": { background: "white", lossless: true },
-		"image/vnd.microsoft.icon": { lossless: true }
+		"image/tiff": { background: "white" }
 	}.freeze
 
 	def format_setups(*format_setups)

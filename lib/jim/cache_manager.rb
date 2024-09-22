@@ -9,47 +9,64 @@ module Jim::CacheManager
 		"%{extension}%{quality}-%{width}x%{height}%{optional_background_postfix}/%{optional_watermark_folder}/%{sha256}.%{extension}"
 	SVG_IMAGE_FILENAME_PATTERN = "svg/%{sha256}.%{extension}"
 	OPTIONAL_BACKGROUND_POSTFIX_PATTERN = "-b%{background}"
-	OPTIONAL_WATERMARK_FOLDER_PATTERN = "%{sha256}}-%{width}x%{height}-%{x}-%{y}}-%{opacity}"
+	OPTIONAL_WATERMARK_FOLDER_PATTERN = "%{sha256}-%{width}x%{height}-%{x}-%{y}-%{opacity}"
 
 	def checksums_json = Jim::System.local_cache_path(CHECKSUMS_JSON)
 
-	def image_metadata_json_pattern(sha256) = Jim::System.cache_path(IMAGE_METADATA_JSON_PATTERN % { sha256: sha256 })
+	def image_metadata_json_pattern(source_sha256) = Jim::System.cache_path(IMAGE_METADATA_JSON_PATTERN % { sha256: source_sha256 })
 
-	def image_filename(sha256, size_property, format_property)
+	def image_filename(
+		source_sha256:,
+		resizing_width:, resizing_height:,
+		watermark_sha256: nil, watermark_width: nil, watermark_height: nil,
+		watermark_x: nil, watermark_y: nil, watermark_opacity: nil, watermark_is_valid: false,
+		output_background: nil, output_extension:, output_is_lossless:, output_quality:
+	)
 		Jim::System.cache_path(IMAGE_FILENAME_PATTERN % {
-			extension: format_property[:extension],
-			quality: format_property[:lossless] ? nil : format_property[:quality],
-			width: size_property[:width],
-			height: size_property[:height],
-			optional_background_postfix: optional_background_postfix(format_property[:background]),
-			optional_watermark_folder: optional_watermark_folder(size_property[:watermark]),
-			sha256: sha256
+			sha256: source_sha256,
+			width: resizing_width,
+			height: resizing_height,
+			optional_watermark_folder: optional_watermark_folder(
+				watermark_sha256: watermark_sha256,
+				watermark_width: watermark_width,
+				watermark_height: watermark_height,
+				watermark_x: watermark_x,
+				watermark_y: watermark_y,
+				watermark_opacity: watermark_opacity,
+				watermark_is_valid: watermark_is_valid
+			),
+			optional_background_postfix: optional_background_postfix(output_background),
+			extension: output_extension,
+			quality: output_is_lossless ? nil : output_quality
 		})
 	end
 
-	def svg_image_filename(source_image, extension)
-		Jim::System.cache_path(SVG_IMAGE_FILENAME_PATTERN % {
-			extension: extension,
-			sha256: source_image.sha256
-		})
+	def svg_image_filename(source_sha256, output_extension)
+		Jim::System.cache_path(SVG_IMAGE_FILENAME_PATTERN % { sha256: source_sha256, extension: output_extension })
 	end
 
 	private_class_method
 
-	def optional_background_postfix(background)
-		OPTIONAL_BACKGROUND_POSTFIX_PATTERN % {
-			background: Jim::Utils.color(background)
-		} if background
+	def optional_background_postfix(output_background)
+		OPTIONAL_BACKGROUND_POSTFIX_PATTERN % { background: output_background } if output_background
 	end
 
-	def optional_watermark_folder(size_watermark_property)
+	def optional_watermark_folder(
+		watermark_sha256:,
+		watermark_width:,
+		watermark_height:,
+		watermark_x:,
+		watermark_y:,
+		watermark_opacity:,
+		watermark_is_valid:
+	)
 		OPTIONAL_WATERMARK_FOLDER_PATTERN % {
-			sha256: size_watermark_property[:source_image].sha256,
-			width: size_watermark_property[:width],
-			height: size_watermark_property[:height],
-			x: size_watermark_property[:x],
-			y: size_watermark_property[:y],
-			opacity: size_watermark_property[:opacity]
-		} if size_watermark_property
+			sha256: watermark_sha256,
+			width: watermark_width,
+			height: watermark_height,
+			x: watermark_x,
+			y: watermark_y,
+			opacity: watermark_opacity
+		} if watermark_is_valid
 	end
 end

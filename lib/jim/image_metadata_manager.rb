@@ -3,8 +3,6 @@
 module Jim::ImageMetadataManager
 	module_function
 
-	RATIONALIZE_TOLERANCE = 0.005
-
 	def metadata(filename)
 		sha256 = Jim::ChecksumManager.sha256(filename)
 		return {} if sha256.nil?
@@ -16,20 +14,23 @@ module Jim::ImageMetadataManager
 		end
 
 		image = Jim::Utils::load_image(filename)
-		width = image.columns
-		height = image.rows
-		ratio = (width.to_f / height).rationalize(RATIONALIZE_TOLERANCE)
-		simplified_width = ratio.numerator
-		simplified_height = ratio.denominator
 		image_metadata = {
-			width: width,
-			height: height,
-			simplified_width: simplified_width,
-			simplified_height: simplified_height,
+			width: image.columns,
+			height: image.rows,
 			mime_type: Jim::Utils.mime_type(filename),
-			avg_color: Jim::Utils.image_avg_color(image)
+			avg_color: image_avg_color(image)
 		}
 		Jim::Utils.write_json_file(image_metadata_json, image_metadata)
 		image_metadata
+	end
+
+	private_class_method
+
+	def image_avg_color(image)
+		image
+			.resize(1, 1)
+			.pixel_color(0, 0)
+			.to_color(Magick::AllCompliance, true, 8, true)
+			.downcase[1..-1]
 	end
 end
