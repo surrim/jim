@@ -6,7 +6,7 @@ class Jim
 	DEFAULT_FORMATS = []
 
 	def formats(*formats)
-		@formats = formats.flatten.map { |format| Jim::Utils.auto_convert_mime_type(format) }.uniq
+		@formats = formats.flatten.map { |format| format&.to_s&.downcase }.uniq
 		self
 	end
 
@@ -21,9 +21,7 @@ class Jim
 	end
 
 	def rm_formats(*formats)
-		formats.flatten.each do |format|
-			@formats.delete(Jim::Utils.auto_convert_mime_type(format))
-		end
+		formats.flatten.each { |format| @formats.delete(format&.to_s&.downcase) }
 		self
 	end
 

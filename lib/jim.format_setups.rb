@@ -4,6 +4,7 @@ class Jim
 	attr_reader :format_setups
 
 	DEFAULT_FORMAT_SETUPS = {
+		"": {quality: 75},
 		"image/bmp": { background: "white", lossless: true },
 		"image/gif": { lossless: true },
 		"image/jpeg": { background: "white", extension: "jpg" },
@@ -12,7 +13,6 @@ class Jim
 		"image/tiff": { background: "white", lossless: true },
 		"image/vnd.microsoft.icon": { lossless: true }
 	}.freeze
-	# quality: 50
 
 	def format_setups(*format_setups)
 		reset_format_setups
@@ -32,7 +32,7 @@ class Jim
 
 	def add_format_setting(format, key, value)
 		begin
-			format = Jim::Utils.auto_convert_mime_type(format)
+			format = format.to_s.downcase
 			if value.nil?
 				@format_setups[format].delete(key.to_s.downcase)
 				@format_setups.delete(format) if @format_setups[format].empty?
