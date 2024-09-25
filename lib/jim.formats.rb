@@ -3,7 +3,7 @@
 class Jim
   attr_reader :formats
 
-  DEFAULT_FORMATS = []
+  DEFAULT_FORMATS = [].freeze
 
   def formats(*formats)
     @formats = formats.flatten.map { |format| format&.to_s&.downcase }.uniq

@@ -12,7 +12,7 @@ class Jim::SourceImage
   def filename = @filename ||= Jim::System.source_path(@src)
   def basename = filename.basename(filename.extname).to_s
   def dirname = Pathname.new(@src).dirname.to_s
-  def extension = filename.extname[1..-1].to_s
+  def extension = filename.extname[1..].to_s
   def sha256 = @sha256 ||= Jim::ChecksumManager.sha256(filename)
   def metadata = @metadata ||= Jim::ImageMetadataManager.metadata(filename)
   def width = metadata[:width].to_i

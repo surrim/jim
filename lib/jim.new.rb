@@ -10,12 +10,12 @@ class Jim
     self.class.constants.filter do |constant|
       constant.start_with? "DEFAULT_"
     end.each do |constant|
-      method_name = constant[:DEFAULT_.length..-1].downcase
+      method_name = constant[:DEFAULT_.length..].downcase
       default_value = self.class.const_get(constant)
-      self.method(method_name).call(default_value)
+      method(method_name).call(default_value)
     end
     presets.each do |method_name, value|
-      self.method(method_name).call(value)
+      method(method_name).call(value)
     end
   end
 

@@ -25,7 +25,7 @@ class Jim
   def watermark_size(watermark_size)
     @watermark_size = watermark_size.nil? ? DEFAULT_WATERMARK_SIZE : watermark_size.to_f \
       if Validator.check_nil_or_greater_than_zero(watermark_size, :watermark_size) \
-      and Validator.check_nil_or_between_0_and_1(watermark_size, :watermark_size)
+      && Validator.check_nil_or_between_0_and_1(watermark_size, :watermark_size)
     self
   end
 
@@ -44,7 +44,7 @@ class Jim
   def watermark_opacity(watermark_opacity)
     @watermark_opacity = watermark_opacity.nil? ? DEFAULT_WATERMARK_OPACITY : watermark_opacity.to_f \
       if Validator.check_nil_or_greater_than_zero(watermark_opacity, :watermark_opacity) \
-      and Validator.check_nil_or_between_0_and_1(watermark_opacity, :watermark_opacity)
+      && Validator.check_nil_or_between_0_and_1(watermark_opacity, :watermark_opacity)
     self
   end
 

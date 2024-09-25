@@ -32,14 +32,14 @@ class Jim
     else
       attr.update(compute_resizing_attr(
                     @fallback_width || attr[:source_width],
-                    **attr.slice(:source_width, :source_height))
-      )
+                    **attr.slice(:source_width, :source_height)
+                  ))
       attr.update(compute_watermark_attr(
-                    **attr.slice(:source_width, :source_height, :resizing_width, :resizing_height))
-      )
+                    **attr.slice(:source_width, :source_height, :resizing_width, :resizing_height)
+                  ))
       attr.update(compute_output_attr(
-                    @fallback_format || attr[:source_extension])
-      )
+                    @fallback_format || attr[:source_extension]
+                  ))
 
       # no svg special cases
       resized_image = ResizedImage.new(**attr.slice(
@@ -63,10 +63,10 @@ class Jim
       Jim::System.add_external_file(fallback_cache_filename, destination_filename)
 
       resizing_and_watermark_attrs = @widths
-                                       .map { |width| width || attr[:source_width] }
-                                       .uniq
-                                       .select { |width| width <= attr[:source_width] || attr[:source_is_svg] }
-                                       .map do |width|
+                                     .map { |width| width || attr[:source_width] }
+                                     .uniq
+                                     .select { |width| width <= attr[:source_width] || attr[:source_is_svg] }
+                                     .map do |width|
         resizing_and_watermark_attr = attr.slice(:source_width, :source_height)
         resizing_and_watermark_attr.update(**compute_resizing_attr(width, **resizing_and_watermark_attr.slice(
           :source_width, :source_height
@@ -76,9 +76,9 @@ class Jim
         )))
       end
       output_attrs = @formats
-                       .map { |format| format || attr[:source_extension] }
-                       .uniq
-                       .map do |format|
+                     .map { |format| format || attr[:source_extension] }
+                     .uniq
+                     .map do |format|
         compute_output_attr(format)
       end
 
@@ -181,18 +181,12 @@ class Jim
       watermark_x = ((resizing_width - watermark_width) * @watermark_x).round
       watermark_y = ((resizing_height - watermark_height) * @watermark_y).round
       watermark_opacity = @watermark_opacity.round(3)
-      watermark_is_valid = watermark_width > 0 && watermark_height > 0 && watermark_opacity > 0
+      watermark_is_valid = watermark_width.positive? && watermark_height.positive? && watermark_opacity.positive?
     end
     {
-      watermark_src: @watermark_src,
-      watermark_filename: watermark_filename,
-      watermark_sha256: watermark_sha256,
-      watermark_width: watermark_width,
-      watermark_height: watermark_height,
-      watermark_x: watermark_x,
-      watermark_y: watermark_y,
-      watermark_opacity: watermark_opacity,
-      watermark_is_valid: !!watermark_is_valid
+      watermark_src: @watermark_src, watermark_filename:, watermark_sha256:,
+      watermark_width:, watermark_height:, watermark_x:, watermark_y:,
+      watermark_opacity:, watermark_is_valid:
     }
   end
 
@@ -201,18 +195,20 @@ class Jim
     format_setup = (@format_setups[""] || {}).merge(
       *@format_setups.fetch_values { |key| Jim::Utils.auto_convert_mime_type(key) == output_mime_type }
     )
-    output_extension = format.include?("/") \
-                         ? format_setup["extension"] || Jim::Utils.preferred_extension_for_mime_type(output_mime_type) \
-                         : format
+    output_extension = if format.include?("/")
+                         format_setup["extension"] || Jim::Utils.preferred_extension_for_mime_type(output_mime_type)
+                       else
+                         format
+                       end
     output_background = Jim::Utils.color(format_setup["background"])
     output_is_lossless = Jim::Utils.is_lossless_mime_type?(output_mime_type)
     output_quality = format_setup["quality"]
     {
-      output_mime_type: output_mime_type,
-      output_extension: output_extension,
-      output_background: output_background,
-      output_is_lossless: output_is_lossless,
-      output_quality: output_quality
+      output_mime_type:,
+      output_extension:,
+      output_background:,
+      output_is_lossless:,
+      output_quality:
     }
   end
 

@@ -10,11 +10,11 @@ class Jim
 
   def to_h
     h = { src: @src, alt: @alt }
-    self.class.constants.filter do |constant|
-      constant.start_with? "DEFAULT_"
-    end.each do |constant|
-      name = constant[:DEFAULT_.length..-1].downcase
-      value = self.instance_variable_get("@#{name}")
+    self.class.constants
+        .filter { |constant| constant.start_with? "DEFAULT_" }
+        .each do |constant|
+      name = constant[:DEFAULT_.length..].downcase
+      value = instance_variable_get("@#{name}")
       h[name.to_sym] = value
     end
     h

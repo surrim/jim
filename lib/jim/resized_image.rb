@@ -24,6 +24,7 @@ class Jim::ResizedImage
 
   def image
     return @image if @image
+
     @image = self.class.load_resized_image(
       source_filename: @source_filename, source_sha256: @source_sha256,
       resizing_width: @resizing_width, resizing_height: @resizing_height
@@ -45,8 +46,7 @@ class Jim::ResizedImage
       watermark_sha256: @watermark_sha256, watermark_width: @watermark_width, watermark_height: @watermark_height,
       watermark_x: @watermark_x, watermark_y: @watermark_y,
       watermark_opacity: @watermark_opacity, watermark_is_valid: @watermark_is_valid,
-      output_background: output_background, output_extension: output_extension,
-      output_is_lossless: output_is_lossless, output_quality: output_quality
+      output_background:, output_extension:, output_is_lossless:, output_quality:
     )
     Jim::Utils.write_file_if_not_exist(cache_filename) do |filename|
       source_src = @source_filename.relative_path_from(Jim::System.source_path)
@@ -74,8 +74,8 @@ class Jim::ResizedImage
   )
     if %w[.svg .svgz].include?(source_filename.extname.downcase)
       png_cache_filename = Jim::CacheManager.image_filename(
-        source_sha256: source_sha256,
-        resizing_width: resizing_width, resizing_height: resizing_height,
+        source_sha256:,
+        resizing_width:, resizing_height:,
         output_extension: "png", output_is_lossless: true, output_quality: nil
       )
       Jim::Utils.write_file_if_not_exist(png_cache_filename) do |filename|

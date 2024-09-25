@@ -24,7 +24,12 @@ class Jim::SvgSourceImage
   def content = @filename.read
   def svg_content = is_compressed? ? ungzip(content) : content
   def svgz_content = is_compressed? ? content : gzip(content)
-  def inline_svg_content = svg_content.sub(XML_DECLARATION_REGEX, "").sub(XML_DOCTYPE_REGEX, "").sub(XML_COMMENT_REGEX, "")
+
+  def inline_svg_content = svg_content
+    .sub(XML_DECLARATION_REGEX, "")
+    .sub(XML_DOCTYPE_REGEX, "")
+    .sub(XML_COMMENT_REGEX, "")
+
   def ungzip(content) = Zlib::GzipReader.new(StringIO.new(content)).read.to_s
 
   def gzip(content)

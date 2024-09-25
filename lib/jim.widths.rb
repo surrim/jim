@@ -3,13 +3,13 @@
 class Jim
   attr_reader :widths
 
-  DEFAULT_WIDTHS = []
+  DEFAULT_WIDTHS = [].freeze
 
   def widths(*widths)
     rm_widths
-    widths.flatten.uniq.each { |width|
+    widths.flatten.uniq.each do |width|
       add_width(width)
-    }
+    end
     self
   end
 

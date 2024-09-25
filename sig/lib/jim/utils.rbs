@@ -1,8 +1,8 @@
 module Jim::Utils
   JSON_MODE: JSON::Ext::Generator::State
   LOSSLESS_MIME_TYPES: Array[String]
-  SPRINTF_SUBSTITUTION_REGEX: Regexp
-  SPRINTF_SUBSTITUTION_LIMIT: Integer
+  SPRINTF2_SUBSTITUTION_REGEX: Regexp
+  SPRINTF2_SUBSTITUTION_LIMIT: Integer
 
   def self?.deep_stringify_keys: (Hash[Object, Object] hash) -> Hash[String, Object]
   def self?.write_file: (Pathname filename, ?String content) ?{ (Pathname) -> void } -> Pathname
@@ -25,5 +25,5 @@ module Jim::Utils
   def self?.prepare_folder: (Pathname filename) -> void
   def self?.clean_dirname: (String dirname) -> String
   def self?.clean_basename: (String basename) -> String
-  def self?.sprintf: (String format_string, **Hash[Symbol, untyped] substitutions) -> String
+  def self?.sprintf2: (String format_string, **Hash[Symbol, untyped] substitutions) -> String
 end

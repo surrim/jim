@@ -3,7 +3,7 @@
 class Jim
   attr_reader :img_sizes, :default_img_size
 
-  DEFAULT_IMG_SIZES = {}
+  DEFAULT_IMG_SIZES = {}.freeze
   DEFAULT_DEFAULT_IMG_SIZE = nil
 
   def img_sizes(*img_sizes)

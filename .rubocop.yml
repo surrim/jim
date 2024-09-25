@@ -1,0 +1,22 @@
+Metrics/MethodLength:
+  Enabled: false
+Metrics/ParameterLists:
+  Enabled: false
+Naming/PredicateName:
+  Enabled: false
+Style/FormatStringToken:
+  Enabled: false
+Style/KeywordParametersOrder:
+  Enabled: false
+Style/StringLiterals:
+  Enabled: false
+
+# Fix later
+Style/ClassAndModuleChildren:
+  Enabled: false
+Style/Documentation:
+  Enabled: false
+Lint/UselessAccessModifier:
+  Enabled: false
+Metrics/AbcSize:
+  Enabled: false

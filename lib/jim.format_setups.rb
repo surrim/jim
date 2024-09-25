@@ -19,15 +19,18 @@ class Jim
   end
 
   def add_format_setup(format, setup)
-    setup.each do |key, value|
-      add_format_setting(format, key, value)
-    end \
-      if Validator.check_is_hash(setup, :setup)
+    if Validator.check_is_hash(setup, :setup)
+      setup.each do |key, value|
+        add_format_setting(format, key, value)
+      end
+    end
     self
   end
 
   def add_format_setting(format, key, value)
-    begin
+    if Validator.check_is_primitive(format, :format) \
+      && Validator.check_is_primitive(key, :key) \
+      && Validator.check_is_primitive(value, :value)
       format = format.to_s.downcase
       if value.nil?
         @format_setups[format].delete(key.to_s.downcase)
@@ -36,10 +39,7 @@ class Jim
         @format_setups[format] ||= {}
         @format_setups[format][key.to_s.downcase] = value
       end
-    end \
-      if Validator.check_is_primitive(format, :format) \
-      and Validator.check_is_primitive(key, :key) \
-      and Validator.check_is_primitive(value, :value)
+    end
     self
   end
 

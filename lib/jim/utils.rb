@@ -7,8 +7,8 @@ module Jim::Utils
   module_function
 
   LOSSLESS_MIME_TYPES = %w[image/bmp image/gif image/png image/svg+xml image/tiff image/vnd.microsoft.icon].freeze
-  SPRINTF_SUBSTITUTION_REGEX = /%{ *(?<identifier>[a-zA-Z_]\w*) *(\[ *(?<from>-?\d+)( *(?<mode>,|..) *(?<to>-?\d+))? *\])? *}/
-  SPRINTF_SUBSTITUTION_LIMIT = 16
+  SPRINTF2_SUBSTITUTION_REGEX = /%{ *(?<identifier>[a-zA-Z_]\w*) *(?<_0>\[ *(?<from>-?\d+)(?<_1> *(?<mode>,|..) *(?<to>-?\d+))? *\])? *}/
+  SPRINTF2_SUBSTITUTION_LIMIT = 16
 
   def deep_stringify_keys(hash)
     result = {}
@@ -40,18 +40,20 @@ module Jim::Utils
   def write_json_file(filename, content) = write_file(filename, JSON.pretty_generate(content))
 
   def load_image(filename)
-    image = Magick::ImageList.new(filename.to_s) { |info| info.channel }.auto_orient
+    image = Magick::ImageList.new(filename.to_s, &:channel).auto_orient
     image.strip!
     image
   end
 
   def color(color)
     return nil if color.nil?
-    Magick::Pixel.from_color(color).to_color(Magick::AllCompliance, false, 8, true).downcase[1..-1].to_s
+
+    Magick::Pixel.from_color(color).to_color(Magick::AllCompliance, false, 8, true).downcase[1..].to_s
   end
 
   def mime_type(filename)
     return nil if filename.nil?
+
     types = MIME::Types.type_for(filename.to_s)
     if types.empty?
       Jim::System.warn("No MIME type available for #{filename}")
@@ -67,6 +69,7 @@ module Jim::Utils
   def auto_convert_mime_type(format)
     return nil if format.nil?
     return format if format.include?("/")
+
     mime_type(".#{format}")
   end
 
@@ -87,9 +90,9 @@ module Jim::Utils
       height: resizing_height,
       extension: output_extension,
       background: output_background,
-      quality: output_is_lossless ? nil : output_quality,
+      quality: output_is_lossless ? nil : output_quality
     }
-    Jim::System.destination_path(sprintf(filename_pattern, **user_substitutions, **substitutions))
+    Jim::System.destination_path(sprintf2(filename_pattern, **user_substitutions, **substitutions))
   end
 
   private_class_method
@@ -107,25 +110,29 @@ module Jim::Utils
       Jim::System.warn("SubstitutionError: Preserving leading underscore from \"#{basename}\"")
       return basename
     end
-    basename.chr == "_" ? basename[1..-1].to_s : basename
+    basename.chr == "_" ? basename[1..].to_s : basename
   end
 
-  def sprintf(format_string, **substitutions)
+  def sprintf2(format_string, **substitutions)
     i = 0
     cycle_counter = 0
-    while i < format_string.length do
-      break unless format_string.match(SPRINTF_SUBSTITUTION_REGEX, i) do |match|
+    while i < format_string.length
+      break unless format_string.match(SPRINTF2_SUBSTITUTION_REGEX, i) do |match|
         match_begin, match_end = match.offset(0)
         identifier = match[:identifier].to_sym
-        if !substitutions.has_key?(identifier)
+        if !substitutions.key?(identifier)
           Jim::System.warn("KeyError: %{#{identifier}} not found, skipping substitution")
-          format_string = format_string[0, match_begin].to_s + format_string[match_end..-1].to_s
-        elsif cycle_counter >= SPRINTF_SUBSTITUTION_LIMIT
-          Jim::System.warn("SubstitutionError: %{#{identifier}} probably causes cyclic dependency, skipping substitution")
+          format_string = format_string[0, match_begin].to_s + format_string[match_end..].to_s
+        elsif cycle_counter >= SPRINTF2_SUBSTITUTION_LIMIT
+          Jim::System.warn(
+            "SubstitutionError: %{#{identifier}} probably causes cyclic dependency, skipping substitution"
+          )
           return format_string
         else
           substitution = substitutions[identifier].to_s
-          from, mode, to = match[:from], match[:mode], match[:to]
+          from = match[:from]
+          mode = match[:mode]
+          to = match[:to]
           value = if from.nil?
                     substitution
                   else
@@ -135,7 +142,7 @@ module Jim::Utils
                     else substitution[from.to_i]
                     end
                   end
-          format_string = format_string[0, match_begin].to_s + value.to_s + format_string[match_end..-1].to_s
+          format_string = format_string[0, match_begin].to_s + value.to_s + format_string[match_end..].to_s
         end
         i = match_begin
         cycle_counter += 1

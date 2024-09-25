@@ -5,13 +5,13 @@ require_relative "jim.version"
 class Jim
   attr_reader :substitutions
 
-  DEFAULT_SUBSTITUTIONS = { jim_version: Jim::VERSION }
+  DEFAULT_SUBSTITUTIONS = { jim_version: Jim::VERSION }.freeze
 
   def substitutions(*substitutions)
     rm_substitutions
-    {}.merge(*substitutions.compact).each { |key, value|
+    {}.merge(*substitutions.compact).each do |key, value|
       add_substitution(key, value)
-    }
+    end
     self
   end
 
