@@ -1,0 +1,9 @@
+module Jim::ImageMetadataManager
+  def self?.metadata: (Pathname filename) -> {
+			width: Integer,
+			height: Integer,
+			mime_type: String?,
+			avg_color: String
+		}
+  def self?.image_avg_color: (Magick::Image image) -> String
+end

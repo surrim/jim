@@ -1,0 +1,28 @@
+class Jim::SourceImage
+	@src: String
+	@filename: Pathname?
+	@sha256: String?
+	@metadata: {
+			width: Integer,
+			height: Integer,
+			mime_type: String?,
+			avg_color: String
+		}?
+
+	attr_reader src: String
+
+	SVG_MIME_TYPE: String
+
+	def initialize: (String src) -> void
+	def filename: () -> Pathname
+	def basename: () -> String
+	def dirname: () -> String
+	def extension: () -> String
+	def sha256: () -> String
+	def metadata: () -> Hash[Symbol, String | Integer]
+	def width: () -> Integer
+	def height: () -> Integer
+	def mime_type: () -> String?
+	def avg_color: () -> String
+	def is_svg?: () -> bool
+end

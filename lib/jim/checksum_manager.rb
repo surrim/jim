@@ -15,7 +15,6 @@ class Jim::ChecksumManager
     unless filename.exist?
       @checksums.delete(filename.to_s.to_sym)
       Jim::System.error("FilesystemError: #{filename} not found")
-      return nil
     end
 
     stat = filename.stat
@@ -27,7 +26,7 @@ class Jim::ChecksumManager
       return checksum_entry[:sha256]
     end
 
-    sha256 = Digest::SHA256.file(filename).hexdigest
+    sha256 = Digest::SHA256.file(filename.to_s).hexdigest
     @checksums[filename.to_s.to_sym] = { mtime: mtime, size: size, sha256: sha256 }
     sha256
   end

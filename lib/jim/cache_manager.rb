@@ -13,7 +13,9 @@ module Jim::CacheManager
 
   def checksums_json = Jim::System.local_cache_path(CHECKSUMS_JSON)
 
-  def image_metadata_json_pattern(source_sha256) = Jim::System.cache_path(IMAGE_METADATA_JSON_PATTERN % { sha256: source_sha256 })
+  def image_metadata_json_pattern(source_sha256)
+    Jim::System.cache_path(IMAGE_METADATA_JSON_PATTERN % { sha256: source_sha256 })
+  end
 
   def image_filename(
     source_sha256:,

@@ -5,7 +5,9 @@ module Jim::ImageMetadataManager
 
   def metadata(filename)
     sha256 = Jim::ChecksumManager.sha256(filename)
-    return {} if sha256.nil?
+    if sha256.nil?
+      Jim::System.error("FilesystemError: #{filename} not found")
+    end
 
     image_metadata_json = Jim::CacheManager.image_metadata_json_pattern(sha256)
     if image_metadata_json.exist?
@@ -31,6 +33,6 @@ module Jim::ImageMetadataManager
       .resize(1, 1)
       .pixel_color(0, 0)
       .to_color(Magick::AllCompliance, true, 8, true)
-      .downcase[1..-1]
+      .downcase[1..-1].to_s
   end
 end

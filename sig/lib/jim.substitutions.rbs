@@ -1,0 +1,19 @@
+class Jim
+  @substitutions: Hash[Symbol, String]
+
+  attr_reader substitutions: Hash[Symbol, String]
+
+  DEFAULT_SUBSTITUTIONS: { jim_version: String }
+
+  def substitutions: (*untyped substitutions) -> Jim
+  def add_substitution: (untyped key, untyped value) -> Jim
+  def rm_substitution: (untyped key) -> Jim
+  def rm_substitutions: () -> Jim
+
+  module LiquidFilters
+    def jim_substitutions: (Jim jim, *untyped substitutions) -> Jim
+    def jim_add_substitution: (Jim jim, untyped key, untyped value) -> Jim
+    def jim_rm_substitution: (Jim jim, untyped key) -> Jim
+    def jim_rm_substitutions: (Jim jim) -> Jim
+  end
+end

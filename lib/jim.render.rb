@@ -109,7 +109,7 @@ class Jim
             )
           )
           generated_images.push({
-                                  src: generated_filename&.relative_path_from(Jim::System.destination_path)&.to_s,
+                                  src: generated_filename.relative_path_from(Jim::System.destination_path).to_s,
                                   mime_type: attr[:output_mime_type],
                                   width: attr[:resizing_width]
                                 })
@@ -181,13 +181,9 @@ class Jim
       watermark_x = ((resizing_width - watermark_width) * @watermark_x).round
       watermark_y = ((resizing_height - watermark_height) * @watermark_y).round
       watermark_opacity = @watermark_opacity.round(3)
-      watermark_is_valid = \
-        watermark_source_image != nil \
-          && watermark_width > 0 \
-          && watermark_height > 0 \
-          && watermark_opacity > 0
+      watermark_is_valid = watermark_width > 0 && watermark_height > 0 && watermark_opacity > 0
     end
-    watermark_is_valid ? {
+    {
       watermark_src: @watermark_src,
       watermark_filename: watermark_filename,
       watermark_sha256: watermark_sha256,
@@ -196,14 +192,18 @@ class Jim
       watermark_x: watermark_x,
       watermark_y: watermark_y,
       watermark_opacity: watermark_opacity,
-      watermark_is_valid: watermark_is_valid
-    } : { watermark_is_valid: false }
+      watermark_is_valid: !!watermark_is_valid
+    }
   end
 
   def compute_output_attr(format)
     output_mime_type = Jim::Utils.auto_convert_mime_type(format)
-    format_setup = {}.merge(@format_setups[""] || {}, @format_setups[output_mime_type] || {})
-    output_extension = format.include?("/") ? Jim::Utils.preferred_extension_for_mime_type(output_mime_type) : format
+    format_setup = (@format_setups[""] || {}).merge(
+      *@format_setups.fetch_values { |key| Jim::Utils.auto_convert_mime_type(key) == output_mime_type }
+    )
+    output_extension = format.include?("/") \
+                         ? format_setup["extension"] || Jim::Utils.preferred_extension_for_mime_type(output_mime_type) \
+                         : format
     output_background = Jim::Utils.color(format_setup["background"])
     output_is_lossless = Jim::Utils.is_lossless_mime_type?(output_mime_type)
     output_quality = format_setup["quality"]

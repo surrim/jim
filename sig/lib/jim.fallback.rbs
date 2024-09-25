@@ -1,0 +1,20 @@
+class Jim
+  @fallback_format: String?
+  @fallback_width: Integer?
+
+  attr_reader fallback_format: String?
+  attr_reader fallback_width: Integer?
+
+  DEFAULT_FALLBACK_FORMAT: nil
+  DEFAULT_FALLBACK_WIDTH: nil
+
+  def fallback_format: (untyped fallback_format) -> Jim
+  def fallback_width: (untyped fallback_width) -> Jim
+  def fallback: (untyped fallback_format, untyped fallback_width) -> Jim
+
+  module LiquidFilters
+    def jim_fallback_format: (Jim jim, untyped fallback_format) -> Jim
+    def jim_fallback_width: (Jim jim, untyped fallback_width) -> Jim
+    def jim_fallback: (Jim jim, untyped fallback_format, untyped fallback_width) -> Jim
+  end
+end

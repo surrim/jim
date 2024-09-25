@@ -11,6 +11,6 @@ class Jim
   end
 
   module LiquidFilters
-    def jim_watermark(jim, nomarkdown = true) = jim.nomarkdown(nomarkdown)
+    def jim_nomarkdown(jim, nomarkdown = true) = jim.nomarkdown(nomarkdown)
   end
 end

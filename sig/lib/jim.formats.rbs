@@ -1,0 +1,21 @@
+class Jim
+  @formats: Array[String?]
+
+  attr_reader formats: Array[String?]
+
+  DEFAULT_FORMATS: []
+
+  def formats: (*untyped formats) -> Jim
+  def append_formats: (*untyped formats) -> Jim
+  def prepend_formats: (*untyped formats) -> Jim
+  def rm_formats: (*untyped formats) -> Jim
+  def rm_all_formats: () -> Jim
+
+  module LiquidFilters
+    def jim_formats: (Jim jim, *untyped formats) -> Jim
+    def jim_append_formats: (Jim jim, *untyped formats) -> Jim
+    def jim_prepend_formats: (Jim jim, *untyped formats) -> Jim
+    def jim_rm_formats: (Jim jim, *untyped formats) -> Jim
+    def jim_rm_all_formats: (Jim jim) -> Jim
+  end
+end

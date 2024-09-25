@@ -1,0 +1,25 @@
+module Jim::CacheManager
+  CHECKSUMS_JSON: String
+  IMAGE_METADATA_JSON_PATTERN: String
+  IMAGE_FILENAME_PATTERN: String
+  SVG_IMAGE_FILENAME_PATTERN: String
+  OPTIONAL_BACKGROUND_POSTFIX_PATTERN: String
+  OPTIONAL_WATERMARK_FOLDER_PATTERN: String
+
+  def self?.checksums_json: () -> Pathname
+  def self?.image_metadata_json_pattern: (String source_sha256) -> Pathname
+  def self?.image_filename: (
+			source_sha256: String,
+			resizing_width: Integer, resizing_height: Integer,
+			output_extension: String, output_is_lossless: bool, output_quality: Integer,
+			?watermark_sha256: String?, ?watermark_width: Integer?, ?watermark_height: Integer?,
+			?watermark_x: Integer?, ?watermark_y: Integer?, ?watermark_opacity: Float?, ?watermark_is_valid: bool,
+			?output_background: String?
+		) -> Pathname
+  def self?.svg_image_filename: (String source_sha256, String output_extension) -> Pathname
+  def self?.optional_background_postfix: (String? output_background) -> String?
+  def self?.optional_watermark_folder: (
+			watermark_sha256: String?, watermark_width: Integer?, watermark_height: Integer?,
+			watermark_x: Integer?, watermark_y: Integer?, watermark_opacity: Float?, watermark_is_valid: bool
+		) -> String?
+end

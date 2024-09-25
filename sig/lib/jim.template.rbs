@@ -1,0 +1,15 @@
+class Jim
+  @template: String
+
+  attr_reader template: String
+
+  DEFAULT_TEMPLATE: "jim-template.html"
+
+  def template: (untyped template) -> Jim
+  def reset_template: () -> Jim
+
+  module LiquidFilters
+    def jim_template: (Jim jim, untyped template) -> Jim
+    def jim_reset_template: (Jim jim) -> Jim
+  end
+end
