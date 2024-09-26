@@ -7,8 +7,6 @@ module Jim::Utils
   module_function
 
   LOSSLESS_MIME_TYPES = %w[image/bmp image/gif image/png image/svg+xml image/tiff image/vnd.microsoft.icon].freeze
-  SPRINTF2_SUBSTITUTION_REGEX = /%{ *(?<identifier>[a-zA-Z_]\w*) *(?<_0>\[ *(?<from>-?\d+)(?<_1> *(?<mode>,|..) *(?<to>-?\d+))? *\])? *}/
-  SPRINTF2_SUBSTITUTION_LIMIT = 16
 
   def deep_stringify_keys(hash)
     result = {}
@@ -92,7 +90,7 @@ module Jim::Utils
       background: output_background,
       quality: output_is_lossless ? nil : output_quality
     }
-    Jim::System.destination_path(sprintf2(filename_pattern, **user_substitutions, **substitutions))
+    Jim::System.destination_path(Jim::Sprintf2.deep_substitute(filename_pattern, **user_substitutions, **substitutions))
   end
 
   private_class_method
@@ -111,43 +109,5 @@ module Jim::Utils
       return basename
     end
     basename.chr == "_" ? basename[1..].to_s : basename
-  end
-
-  def sprintf2(format_string, **substitutions)
-    i = 0
-    cycle_counter = 0
-    while i < format_string.length
-      break unless format_string.match(SPRINTF2_SUBSTITUTION_REGEX, i) do |match|
-        match_begin, match_end = match.offset(0)
-        identifier = match[:identifier].to_sym
-        if !substitutions.key?(identifier)
-          Jim::System.warn("KeyError: %{#{identifier}} not found, skipping substitution")
-          format_string = format_string[0, match_begin].to_s + format_string[match_end..].to_s
-        elsif cycle_counter >= SPRINTF2_SUBSTITUTION_LIMIT
-          Jim::System.warn(
-            "SubstitutionError: %{#{identifier}} probably causes cyclic dependency, skipping substitution"
-          )
-          return format_string
-        else
-          substitution = substitutions[identifier].to_s
-          from = match[:from]
-          mode = match[:mode]
-          to = match[:to]
-          value = if from.nil?
-                    substitution
-                  else
-                    case mode
-                    when "," then substitution[from.to_i, to.to_i]
-                    when ".." then substitution[from.to_i..to.to_i]
-                    else substitution[from.to_i]
-                    end
-                  end
-          format_string = format_string[0, match_begin].to_s + value.to_s + format_string[match_end..].to_s
-        end
-        i = match_begin
-        cycle_counter += 1
-      end
-    end
-    format_string
   end
 end

@@ -1,0 +1,21 @@
+class Jim::Sprintf2
+  @computed_dependencies: Hash[String, Array[Symbol]]
+  @computed_topologies: Hash[Hash[Symbol, Array[Symbol]], Array[Symbol]]
+
+  include Singleton
+
+  SPRINTF2_SUBSTITUTION_REGEX: Regexp
+
+  def initialize: () -> void
+  def deep_substitute: (String format_string, **Hash[Symbol, untyped] substitutions) -> String
+  def substitute: (String format_string, **Hash[Symbol, untyped] substitutions) -> String
+  def self.deep_substitute: (String format_string, **Hash[Symbol, untyped] substitutions) -> String
+  def self.substitute: (String format_string, **Hash[Symbol, untyped] substitutions) -> String
+
+  private
+
+  def compute_topology: (Hash[Symbol, Array[Symbol]] graph) -> Array[Symbol]
+  def compute_dependencies: (String format) -> Array[Symbol]
+  def self.pop_root_dependency: (Hash[Symbol, Array[Symbol]] graph) -> Symbol
+  def self.eval2: (String value, Integer? from, String? mode, Integer? to) -> String
+end
