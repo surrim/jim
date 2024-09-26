@@ -1,8 +1,6 @@
 class Jim
   @formats: Array[String?]
 
-  attr_reader formats: Array[String?]
-
   DEFAULT_FORMATS: []
 
   def formats: (*untyped formats) -> Jim

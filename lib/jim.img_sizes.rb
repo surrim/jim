@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Jim
-  attr_reader :img_sizes, :default_img_size
-
   DEFAULT_IMG_SIZES = {}.freeze
   DEFAULT_DEFAULT_IMG_SIZE = nil
 

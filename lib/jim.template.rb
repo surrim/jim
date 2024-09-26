@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Jim
-  attr_reader :template
-
   DEFAULT_TEMPLATE = "jim-template.html"
 
   def template(template)

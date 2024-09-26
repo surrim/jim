@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Jim
-  attr_reader :widths
-
   DEFAULT_WIDTHS = [].freeze
 
   def widths(*widths)

@@ -1,8 +1,6 @@
 class Jim
   @widths: Array[Integer?]
 
-  attr_reader widths: Array[Integer?]
-
   DEFAULT_WIDTHS: []
 
   def widths: (*untyped widths) -> Jim

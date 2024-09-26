@@ -1,8 +1,6 @@
 class Jim
   @img_attrs: Hash[String, String]
 
-  attr_reader img_attrs: Hash[String, String]
-
   DEFAULT_IMG_ATTRS: {}
 
   def img_attrs: (*untyped img_attrs) -> Jim

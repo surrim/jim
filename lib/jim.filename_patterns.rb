@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Jim
-  attr_reader :filename_pattern, :svg_filename_pattern
-
   DEFAULT_FILENAME_PATTERN = "%{dirname}/%{basename}-%{width}.%{extension}"
   DEFAULT_SVG_FILENAME_PATTERN = "%{dirname}/%{basename}.svgz"
 

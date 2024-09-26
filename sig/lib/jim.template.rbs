@@ -1,8 +1,6 @@
 class Jim
   @template: String
 
-  attr_reader template: String
-
   DEFAULT_TEMPLATE: "jim-template.html"
 
   def template: (untyped template) -> Jim

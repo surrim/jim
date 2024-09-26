@@ -2,9 +2,6 @@ class Jim
   @img_sizes: Hash[String, String]
 	@default_img_size: String?
 
-  attr_reader img_sizes: Hash[String, String]
-  attr_reader default_img_size: String?
-
   DEFAULT_IMG_SIZES: {}
   DEFAULT_DEFAULT_IMG_SIZE: nil
 

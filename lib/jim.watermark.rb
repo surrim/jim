@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Jim
-  attr_reader :watermark_src, :watermark_size, :watermark_x, :watermark_y, :watermark_opacity
-
   DEFAULT_WATERMARK_SRC = nil
   DEFAULT_WATERMARK_SIZE = 0.01
   DEFAULT_WATERMARK_X = 0.5

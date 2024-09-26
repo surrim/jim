@@ -1,8 +1,6 @@
 class Jim
   @substitutions: Hash[Symbol, String]
 
-  attr_reader substitutions: Hash[Symbol, String]
-
   DEFAULT_SUBSTITUTIONS: { jim_version: String }
 
   def substitutions: (*untyped substitutions) -> Jim

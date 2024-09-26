@@ -3,8 +3,6 @@
 require_relative "jim.version"
 
 class Jim
-  attr_reader :substitutions
-
   DEFAULT_SUBSTITUTIONS = { jim_version: Jim::VERSION }.freeze
 
   def substitutions(*substitutions)

@@ -1,8 +1,6 @@
 class Jim
   @nomarkdown: bool
 
-  attr_reader nomarkdown: bool
-
   DEFAULT_NOMARKDOWN: bool
 
   def nomarkdown: (?untyped nomarkdown) -> Jim

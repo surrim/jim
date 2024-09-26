@@ -2,9 +2,6 @@ class Jim
   @src: String
   @alt: String?
 
-  attr_reader src: String
-  attr_reader alt: String?
-
   def initialize: (untyped src, ?untyped? alt, **untyped presets) -> Jim
 
   module LiquidFilters

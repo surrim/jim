@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Jim
-  attr_reader :src, :alt
-
   def initialize(src, alt = nil, **presets)
     @src = src.to_s
     @alt = alt&.to_s

@@ -1,8 +1,6 @@
 class Jim
   @format_setups: Hash[String, Hash[String, Integer? | String?]]
 
-  attr_reader format_setups: Hash[String, Hash[String, Integer? | String?]]
-
   DEFAULT_FORMAT_SETUPS: Hash[:Symbol, Hash[:Symbol, Integer | String]]
 
   def format_setups: (*untyped format_setups) -> Jim

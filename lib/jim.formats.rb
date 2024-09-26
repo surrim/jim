@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Jim
-  attr_reader :formats
-
   DEFAULT_FORMATS = [].freeze
 
   def formats(*formats)

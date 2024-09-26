@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Jim
-  attr_reader :format_setups
-
   DEFAULT_FORMAT_SETUPS = {
     "": { quality: 75 },
     "image/bmp": { background: "white" },

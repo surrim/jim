@@ -2,9 +2,6 @@ class Jim
   @filename_pattern: String
   @svg_filename_pattern: String?
 
-  attr_reader filename_pattern: String
-  attr_reader svg_filename_pattern: String?
-
   DEFAULT_FILENAME_PATTERN: String
   DEFAULT_SVG_FILENAME_PATTERN: String
 

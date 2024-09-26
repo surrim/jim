@@ -1,8 +1,6 @@
 class Jim
   @styles: Hash[String, String]
 
-  attr_reader styles: Hash[String, String]
-
   DEFAULT_STYLES: {}
 
   def styles: (*untyped styles) -> Jim

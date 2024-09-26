@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Jim
-  attr_reader :img_attrs
-
   DEFAULT_IMG_ATTRS = {}.freeze
 
   def img_attrs(*img_attrs)

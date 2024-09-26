@@ -2,9 +2,6 @@ class Jim
   @fallback_format: String?
   @fallback_width: Integer?
 
-  attr_reader fallback_format: String?
-  attr_reader fallback_width: Integer?
-
   DEFAULT_FALLBACK_FORMAT: nil
   DEFAULT_FALLBACK_WIDTH: nil
 

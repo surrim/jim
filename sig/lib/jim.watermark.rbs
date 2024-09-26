@@ -5,12 +5,6 @@ class Jim
   @watermark_y: Float
   @watermark_opacity: Float
 
-  attr_reader watermark_src: String?
-  attr_reader watermark_size: Float
-  attr_reader watermark_x: Float
-  attr_reader watermark_y: Float
-  attr_reader watermark_opacity: Float
-
   DEFAULT_WATERMARK_SRC: nil
   DEFAULT_WATERMARK_SIZE: Float
   DEFAULT_WATERMARK_X: Float

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Jim
-  attr_reader :nomarkdown
-
   DEFAULT_NOMARKDOWN = false
 
   def nomarkdown(nomarkdown = true)

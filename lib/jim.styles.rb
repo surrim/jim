@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Jim
-  attr_reader :styles
-
   DEFAULT_STYLES = {}.freeze
 
   def styles(*styles)
