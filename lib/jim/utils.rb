@@ -8,12 +8,13 @@ module Jim::Utils
 
   LOSSLESS_MIME_TYPES = %w[image/bmp image/gif image/png image/svg+xml image/tiff image/vnd.microsoft.icon].freeze
 
-  def deep_stringify_keys(hash)
-    result = {}
-    hash.each do |key, value|
-      result[key.to_s] = value.is_a?(Hash) ? deep_stringify_keys(value) : value
+  def deep_stringify_keys(value)
+    case value
+    when Hash then value.map { |k, v| [k.to_s, deep_stringify_keys(v)] }.to_h
+    when Array then value.map { |v| deep_stringify_keys(v) }
+    when Symbol then value.to_s
+    else value
     end
-    result
   end
 
   def write_file(filename, content = "")

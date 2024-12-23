@@ -129,7 +129,7 @@ class Jim
     if render
       output = "{::nomarkdown}\n#{output}\n{:/nomarkdown}\n" if @nomarkdown
     end
-    output
+    Jim::Utils.deep_stringify_keys(output)
   end
 
   private
