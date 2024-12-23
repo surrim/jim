@@ -65,14 +65,14 @@ class Jim::Sprintf2
     return @computed_dependencies[format] if @computed_dependencies.key?(format)
 
     @computed_dependencies[format] = format.scan(SPRINTF2_SUBSTITUTION_REGEX).map do |matches|
-      matches.first.to_s.to_sym
+      matches.first
     end.uniq
   end
 
   private_class_method
 
   def self.pop_root_dependency(graph)
-    identifier = graph.find(&:empty?)&.first.to_s.to_sym
+    identifier = graph.find(&:empty?)&.first
     graph.delete(identifier)
     identifier
   end
