@@ -30,16 +30,9 @@ class Jim
         Jim::System.add_external_file(cache_filename, destination_filename)
       end
     else
-      attr.update(compute_resizing_attr(
-                    @fallback_width || attr[:source_width],
-                    **attr.slice(:source_width, :source_height)
-                  ))
-      attr.update(compute_watermark_attr(
-                    **attr.slice(:source_width, :source_height, :resizing_width, :resizing_height)
-                  ))
-      attr.update(compute_output_attr(
-                    @fallback_format || attr[:source_extension]
-                  ))
+      attr.update(compute_resizing_attr([@fallback_width, attr[:source_width]].compact.min, **attr.slice(:source_width, :source_height)))
+      attr.update(compute_watermark_attr(**attr.slice(:source_width, :source_height, :resizing_width, :resizing_height)))
+      attr.update(compute_output_attr(@fallback_format || attr[:source_extension]))
 
       # no svg special cases
       resized_image = ResizedImage.new(**attr.slice(
