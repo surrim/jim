@@ -1,0 +1,70 @@
+{%- capture src %} src="{{ jim_context.src | relative_url }}"{% endcapture %}
+
+{%- if jim_context.alt %}
+{%-   capture alt %} alt="{{ jim_context.alt | escape }}"{% endcapture %}
+{%- endif %}
+
+{%- if jim_context.img_sizes != empty %}
+{%-   assign sizes_array = "" | split: "" %}
+{%-   for size in jim_context.img_sizes %}
+{%-     if size[0] != "" %}
+{%-       capture size_line %}({{ size[0] }}) {{ size[1] }}{% endcapture %}
+{%-     else %}
+{%-       capture size_line %}{{ size[1] }}{% endcapture %}
+{%-     endif %}
+{%-     assign sizes_array = sizes_array | push: size_line %}
+{%-   endfor %}
+{%-   capture sizes %} sizes="{{ sizes_array | join: ", " }}"{% endcapture %}
+{%- endif %}
+
+{%- if jim_context.styles != empty %}
+{%-   assign styles_array = "" | split: "" %}
+{%-   for style in jim_context.styles %}
+{%-     capture style_line %}{{ style[0] }}: {{ style[1] }}{% endcapture %}
+{%-     assign styles_array = styles_array | push: style_line %}
+{%-   endfor %}
+{%-   capture style %} style="{{ styles_array | join: "; " }}"{% endcapture %}
+{%- endif %}
+
+{%- for img_attr in jim_context.img_attrs %}
+{%-   capture img_attrs %}{{ img_attrs }} {{ img_attr[0] | escape }}="{{ img_attr[1] | escape }}"{% endcapture %}
+{%- endfor %}
+
+{%- assign grouped_images = jim_context.images | group_by: "mime_type" %}
+{%- if grouped_images.size == 0 %}
+{%-   comment %}No formats and widths specified{% endcomment %}
+{%-   capture type %} type="{{ jim_context.mime_type }}"{% endcapture %}
+{{- nil -}}
+<img{{ type }}{{ src }}{{ alt }}{{ style }}{{ img_attrs }}>
+{%- elsif grouped_images.size == 1 %}
+{%-   comment %}Only one format specified{% endcomment %}
+{%-   assign image_group = grouped_images[0] %}
+{%-   assign sources = "" | split: "" %}
+{%-   assign mime_type_images = image_group.items %}
+{%-   for mime_type_image in mime_type_images %}
+{%-     capture item %}{{ mime_type_image.src | relative_url }} {{ mime_type_image.width }}w{% endcapture %}
+{%-     assign sources = sources | push: item %}
+{%-   endfor %}
+{%-   capture type %} type="{{ image_group.name }}"{% endcapture %}
+{%-   capture srcset %} srcset="{{ sources | join: ", " }}"{% endcapture %}
+{{- nil -}}
+<img{{ type }}{{ srcset }}{{ sizes }}{{ src }}{{ alt }}{{ style }}{{ img_attrs }}>
+{%- else %}
+{%-   comment %}Multiple formats specified{% endcomment %}
+{{- nil -}}
+<picture>
+{%-   for image_group in grouped_images %}
+{%-     assign sources = "" | split: "" %}
+{%-     assign mime_type_images = image_group.items %}
+{%-     for mime_type_image in mime_type_images %}
+{%-       capture item %}{{ mime_type_image.src | relative_url }} {{ mime_type_image.width }}w{% endcapture %}
+{%-       assign sources = sources | push: item %}
+{%-     endfor %}
+{%-     capture type %} type="{{ image_group.name }}"{% endcapture %}
+{%-     capture srcset %} srcset="{{ sources | join: ", " }}"{% endcapture %}
+  <source{{ type }}{{ srcset }}{{ sizes }}>
+{%-   endfor %}
+  <img{{ src }}{{ alt }}{{ style }}{{ img_attrs }}>
+</picture>
+{%- endif %}
+{{- nil -}}

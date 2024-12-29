@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class Jim
-  DEFAULT_TEMPLATE = "jim-template.html"
+  DEFAULT_TEMPLATE = nil
 
   def template(template)
-    @template = template.nil? ? DEFAULT_TEMPLATE : template.to_s
+    @template = template&.to_s
     self
   end
 

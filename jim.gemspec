@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.author        = "surrim"
   spec.email         = "root@surrim.org"
   spec.summary       = "Image batch transformations and template-based output for Jekyll and Bridgetown"
-  spec.description   =  %q(
+  spec.description   = %q(
 		Superior image processing and responsive HTML5 outputs for
 		Jekyll and Bridgetown, 100% flexible.
 		Using a very efficient and persistent cache, user-defined
@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://surrim.org/"
   spec.license       = "GPLv3"
 
-  spec.files         = `/usr/bin/git ls-files -z`.split("\x0").select { |f| f.match(/^(lib|LICENSE|README|)/) }
+  spec.files         = `/usr/bin/git ls-files -z`.split("\x0").select { |f| f.match(/^(components|lib|LICENSE|README|)/) }
   spec.require_paths = ["lib"]
 
   spec.required_ruby_version = "~> 3.3"

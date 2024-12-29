@@ -4,6 +4,8 @@ if Module.const_defined?(:Bridgetown)
   module Jim::System
     module_function
 
+    DEFAULT_TEMPLATE = "jim_template"
+
     def add_external_file(source_filename, destination_filename)
       relative_destination_filename = destination_filename.relative_path_from(@site.dest)
       static_file = Bridgetown::StaticFile.new(
@@ -18,7 +20,10 @@ if Module.const_defined?(:Bridgetown)
       @site.static_files.push(static_file)
     end
 
-    Bridgetown.initializer :jim do |_config|
+    def read_template_file(template_src) = Liquid::Template.file_system.read_template_file(template_src || DEFAULT_TEMPLATE)
+
+    Bridgetown.initializer :jim do |config|
+      config.source_manifest(origin: Jim, components: File.expand_path("../../components", __dir__))
     end
     Bridgetown::Hooks.register(:site, :after_init) { |site| Jim::System.init(site, Bridgetown.logger) }
   end

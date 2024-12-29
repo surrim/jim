@@ -126,10 +126,12 @@ class Jim
       img_attrs: @img_attrs,
       styles: @styles
     }
+    output = Jim::Utils.deep_stringify_keys(output)
     if render
+      output = Jim::System.render(@template, output)
       output = "{::nomarkdown}\n#{output}\n{:/nomarkdown}\n" if @nomarkdown
     end
-    Jim::Utils.deep_stringify_keys(output)
+    output
   end
 
   private

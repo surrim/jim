@@ -1,7 +1,7 @@
 class Jim
-  @template: String
+  @template: String?
 
-  DEFAULT_TEMPLATE: "jim-template.html"
+  DEFAULT_TEMPLATE: nil
 
   def template: (untyped template) -> Jim
   def reset_template: () -> Jim

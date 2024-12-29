@@ -18,6 +18,16 @@ module Jim::System
   def local_cache_path(*src) = Pathname.new(@site.in_cache_dir("jimcache", *src))
   def cache_path(*src) = config[:jim_cache] ? path(config[:jim_cache], *src) : local_cache_path(*src)
 
+  def render(template_src, jim_context)
+    template = read_template_file(template_src)
+    Liquid::Template
+      .parse(template, error_mode: :strict)
+      .render!(@site.site_payload.merge({ "jim_context" => jim_context }), {
+                 registers: { site: @site },
+                 strict_filters: true
+               })
+  end
+
   def init(site, logger)
     @site = site
     @logger = logger
