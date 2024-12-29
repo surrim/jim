@@ -71,11 +71,7 @@ class Jim::Sprintf2
 
   private_class_method
 
-  def self.pop_root_dependency(graph)
-    identifier = graph.find(&:empty?)&.first
-    graph.delete(identifier)
-    identifier
-  end
+  def self.pop_root_dependency(graph) = graph.delete(graph.find { |_, value| value.empty? }&.first)
 
   def self.eval2(value, from, mode, to)
     return value if from.nil?
