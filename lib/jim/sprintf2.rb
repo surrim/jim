@@ -64,9 +64,7 @@ class Jim::Sprintf2
   def compute_dependencies(format)
     return @computed_dependencies[format] if @computed_dependencies.key?(format)
 
-    @computed_dependencies[format] = format.scan(SPRINTF2_SUBSTITUTION_REGEX).map do |matches|
-      matches.first
-    end.uniq
+    @computed_dependencies[format] = format.scan(SPRINTF2_SUBSTITUTION_REGEX).map(&:first).uniq
   end
 
   private_class_method
