@@ -8,13 +8,11 @@ Gem::Specification.new do |spec|
   spec.author        = 'surrim'
   spec.email         = 'root@surrim.org'
   spec.summary       = 'Image batch transformations and template-based output for Jekyll and Bridgetown'
-  spec.description   = %q(
-		Superior image processing and responsive HTML5 outputs for
-		Jekyll and Bridgetown, 100% flexible.
-		Using a very efficient and persistent cache, user-defined
-		filenames, templates, watermarks, additional CSS/HTML
-		attributes, SVG forwarding/inlining, raw data and more.
-	)
+  spec.description   = 'Superior image processing and responsive HTML5 outputs for' \
+                       'Jekyll and Bridgetown, 100% flexible.' \
+                       'Using a very efficient and persistent cache, user-defined' \
+                       'filenames, templates, watermarks, additional CSS/HTML' \
+                       'attributes, SVG forwarding/inlining, raw data and more.'
   spec.homepage      = 'https://surrim.org/'
   spec.license       = 'GPLv3'
 

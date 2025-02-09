@@ -3,7 +3,7 @@
 module Jim::System
   module_function
 
-  def info(tag = 'Jim', text) = @logger.info("#{tag}:", text)
+  def info(tag = 'Jim', text) = @logger.info("#{tag}:", text) # rubocop:disable Style/OptionalArguments
   def warn(text) = @logger.warn('Jim:', text)
 
   def error(text)
