@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Jim
-  def render(render = true)
+  def render(render = true) # rubocop:disable Style/OptionalBooleanParameter
     attr = compute_source_attr
 
     destination_filename = nil
@@ -208,6 +208,6 @@ class Jim
   end
 
   module LiquidFilters
-    def jim_render(jim, render = true) = jim.render(render)
+    def jim_render(jim, render = true) = jim.render(render) # rubocop:disable Style/OptionalBooleanParameter
   end
 end

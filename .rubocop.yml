@@ -4,8 +4,6 @@ Metrics/ParameterLists:
   Enabled: false
 Style/KeywordParametersOrder:
   Enabled: false
-Style/OptionalBooleanParameter:
-  Enabled: false
 
 # Fix later
 Style/ClassAndModuleChildren:
