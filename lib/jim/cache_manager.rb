@@ -4,13 +4,13 @@ module Jim::CacheManager
   module_function
 
   CHECKSUMS_JSON = "checksums.json"
-  IMAGE_METADATA_JSON_PATTERN = "metadata/%{sha256}.json"
+  IMAGE_METADATA_JSON_PATTERN = "metadata/%<sha256>s.json"
   IMAGE_FILENAME_PATTERN =
-    "%{extension}%{quality}-%{width}x%{height}%{optional_background_postfix}" \
-    "/%{optional_watermark_folder}/%{sha256}.%{extension}"
-  SVG_IMAGE_FILENAME_PATTERN = "svg/%{sha256}.%{extension}"
-  OPTIONAL_BACKGROUND_POSTFIX_PATTERN = "-b%{background}"
-  OPTIONAL_WATERMARK_FOLDER_PATTERN = "%{sha256}-%{width}x%{height}-%{x}-%{y}-%{opacity}"
+    "%<extension>s%<quality>s-%<width>sx%<height>s%<optional_background_postfix>s" \
+    "/%<optional_watermark_folder>s/%<sha256>s.%<extension>s"
+  SVG_IMAGE_FILENAME_PATTERN = "svg/%<sha256>s.%<extension>s"
+  OPTIONAL_BACKGROUND_POSTFIX_PATTERN = "-b%<background>s"
+  OPTIONAL_WATERMARK_FOLDER_PATTERN = "%<sha256>s-%<width>sx%<height>s-%<x>s-%<y>s-%<opacity>s"
 
   def checksums_json = Jim::System.local_cache_path(CHECKSUMS_JSON)
 

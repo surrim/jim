@@ -4,8 +4,6 @@ Metrics/ParameterLists:
   Enabled: false
 Naming/PredicateName:
   Enabled: false
-Style/FormatStringToken:
-  Enabled: false
 Style/KeywordParametersOrder:
   Enabled: false
 Style/OptionalBooleanParameter:
