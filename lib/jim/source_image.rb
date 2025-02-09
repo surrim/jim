@@ -19,5 +19,5 @@ class Jim::SourceImage
   def height = metadata[:height].to_i
   def mime_type = metadata[:mime_type]&.to_s
   def avg_color = metadata[:avg_color].to_s
-  def is_svg? = mime_type == SVG_MIME_TYPE
+  def svg? = mime_type == SVG_MIME_TYPE
 end

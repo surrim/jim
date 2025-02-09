@@ -12,7 +12,7 @@ module Jim::Utils
   def self?.load_image: (Pathname filename) -> Magick::Image
   def self?.color: (String? color) -> String
   def self?.mime_type: (Pathname | String filename) -> String?
-  def self?.is_lossless_mime_type?: (String? mime_type) -> bool
+  def self?.lossless_mime_type?: (String? mime_type) -> bool
   def self?.preferred_extension_for_mime_type: (String? mime_type) -> String?
   def self?.auto_convert_mime_type: (String? format) -> String?
   def self?.replace_filename_pattern: (

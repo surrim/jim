@@ -150,7 +150,7 @@ class Jim
       source_height: source_image.height,
       source_mime_type: source_image.mime_type,
       source_avg_color: source_image.avg_color,
-      source_is_svg: source_image.is_svg?
+      source_is_svg: source_image.svg?
     }
   end
 
@@ -196,7 +196,7 @@ class Jim
                          format
                        end
     output_background = Jim::Utils.color(format_setup['background'])
-    output_is_lossless = Jim::Utils.is_lossless_mime_type?(output_mime_type)
+    output_is_lossless = Jim::Utils.lossless_mime_type?(output_mime_type)
     output_quality = format_setup['quality']
     {
       output_mime_type:,

@@ -13,7 +13,7 @@ class Jim::SvgSourceImage
     @sha256 = sha256
   end
 
-  def is_compressed? = @is_compressed ||= @filename.to_s.downcase.end_with?('.svgz')
+  def compressed? = @compressed ||= @filename.to_s.downcase.end_with?('.svgz')
   def convert(compress) = compress ? convert_to_svgz : convert_to_svg
   def convert_to_svg = convert_to('svg', svg_content)
   def convert_to_svgz = convert_to('svgz', svgz_content)
@@ -22,8 +22,8 @@ class Jim::SvgSourceImage
   private
 
   def content = @filename.read
-  def svg_content = is_compressed? ? ungzip(content) : content
-  def svgz_content = is_compressed? ? content : gzip(content)
+  def svg_content = compressed? ? ungzip(content) : content
+  def svgz_content = compressed? ? content : gzip(content)
 
   def inline_svg_content = svg_content
     .sub(XML_DECLARATION_REGEX, '')

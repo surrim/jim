@@ -1,14 +1,14 @@
 class Jim::SvgSourceImage
   @filename: Pathname
   @sha256: String
-  @is_compressed: bool?
+  @compressed: bool?
 
   XML_DECLARATION_REGEX: Regexp
   XML_DOCTYPE_REGEX: Regexp
   XML_COMMENT_REGEX: Regexp
 
   def initialize: (Pathname filename, String sha256) -> void
-  def is_compressed?: () -> bool
+  def compressed?: () -> bool
   def convert: (bool compress) -> Pathname
   def convert_to_svg: () -> Pathname
   def convert_to_svgz: () -> Pathname

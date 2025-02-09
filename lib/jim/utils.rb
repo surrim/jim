@@ -61,7 +61,7 @@ module Jim::Utils
     types.first.content_type
   end
 
-  def is_lossless_mime_type?(mime_type) = LOSSLESS_MIME_TYPES.include?(mime_type)
+  def lossless_mime_type?(mime_type) = LOSSLESS_MIME_TYPES.include?(mime_type)
 
   def preferred_extension_for_mime_type(mime_type) = MIME::Types[mime_type]&.first&.preferred_extension
 
