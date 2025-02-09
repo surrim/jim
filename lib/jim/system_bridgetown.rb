@@ -20,7 +20,9 @@ if Module.const_defined?(:Bridgetown)
       @site.static_files.push(static_file)
     end
 
-    def read_template_file(template_src) = Liquid::Template.file_system.read_template_file(template_src || DEFAULT_TEMPLATE)
+    def read_template_file(template_src)
+      Liquid::Template.file_system.read_template_file(template_src || DEFAULT_TEMPLATE)
+    end
 
     Bridgetown.initializer :jim do |config|
       config.source_manifest(origin: Jim, components: File.expand_path('../../components', __dir__))

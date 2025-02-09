@@ -23,6 +23,6 @@ class Jim
   module LiquidFilters
     def jim_filename_pattern(jim, filename_pattern) = jim.filename_pattern(filename_pattern)
     def jim_svg_filename_pattern(jim, svg_filename_pattern) = jim.svg_filename_pattern(svg_filename_pattern)
-    def jim_filename_patterns(jim, filename_pattern, svg_filename_pattern) = jim.filename_patterns(filename_pattern, svg_filename_pattern)
+    def jim_filename_patterns(jim, filename_pattern, svg_filename_pattern) = jim.filename_patterns(filename_pattern, svg_filename_pattern) # rubocop:disable Layout/LineLength
   end
 end

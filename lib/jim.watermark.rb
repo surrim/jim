@@ -49,7 +49,7 @@ class Jim
   def rm_watermark = watermark_src(nil)
 
   module LiquidFilters
-    def jim_watermark(jim, watermark_src, watermark_size = nil, watermark_x = nil, watermark_y = nil, watermark_opacity = nil) = jim.watermark(watermark_src, watermark_size, watermark_x, watermark_y, watermark_opacity)
+    def jim_watermark(jim, watermark_src, watermark_size = nil, watermark_x = nil, watermark_y = nil, watermark_opacity = nil) = jim.watermark(watermark_src, watermark_size, watermark_x, watermark_y, watermark_opacity) # rubocop:disable Layout/LineLength
     def jim_watermark_src(jim, watermark_src) = jim.watermark_src(watermark_src)
     def jim_watermark_size(jim, watermark_size) = jim.watermark_size(watermark_size)
     def jim_watermark_x(jim, watermark_x) = jim.watermark_x(watermark_x)

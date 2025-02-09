@@ -5,7 +5,7 @@ require 'singleton'
 class Jim::Sprintf2
   include Singleton
 
-  SPRINTF2_SUBSTITUTION_REGEX = /% *{(?<identifier>[_a-zA-Z]\w*)(\[ *(?<from>-?\d+) *((?<mode>\.\.|,) *(?<to>-?\d+)?)? *\])?}/
+  SPRINTF2_SUBSTITUTION_REGEX = /% *{(?<identifier>[_a-zA-Z]\w*)(\[ *(?<from>-?\d+) *((?<mode>\.\.|,) *(?<to>-?\d+)?)? *\])?}/ # rubocop:disable Layout/LineLength
 
   def initialize
     @computed_dependencies = {}
