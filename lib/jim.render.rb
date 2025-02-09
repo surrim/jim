@@ -8,7 +8,7 @@ class Jim
     generated_images = []
     if attr[:source_is_svg] && @svg_filename_pattern
       svg_source_image = SvgSourceImage.new(attr[:source_filename], attr[:source_sha256])
-      if @svg_filename_pattern == "" # inline SVG/SVGZ
+      if @svg_filename_pattern == '' # inline SVG/SVGZ
         return svg_source_image.convert_to_inline_svg.read if render
       else
         # copy SVG/SVGZ -> SVG/SVGZ
@@ -25,7 +25,7 @@ class Jim
             :output_extension, :output_background, :output_is_lossless, :output_quality
           )
         )
-        compress = destination_filename.extname.downcase == ".svgz"
+        compress = destination_filename.extname.downcase == '.svgz'
         cache_filename = svg_source_image.convert(compress)
         Jim::System.add_external_file(cache_filename, destination_filename)
       end
@@ -187,17 +187,17 @@ class Jim
 
   def compute_output_attr(format)
     output_mime_type = Jim::Utils.auto_convert_mime_type(format)
-    format_setup = (@format_setups[""] || {}).merge(
+    format_setup = (@format_setups[''] || {}).merge(
       *@format_setups.fetch_values { |key| Jim::Utils.auto_convert_mime_type(key) == output_mime_type }
     )
-    output_extension = if format.include?("/")
-                         format_setup["extension"] || Jim::Utils.preferred_extension_for_mime_type(output_mime_type)
+    output_extension = if format.include?('/')
+                         format_setup['extension'] || Jim::Utils.preferred_extension_for_mime_type(output_mime_type)
                        else
                          format
                        end
-    output_background = Jim::Utils.color(format_setup["background"])
+    output_background = Jim::Utils.color(format_setup['background'])
     output_is_lossless = Jim::Utils.is_lossless_mime_type?(output_mime_type)
-    output_quality = format_setup["quality"]
+    output_quality = format_setup['quality']
     {
       output_mime_type:,
       output_extension:,

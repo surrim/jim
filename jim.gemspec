@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require_relative "lib/jim.version"
+require_relative 'lib/jim.version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "jim"
+  spec.name          = 'jim'
   spec.version       = Jim::VERSION
-  spec.author        = "surrim"
-  spec.email         = "root@surrim.org"
-  spec.summary       = "Image batch transformations and template-based output for Jekyll and Bridgetown"
+  spec.author        = 'surrim'
+  spec.email         = 'root@surrim.org'
+  spec.summary       = 'Image batch transformations and template-based output for Jekyll and Bridgetown'
   spec.description   = %q(
 		Superior image processing and responsive HTML5 outputs for
 		Jekyll and Bridgetown, 100% flexible.
@@ -15,16 +15,16 @@ Gem::Specification.new do |spec|
 		filenames, templates, watermarks, additional CSS/HTML
 		attributes, SVG forwarding/inlining, raw data and more.
 	)
-  spec.homepage      = "https://surrim.org/"
-  spec.license       = "GPLv3"
+  spec.homepage      = 'https://surrim.org/'
+  spec.license       = 'GPLv3'
 
   spec.files         = `/usr/bin/git ls-files -z`.split("\x0").select { |f| f.match(/^(components|lib|LICENSE|README|)/) }
-  spec.require_paths = ["lib"]
+  spec.require_paths = ['lib']
 
-  spec.required_ruby_version = "~> 3.3"
-  spec.add_runtime_dependency "mime-types", "~> 3.4"
-  spec.add_runtime_dependency "rmagick", "~> 5.2"
-  spec.add_runtime_dependency "zlib", "~> 3.1"
-  spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "rubocop", "~> 1.66"
+  spec.required_ruby_version = '~> 3.3'
+  spec.add_runtime_dependency 'mime-types', '~> 3.4'
+  spec.add_runtime_dependency 'rmagick', '~> 5.2'
+  spec.add_runtime_dependency 'zlib', '~> 3.1'
+  spec.add_development_dependency 'rspec', '~> 3.0'
+  spec.add_development_dependency 'rubocop', '~> 1.66'
 end

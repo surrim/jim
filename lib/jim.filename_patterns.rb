@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class Jim
-  DEFAULT_FILENAME_PATTERN = "%<dirname>s/%<basename>s-%<width>s.%<extension>s"
-  DEFAULT_SVG_FILENAME_PATTERN = "%<dirname>s/%<basename>s.svgz"
+  DEFAULT_FILENAME_PATTERN = '%<dirname>s/%<basename>s-%<width>s.%<extension>s'
+  DEFAULT_SVG_FILENAME_PATTERN = '%<dirname>s/%<basename>s.svgz'
 
   def filename_pattern(filename_pattern)
     @filename_pattern = filename_pattern.to_s \

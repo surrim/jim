@@ -6,7 +6,7 @@ class Jim
     @alt = alt&.to_s
 
     self.class.constants
-        .filter { |constant| constant.start_with?("DEFAULT_") }
+        .filter { |constant| constant.start_with?('DEFAULT_') }
         .each do |constant|
       method_name = constant[:DEFAULT_.length..].downcase
       default_value = self.class.const_get(constant)

@@ -13,7 +13,7 @@ class Jim
   end
 
   def add_img_size(media_condition, img_size)
-    if media_condition.to_s == ""
+    if media_condition.to_s == ''
       @default_img_size = img_size&.to_s
     elsif img_size.nil?
       @img_sizes.delete(media_condition.to_s)

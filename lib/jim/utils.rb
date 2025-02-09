@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require "mime-types"
-require "rmagick"
+require 'mime-types'
+require 'rmagick'
 
 module Jim::Utils
   module_function
@@ -17,7 +17,7 @@ module Jim::Utils
     end
   end
 
-  def write_file(filename, content = "")
+  def write_file(filename, content = '')
     prepare_folder(filename)
     tmp_filename = tmp_filename(filename)
     block_given? ? yield(tmp_filename) : tmp_filename.write(content)
@@ -25,7 +25,7 @@ module Jim::Utils
     filename
   end
 
-  def write_file_if_not_exist(filename, content = "", &block)
+  def write_file_if_not_exist(filename, content = '', &block)
     if filename.exist?
       FileUtils.touch(filename)
     else
@@ -67,7 +67,7 @@ module Jim::Utils
 
   def auto_convert_mime_type(format)
     return nil if format.nil?
-    return format if format.include?("/")
+    return format if format.include?('/')
 
     mime_type(".#{format}")
   end
@@ -100,7 +100,7 @@ module Jim::Utils
 
   def prepare_folder(filename) = FileUtils.mkdir_p(filename.dirname)
 
-  def clean_dirname(dirname) = Pathname.new(".").join(*Pathname.new(dirname).each_filename.map do |basename|
+  def clean_dirname(dirname) = Pathname.new('.').join(*Pathname.new(dirname).each_filename.map do |basename|
     clean_basename(basename)
   end).to_s
 
@@ -109,6 +109,6 @@ module Jim::Utils
       Jim::System.warn("SubstitutionError: Preserving leading underscore from \"#{basename}\"")
       return basename
     end
-    basename.chr == "_" ? basename[1..].to_s : basename
+    basename.chr == '_' ? basename[1..].to_s : basename
   end
 end

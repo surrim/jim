@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "jim.version"
+require_relative 'jim.version'
 
 class Jim
   DEFAULT_SUBSTITUTIONS = { jim_version: Jim::VERSION }.freeze

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "singleton"
+require 'singleton'
 
 class Jim::Sprintf2
   include Singleton
@@ -56,7 +56,7 @@ class Jim::Sprintf2
       end
       sorted_graph.push(root_dependency)
     end
-    Jim::System.warn("SubstitutionError: Ignoring cyclic dependency substitutions") unless graph.empty?
+    Jim::System.warn('SubstitutionError: Ignoring cyclic dependency substitutions') unless graph.empty?
 
     @computed_topologies[original_graph] = sorted_graph
   end
@@ -74,7 +74,7 @@ class Jim::Sprintf2
   def self.eval2(value, from, mode, to)
     return value if from.nil?
     return value[from] if mode.nil?
-    return (to.nil? ? value[from,] : value[from, to]).to_s if mode == ","
+    return (to.nil? ? value[from,] : value[from, to]).to_s if mode == ','
 
     (to.nil? ? value[from..] : value[from..to]).to_s
   end

@@ -4,7 +4,7 @@ if Module.const_defined?(:Jekyll)
   module Jim::System
     module_function
 
-    DEFAULT_TEMPLATE = "jim_template.html"
+    DEFAULT_TEMPLATE = 'jim_template.html'
 
     def add_external_file(source_filename, destination_filename)
       @site_destination_dir ||= destination_path

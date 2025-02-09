@@ -51,7 +51,7 @@ class Jim::ResizedImage
     Jim::Utils.write_file_if_not_exist(cache_filename) do |filename|
       source_src = @source_filename.relative_path_from(Jim::System.source_path)
       format = "#{output_extension}#{output_quality ? "/##{output_quality}" : nil}"
-      Jim::System.info("Converting", "#{source_src} (#{format}, #{@resizing_width}x#{@resizing_height})")
+      Jim::System.info('Converting', "#{source_src} (#{format}, #{@resizing_width}x#{@resizing_height})")
       output_image = image
       if output_background
         image_list = Magick::ImageList.new
@@ -76,13 +76,13 @@ class Jim::ResizedImage
       png_cache_filename = Jim::CacheManager.image_filename(
         source_sha256:,
         resizing_width:, resizing_height:,
-        output_extension: "png", output_is_lossless: true, output_quality: nil
+        output_extension: 'png', output_is_lossless: true, output_quality: nil
       )
       Jim::Utils.write_file_if_not_exist(png_cache_filename) do |filename|
         system(
-          "inkscape", source_filename.to_s,
-          "-w", resizing_width.to_s, "-h", resizing_height.to_s,
-          "-o", "-", "--export-type=png", "--export-png-color-mode=RGBA_16",
+          'inkscape', source_filename.to_s,
+          '-w', resizing_width.to_s, '-h', resizing_height.to_s,
+          '-o', '-', '--export-type=png', '--export-png-color-mode=RGBA_16',
           out: filename.to_s, exception: true
         )
       end

@@ -3,7 +3,7 @@
 class Jim::SourceImage
   attr_reader :src
 
-  SVG_MIME_TYPE = "image/svg+xml"
+  SVG_MIME_TYPE = 'image/svg+xml'
 
   def initialize(src)
     @src = src

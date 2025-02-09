@@ -16,7 +16,7 @@ class Jim
     if values.empty?
       @styles.delete(property.to_s)
     else
-      @styles[property.to_s] = values.join(" ")
+      @styles[property.to_s] = values.join(' ')
     end
     self
   end

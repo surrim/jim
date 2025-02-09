@@ -3,9 +3,9 @@
 class Jim
   DEFAULT_FORMAT_SETUPS = {
     "": { quality: 75 },
-    "image/bmp": { background: "white" },
-    "image/jpeg": { background: "white", extension: "jpg" },
-    "image/tiff": { background: "white" }
+    "image/bmp": { background: 'white' },
+    "image/jpeg": { background: 'white', extension: 'jpg' },
+    "image/tiff": { background: 'white' }
   }.freeze
 
   def format_setups(*format_setups)
