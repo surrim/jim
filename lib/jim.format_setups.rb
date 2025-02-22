@@ -50,7 +50,7 @@ class Jim
   end
 
   module LiquidFilters
-    def jim_format_setups(jim, *format_setups) = jim.format_setups(format_setups)
+    def jim_format_setups(jim, *format_setups) = jim.format_setups(*format_setups)
     def jim_add_format_setup(jim, format, setup) = jim.add_format_setup(format, setup)
     def jim_add_format_setting(jim, format, key, value) = jim.add_format_setting(format, key, value)
     def jim_reset_format_setups(jim) = jim.reset_format_setups
