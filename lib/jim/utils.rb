@@ -34,7 +34,11 @@ module Jim::Utils
     filename
   end
 
-  def read_json_file(filename) = JSON.parse(filename.read, { symbolize_names: true })
+  def read_json_file(filename)
+    JSON.parse(filename.read, { symbolize_names: true })
+  rescue JSON::ParserError
+    Jim::System.error("JSON::ParserError: #{filename} does not contain valid JSON data")
+  end
 
   def write_json_file(filename, content) = write_file(filename, JSON.pretty_generate(content))
 
