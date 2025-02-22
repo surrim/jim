@@ -16,7 +16,7 @@ module Jim::System
   def source_path(*src) = Pathname.new('.').join(*src).expand_path(config['source'])
   def destination_path(*src) = Pathname.new(@site.in_dest_dir(*src))
   def local_cache_path(*src) = Pathname.new(@site.in_cache_dir('jimcache', *src))
-  def cache_path(*src) = config[:jim_cache] ? path(config[:jim_cache], *src) : local_cache_path(*src)
+  def cache_path(*src) = config['jim_cache'] ? path(config['jim_cache'], *src) : local_cache_path(*src)
 
   def render(template_src, jim_context)
     template = read_template_file(template_src)
@@ -31,7 +31,7 @@ module Jim::System
   def init(site, logger)
     @site = site
     @logger = logger
-    warn('jim_cache not configured') unless config[:jim_cache]
+    warn('jim_cache not configured') unless config['jim_cache']
     info("using file://#{File.expand_path(cache_path)}")
   end
 end
