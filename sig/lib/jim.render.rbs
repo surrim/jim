@@ -7,13 +7,13 @@ class Jim
 
   def compute_source_attr: () -> {
 			source_filename: Pathname, source_dirname: String, source_basename: String, source_extension: String,
-			source_sha256: String, source_width: Integer, source_height: Integer, source_mime_type: String?,
+			source_blake3: String, source_width: Integer, source_height: Integer, source_mime_type: String?,
 			source_avg_color: String, source_is_svg: bool }
   def compute_resizing_attr: (Integer width, source_width: Integer, source_height: Integer) -> {
 			resizing_width: Integer, resizing_height: Integer, resizing_simplified_width: Integer, resizing_simplified_height: Integer
 		}
   def compute_watermark_attr: (source_width: Integer, source_height: Integer, resizing_width: Integer, resizing_height: Integer) -> {
-			watermark_src: String?, watermark_filename: Pathname?, watermark_sha256: String?,
+			watermark_src: String?, watermark_filename: Pathname?, watermark_blake3: String?,
 			watermark_width: Integer?, watermark_height: Integer?, watermark_x: Integer?, watermark_y: Integer?,
 			watermark_opacity: Float?, watermark_is_valid: bool
 		}

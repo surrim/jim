@@ -4,8 +4,8 @@ module Jim::ImageMetadataManager
   module_function
 
   def metadata(filename)
-    sha256 = Jim::ChecksumManager.sha256(filename)
-    image_metadata_json = Jim::CacheManager.image_metadata_json_pattern(sha256)
+    blake3 = Jim::ChecksumManager.blake3(filename)
+    image_metadata_json = Jim::CacheManager.image_metadata_json_pattern(blake3)
     if image_metadata_json.exist?
       FileUtils.touch(image_metadata_json)
       return Jim::Utils.read_json_file(image_metadata_json)

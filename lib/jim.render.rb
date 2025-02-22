@@ -7,7 +7,7 @@ class Jim
     destination_filename = nil
     generated_images = []
     if attr[:source_is_svg] && @svg_filename_pattern
-      svg_source_image = SvgSourceImage.new(attr[:source_filename], attr[:source_sha256])
+      svg_source_image = SvgSourceImage.new(attr[:source_filename], attr[:source_blake3])
       if @svg_filename_pattern == '' # inline SVG/SVGZ
         return svg_source_image.convert_to_inline_svg.read if render
       else
@@ -20,7 +20,7 @@ class Jim
           @svg_filename_pattern,
           @substitutions,
           **attr.slice(
-            :source_sha256, :source_extension, :source_dirname, :source_basename,
+            :source_blake3, :source_extension, :source_dirname, :source_basename,
             :resizing_width, :resizing_height,
             :output_extension, :output_background, :output_is_lossless, :output_quality
           )
@@ -41,9 +41,9 @@ class Jim
 
       # no svg special cases
       resized_image = ResizedImage.new(**attr.slice(
-        :source_filename, :source_sha256,
+        :source_filename, :source_blake3,
         :resizing_width, :resizing_height,
-        :watermark_filename, :watermark_sha256, :watermark_width, :watermark_height,
+        :watermark_filename, :watermark_blake3, :watermark_width, :watermark_height,
         :watermark_x, :watermark_y, :watermark_opacity, :watermark_is_valid
       ))
       fallback_cache_filename = resized_image.write(**attr.slice(
@@ -53,7 +53,7 @@ class Jim
         @filename_pattern,
         @substitutions,
         **attr.slice(
-          :source_sha256, :source_extension, :source_dirname, :source_basename,
+          :source_blake3, :source_extension, :source_dirname, :source_basename,
           :resizing_width, :resizing_height,
           :output_extension, :output_background, :output_is_lossless, :output_quality
         )
@@ -84,9 +84,9 @@ class Jim
         attr.update(resizing_and_watermark_attr)
 
         resized_image = ResizedImage.new(**attr.slice(
-          :source_filename, :source_sha256,
+          :source_filename, :source_blake3,
           :resizing_width, :resizing_height,
-          :watermark_filename, :watermark_sha256, :watermark_width, :watermark_height,
+          :watermark_filename, :watermark_blake3, :watermark_width, :watermark_height,
           :watermark_x, :watermark_y, :watermark_opacity, :watermark_is_valid
         ))
 
@@ -101,7 +101,7 @@ class Jim
             @filename_pattern,
             @substitutions,
             **attr.slice(
-              :source_sha256, :source_extension, :source_dirname, :source_basename,
+              :source_blake3, :source_extension, :source_dirname, :source_basename,
               :resizing_width, :resizing_height,
               :output_extension, :output_background, :output_is_lossless, :output_quality
             )
@@ -119,7 +119,7 @@ class Jim
     output = {
       src: destination_filename&.relative_path_from(Jim::System.destination_path)&.to_s,
       alt: @alt,
-      sha256: attr[:source_sha256],
+      blake3: attr[:source_blake3],
       width: attr[:resizing_width],
       height: attr[:resizing_height],
       simplified_width: attr[:resizing_simplified_width],
@@ -150,7 +150,7 @@ class Jim
       source_dirname: source_image.dirname,
       source_basename: source_image.basename,
       source_extension: source_image.extension,
-      source_sha256: source_image.sha256,
+      source_blake3: source_image.blake3,
       source_width: source_image.width,
       source_height: source_image.height,
       source_mime_type: source_image.mime_type,
@@ -173,7 +173,7 @@ class Jim
     if @watermark_src
       watermark_source_image = Jim::SourceImage.new(@watermark_src)
       watermark_filename = watermark_source_image.filename
-      watermark_sha256 = watermark_source_image.sha256
+      watermark_blake3 = watermark_source_image.blake3
       wwsh = watermark_source_image.width * source_height
       whsw = watermark_source_image.height * source_width
       watermark_width = (resizing_width * Math.sqrt(@watermark_size * wwsh / whsw)).round
@@ -184,7 +184,7 @@ class Jim
       watermark_is_valid = watermark_width.positive? && watermark_height.positive? && watermark_opacity.positive?
     end
     {
-      watermark_src: @watermark_src, watermark_filename:, watermark_sha256:,
+      watermark_src: @watermark_src, watermark_filename:, watermark_blake3:,
       watermark_width:, watermark_height:, watermark_x:, watermark_y:,
       watermark_opacity:, watermark_is_valid:
     }

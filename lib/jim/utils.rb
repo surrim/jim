@@ -78,12 +78,12 @@ module Jim::Utils
 
   def replace_filename_pattern(
     filename_pattern, user_substitutions,
-    source_sha256:, source_extension:, source_dirname:, source_basename:,
+    source_blake3:, source_extension:, source_dirname:, source_basename:,
     resizing_width:, resizing_height:,
     output_extension:, output_background:, output_is_lossless:, output_quality:
   )
     substitutions = {
-      sha256: source_sha256,
+      blake3: source_blake3,
       dirname: clean_dirname(source_dirname),
       basename: clean_basename(source_basename),
       original_dirname: source_dirname,

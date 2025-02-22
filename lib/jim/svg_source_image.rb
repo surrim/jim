@@ -8,9 +8,9 @@ class Jim::SvgSourceImage
   XML_DOCTYPE_REGEX = /\s*<!DOCTYPE[^>\[]*(\[[^\]]*\])?>\s*/
   XML_COMMENT_REGEX = /\s*<!--.*-->\s*/
 
-  def initialize(filename, sha256)
+  def initialize(filename, blake3)
     @filename = filename
-    @sha256 = sha256
+    @blake3 = blake3
   end
 
   def compressed? = @compressed ||= @filename.to_s.downcase.end_with?('.svgz')
@@ -41,7 +41,7 @@ class Jim::SvgSourceImage
   end
 
   def convert_to(extension, content)
-    svg_cache_filename = Jim::CacheManager.svg_image_filename(@sha256, extension)
+    svg_cache_filename = Jim::CacheManager.svg_image_filename(@blake3, extension)
     Jim::Utils.write_file_if_not_exist(svg_cache_filename, content)
   end
 end

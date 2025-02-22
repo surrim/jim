@@ -1,12 +1,12 @@
 class Jim::ChecksumManager
   @checksums_json: Pathname
-	@checksums: Hash[Symbol, Hash[Symbol, { mtime: Integer, size: Integer, sha256: String }]]
+	@checksums: Hash[Symbol, Hash[Symbol, { mtime: Integer, size: Integer, blake3: String }]]
 
   include Singleton
 
   def initialize: () -> void
-  def sha256: (Pathname filename) -> String
-  def self.sha256: (Pathname filename) -> String
+  def blake3: (Pathname filename) -> String
+  def self.blake3: (Pathname filename) -> String
   def finalize: () -> void
   def self.finalize: (Integer _object_id) -> void
 end

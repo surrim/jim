@@ -3,17 +3,17 @@
 class Jim::ResizedImage
   # needs source_image, resizing, watermark
   def initialize(
-    source_filename:, source_sha256:,
+    source_filename:, source_blake3:,
     resizing_width:, resizing_height:,
-    watermark_filename: nil, watermark_sha256: nil, watermark_width: nil, watermark_height: nil,
+    watermark_filename: nil, watermark_blake3: nil, watermark_width: nil, watermark_height: nil,
     watermark_x: nil, watermark_y: nil, watermark_opacity: nil, watermark_is_valid: false
   )
     @source_filename = source_filename
-    @source_sha256 = source_sha256
+    @source_blake3 = source_blake3
     @resizing_width = resizing_width
     @resizing_height = resizing_height
     @watermark_filename = watermark_filename
-    @watermark_sha256 = watermark_sha256
+    @watermark_blake3 = watermark_blake3
     @watermark_width = watermark_width
     @watermark_height = watermark_height
     @watermark_x = watermark_x
@@ -26,12 +26,12 @@ class Jim::ResizedImage
     return @image if @image
 
     @image = self.class.load_resized_image(
-      source_filename: @source_filename, source_sha256: @source_sha256,
+      source_filename: @source_filename, source_blake3: @source_blake3,
       resizing_width: @resizing_width, resizing_height: @resizing_height
     )
     if @watermark_is_valid
       watermark_image = self.class.load_resized_image(
-        source_filename: @watermark_filename, source_sha256: @watermark_sha256,
+        source_filename: @watermark_filename, source_blake3: @watermark_blake3,
         resizing_width: @watermark_width, resizing_height: @watermark_height
       )
       @image = @image.dissolve(watermark_image, @watermark_opacity, 1, @watermark_x, @watermark_y)
@@ -41,9 +41,9 @@ class Jim::ResizedImage
 
   def write(output_background: nil, output_extension:, output_is_lossless:, output_quality:)
     cache_filename = Jim::CacheManager.image_filename(
-      source_sha256: @source_sha256,
+      source_blake3: @source_blake3,
       resizing_width: @resizing_width, resizing_height: @resizing_height,
-      watermark_sha256: @watermark_sha256, watermark_width: @watermark_width, watermark_height: @watermark_height,
+      watermark_blake3: @watermark_blake3, watermark_width: @watermark_width, watermark_height: @watermark_height,
       watermark_x: @watermark_x, watermark_y: @watermark_y,
       watermark_opacity: @watermark_opacity, watermark_is_valid: @watermark_is_valid,
       output_background:, output_extension:, output_is_lossless:, output_quality:
@@ -69,12 +69,12 @@ class Jim::ResizedImage
   end
 
   def self.load_resized_image(
-    source_filename:, source_sha256:,
+    source_filename:, source_blake3:,
     resizing_width:, resizing_height:
   )
     if %w[.svg .svgz].include?(source_filename.extname.downcase)
       png_cache_filename = Jim::CacheManager.image_filename(
-        source_sha256:,
+        source_blake3:,
         resizing_width:, resizing_height:,
         output_extension: 'png', output_is_lossless: true, output_quality: nil
       )

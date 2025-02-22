@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'digest/blake3'
 require 'singleton'
 
 class Jim::ChecksumManager
@@ -11,7 +12,7 @@ class Jim::ChecksumManager
     ObjectSpace.define_finalizer(self, self.class.method(:finalize))
   end
 
-  def sha256(filename)
+  def blake3(filename)
     unless filename.exist?
       @checksums.delete(filename.to_s.to_sym)
       Jim::System.error("FilesystemError: #{filename} not found")
@@ -22,16 +23,16 @@ class Jim::ChecksumManager
     size = stat.size
 
     checksum_entry = @checksums[filename.to_s.to_sym] || {}
-    if checksum_entry.key?(:sha256) && checksum_entry[:mtime] == mtime && checksum_entry[:size] == size
-      return checksum_entry[:sha256]
+    if checksum_entry.key?(:blake3) && checksum_entry[:mtime] == mtime && checksum_entry[:size] == size
+      return checksum_entry[:blake3]
     end
 
-    sha256 = Digest::SHA256.file(filename.to_s).hexdigest
-    @checksums[filename.to_s.to_sym] = { mtime:, size:, sha256: }
-    sha256
+    blake3 = Digest::Blake3.file(filename.to_s).hexdigest
+    @checksums[filename.to_s.to_sym] = { mtime:, size:, blake3: }
+    blake3
   end
 
-  def self.sha256(filename) = instance.sha256(filename)
+  def self.blake3(filename) = instance.blake3(filename)
 
   def finalize
     if @checksums.empty?

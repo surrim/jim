@@ -17,7 +17,7 @@ module Jim::Utils
   def self?.auto_convert_mime_type: (String? format) -> String?
   def self?.replace_filename_pattern: (
 			String filename_pattern, Hash[Symbol, untyped] user_substitutions,
-			source_sha256: String, source_extension: String, source_dirname: String, source_basename: String,
+			source_blake3: String, source_extension: String, source_dirname: String, source_basename: String,
 			resizing_width: Integer, resizing_height: Integer,
 			output_extension: String, output_background: String?, output_is_lossless: bool, output_quality: Integer
 		) -> Pathname

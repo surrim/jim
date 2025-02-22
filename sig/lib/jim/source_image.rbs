@@ -1,7 +1,7 @@
 class Jim::SourceImage
 	@src: String
 	@filename: Pathname?
-	@sha256: String?
+	@blake3: String?
 	@metadata: {
 			width: Integer,
 			height: Integer,
@@ -18,7 +18,7 @@ class Jim::SourceImage
 	def basename: () -> String
 	def dirname: () -> String
 	def extension: () -> String
-	def sha256: () -> String
+	def blake3: () -> String
 	def metadata: () -> Hash[Symbol, String | Integer]
 	def width: () -> Integer
 	def height: () -> Integer
