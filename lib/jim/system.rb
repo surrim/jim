@@ -31,10 +31,7 @@ module Jim::System
   def init(site, logger)
     @site = site
     @logger = logger
-    if config[:jim_cache]
-      info("using file://#{File.expand_path(config[:jim_cache])}")
-    else
-      warn('jim_cache not configured')
-    end
+    warn('jim_cache not configured') unless config[:jim_cache]
+    info("using file://#{File.expand_path(cache_path)}")
   end
 end
