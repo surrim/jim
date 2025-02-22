@@ -14,8 +14,9 @@ class Jim
     end
 
     merged_presets = {}.merge(*presets.compact
-           .map { |preset| preset.is_a?(Hash) ? preset : preset.to_h }
-           .map { |preset| preset.transform_keys(&:to_sym) }, preset_options)
+      .map { |preset| preset.is_a?(Jim) ? preset.to_config_h : preset }
+      .map { |preset| preset.is_a?(Hash) ? preset : preset.to_h }
+      .map { |preset| preset.transform_keys(&:to_sym) }, preset_options)
     merged_presets.each do |method_name, value|
       method(method_name).call(value)
     rescue NameError

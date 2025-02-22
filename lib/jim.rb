@@ -8,10 +8,10 @@ class Jim
 
   Liquid::Template.register_filter(LiquidFilters)
 
-  def to_h
-    h = { src: @src, alt: @alt }
+  def to_config_h
+    h = {}
     self.class.constants
-        .filter { |constant| constant.start_with? 'DEFAULT_' }
+        .filter { |constant| constant.start_with?('DEFAULT_') }
         .each do |constant|
       name = constant[:DEFAULT_.length..].downcase
       value = instance_variable_get("@#{name}")
@@ -20,6 +20,7 @@ class Jim
     h
   end
 
+  def to_h = to_config_h.merge(src: @src, alt: @alt)
   def to_s = Jim::Utils.deep_stringify_keys(to_h).to_s
   def to_liquid = self
   def to_json(opts = JSON::PRETTY_STATE_PROTOTYPE) = to_h.to_json(opts)
