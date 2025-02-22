@@ -50,7 +50,7 @@ class Jim::ResizedImage
     )
     Jim::Utils.write_file_if_not_exist(cache_filename) do |filename|
       source_src = @source_filename.relative_path_from(Jim::System.source_path)
-      format = "#{output_extension}#{output_quality ? "/##{output_quality}" : nil}"
+      format = "#{output_extension}#{output_quality ? "/#{output_quality}" : nil}"
       Jim::System.info('Converting', "#{source_src} (#{format}, #{@resizing_width}x#{@resizing_height})")
       output_image = image
       if output_background
