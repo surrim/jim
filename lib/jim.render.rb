@@ -29,35 +29,6 @@ class Jim
         Jim::System.add_external_file(cache_filename, destination_filename)
       end
     else # no svg special cases
-      attr.update(compute_resizing_attr(
-                    [@fallback_width, attr[:source_width]].compact.min,
-                    **attr.slice(:source_width, :source_height)
-                  ))
-      attr.update(compute_watermark_attr(
-                    **attr.slice(:source_width, :source_height, :resizing_width, :resizing_height)
-                  ))
-      attr.update(compute_output_attr(@fallback_format || attr[:source_extension]))
-
-      resized_image = ResizedImage.new(**attr.slice(
-        :source_filename, :source_blake3,
-        :resizing_width, :resizing_height,
-        :watermark_filename, :watermark_blake3, :watermark_width, :watermark_height,
-        :watermark_x, :watermark_y, :watermark_opacity, :watermark_is_valid
-      ))
-      fallback_cache_filename = resized_image.write(**attr.slice(
-        :output_background, :output_extension, :output_is_lossless, :output_quality
-      ))
-      destination_filename = Jim::Utils.replace_filename_pattern(
-        @filename_pattern,
-        @substitutions,
-        **attr.slice(
-          :source_blake3, :source_extension, :source_dirname, :source_basename,
-          :resizing_width, :resizing_height,
-          :output_extension, :output_background, :output_is_lossless, :output_quality
-        )
-      )
-      Jim::System.add_external_file(fallback_cache_filename, destination_filename)
-
       resizing_and_watermark_attrs = @widths
                                      .map { |width| width || attr[:source_width] }
                                      .uniq
@@ -112,6 +83,35 @@ class Jim
           Jim::System.add_external_file(generated_cache_filename, generated_filename)
         end
       end
+
+      attr.update(compute_resizing_attr(
+                    [@fallback_width, attr[:source_width]].compact.min,
+                    **attr.slice(:source_width, :source_height)
+                  ))
+      attr.update(compute_watermark_attr(
+                    **attr.slice(:source_width, :source_height, :resizing_width, :resizing_height)
+                  ))
+      attr.update(compute_output_attr(@fallback_format || attr[:source_extension]))
+
+      resized_image = ResizedImage.new(**attr.slice(
+        :source_filename, :source_blake3,
+        :resizing_width, :resizing_height,
+        :watermark_filename, :watermark_blake3, :watermark_width, :watermark_height,
+        :watermark_x, :watermark_y, :watermark_opacity, :watermark_is_valid
+      ))
+      fallback_cache_filename = resized_image.write(**attr.slice(
+        :output_background, :output_extension, :output_is_lossless, :output_quality
+      ))
+      destination_filename = Jim::Utils.replace_filename_pattern(
+        @filename_pattern,
+        @substitutions,
+        **attr.slice(
+          :source_blake3, :source_extension, :source_dirname, :source_basename,
+          :resizing_width, :resizing_height,
+          :output_extension, :output_background, :output_is_lossless, :output_quality
+        )
+      )
+      Jim::System.add_external_file(fallback_cache_filename, destination_filename)
     end
 
     output = {
