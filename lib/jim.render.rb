@@ -114,6 +114,16 @@ class Jim
       Jim::System.add_external_file(fallback_cache_filename, destination_filename)
     end
 
+    style_substitutions = @substitutions.merge(
+      blake3: attr[:source_blake3],
+      width: attr[:resizing_width],
+      height: attr[:resizing_height],
+      simplified_width: attr[:resizing_simplified_width],
+      simplified_height: attr[:resizing_simplified_height],
+      mime_type: attr[:output_mime_type],
+      avg_color: attr[:source_avg_color]
+    )
+
     output = {
       src: destination_filename&.relative_path_from(Jim::System.destination_path)&.to_s,
       alt: @alt,
@@ -126,8 +136,8 @@ class Jim
       avg_color: attr[:source_avg_color],
       images: generated_images,
       img_sizes: @img_sizes,
-      img_attrs: @img_attrs,
-      styles: @styles
+      img_attrs: self.class.substitute_hash(@img_attrs, **style_substitutions),
+      styles: self.class.substitute_hash(@styles, **style_substitutions)
     }
     output = Jim::Utils.deep_stringify_keys(output)
     if render
@@ -135,6 +145,18 @@ class Jim
       output = "{::nomarkdown}\n#{output}\n{:/nomarkdown}\n" if @nomarkdown
     end
     output
+  end
+
+  private_class_method
+
+  def self.substitute_hash(hash, **substitutions)
+    replaced_hash = {}
+    hash.each do |property, value|
+      replaced_property = Jim::Sprintf2.deep_substitute(property, **substitutions)
+      replaced_value = Jim::Sprintf2.deep_substitute(value, **substitutions)
+      replaced_hash[replaced_property] = replaced_value
+    end
+    replaced_hash
   end
 
   private
