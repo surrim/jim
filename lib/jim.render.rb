@@ -10,8 +10,7 @@ class Jim
       svg_source_image = SvgSourceImage.new(attr[:source_filename], attr[:source_blake3])
       if @svg_filename_pattern == '' # inline SVG/SVGZ
         return svg_source_image.convert_to_inline_svg.read if render
-      else
-        # copy SVG/SVGZ -> SVG/SVGZ
+      else # copy SVG/SVGZ -> SVG/SVGZ
         attr.update(
           compute_resizing_attr(attr[:source_width], **attr.slice(:source_width, :source_height))
         )
@@ -29,7 +28,7 @@ class Jim
         cache_filename = svg_source_image.convert(compress)
         Jim::System.add_external_file(cache_filename, destination_filename)
       end
-    else
+    else # no svg special cases
       attr.update(compute_resizing_attr(
                     [@fallback_width, attr[:source_width]].compact.min,
                     **attr.slice(:source_width, :source_height)
@@ -39,7 +38,6 @@ class Jim
                   ))
       attr.update(compute_output_attr(@fallback_format || attr[:source_extension]))
 
-      # no svg special cases
       resized_image = ResizedImage.new(**attr.slice(
         :source_filename, :source_blake3,
         :resizing_width, :resizing_height,
