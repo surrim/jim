@@ -5,23 +5,23 @@ module NewMixin
     @src = src.to_s
     @alt = alt&.to_s
 
-    self.class.constants
-        .filter { |constant| constant.start_with?('DEFAULT_') }
-        .each do |constant|
-      method_name = constant['DEFAULT_'.length..].downcase
-      default_value = self.class.const_get(constant)
-      method(method_name).call(default_value)
+    apply_preset = lambda do |preset|
+      preset = preset.to_preset if preset.is_a?(Jim)
+      preset = preset.to_h unless preset.is_a?(Hash)
+      preset.each do |key, value|
+        method(key.to_sym).call(value)
+      rescue NameError
+        Jim::System.info("Ignored preset parameter #{key} = #{value.inspect}")
+      end
     end
 
-    merged_presets = {}.merge(*presets.compact
-      .map { |preset| preset.is_a?(Jim) ? preset.to_config_h : preset }
-      .map { |preset| preset.is_a?(Hash) ? preset : preset.to_h }
-      .map { |preset| preset.transform_keys(&:to_sym) }, preset_options)
-    merged_presets.each do |method_name, value|
-      method(method_name).call(value)
-    rescue NameError
-      Jim::System.info("Ignored preset parameter #{method_name} = #{value.inspect}")
-    end
+    apply_preset.call(Jim.hard_coded_preset) # set to valid state
+    apply_preset.call(Jim::Utils.deep_merge(
+                        Jim.hard_coded_preset,
+                        Jim::System.default_preset,
+                        *presets.flatten.compact,
+                        **preset_options
+                      ))
   end
 end
 

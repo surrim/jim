@@ -17,6 +17,33 @@ module Jim::Utils
     end
   end
 
+  def deep_merge(*hashes)
+    return {} if hashes.empty?
+
+    last_hash = hashes.pop.dup
+    return last_hash unless last_hash.is_a?(Hash)
+
+    last_hash = deep_stringify_keys(last_hash)
+
+    until hashes.empty?
+      hash = hashes.pop.dup
+      break unless hash.is_a?(Hash)
+
+      hash = deep_stringify_keys(hash)
+
+      hash.each_key do |key|
+        unless last_hash.key?(key.to_s)
+          last_hash[key.to_s] = hash[key]
+          next
+        end
+        next unless last_hash[key.to_s].is_a?(Hash)
+
+        last_hash[key.to_s] = deep_merge(hash[key], last_hash[key.to_s])
+      end
+    end
+    last_hash
+  end
+
   def write_file(filename, content = '')
     prepare_folder(filename)
     tmp_filename = tmp_filename(filename)
