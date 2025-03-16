@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Jim
+module WidthsMixin
   DEFAULT_WIDTHS = [].freeze
 
   def widths(*widths)
@@ -28,11 +28,11 @@ class Jim
     @widths = []
     self
   end
+end
 
-  module LiquidFilters
-    def jim_widths(jim, *widths) = jim.widths(widths)
-    def jim_add_width(jim, width) = jim.add_width(width)
-    def jim_rm_width(jim, width) = jim.rm_width(width)
-    def jim_rm_widths(jim) = jim.rm_widths
-  end
+module Jim::LiquidFilters
+  def jim_widths(jim, *widths) = jim.widths(widths)
+  def jim_add_width(jim, width) = jim.add_width(width)
+  def jim_rm_width(jim, width) = jim.rm_width(width)
+  def jim_rm_widths(jim) = jim.rm_widths
 end

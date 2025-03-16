@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Jim
+module ImgAttrsMixin
   DEFAULT_IMG_ATTRS = {}.freeze
 
   def img_attrs(*img_attrs)
@@ -13,8 +13,8 @@ class Jim
 
   def add_img_attr(key, value)
     @img_attrs[key.to_s] = value.to_s \
-      if Validator.check_is_primitive(key, :key) \
-      && Validator.check_is_primitive(value, :value)
+      if Jim::Validator.check_is_primitive(key, :key) \
+      && Jim::Validator.check_is_primitive(value, :value)
     self
   end
 
@@ -27,11 +27,11 @@ class Jim
     @img_attrs = {}
     self
   end
+end
 
-  module LiquidFilters
-    def jim_img_attrs(jim, *img_attrs) = jim.img_attrs(img_attrs)
-    def jim_add_img_attr(jim, key, value) = jim.add_img_attr(key, value)
-    def jim_rm_img_attr(jim, key) = jim.rm_img_attr(key)
-    def jim_rm_img_attrs(jim) = jim.rm_img_attrs
-  end
+module Jim::LiquidFilters
+  def jim_img_attrs(jim, *img_attrs) = jim.img_attrs(img_attrs)
+  def jim_add_img_attr(jim, key, value) = jim.add_img_attr(key, value)
+  def jim_rm_img_attr(jim, key) = jim.rm_img_attr(key)
+  def jim_rm_img_attrs(jim) = jim.rm_img_attrs
 end

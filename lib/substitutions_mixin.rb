@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative 'jim.version'
+require_relative 'jim/version'
 
-class Jim
+module SubstitutionsMixin
   DEFAULT_SUBSTITUTIONS = { jim_version: Jim::VERSION }.freeze
 
   def substitutions(*substitutions)
@@ -28,11 +28,11 @@ class Jim
     @substitutions = {}
     self
   end
+end
 
-  module LiquidFilters
-    def jim_substitutions(jim, *substitutions) = jim.substitutions(jim, substitutions)
-    def jim_add_substitution(jim, key, value) = jim.add_substitution(key, value)
-    def jim_rm_substitution(jim, key) = jim.rm_substitution(key)
-    def jim_rm_substitutions(jim) = jim.rm_substitutions
-  end
+module Jim::LiquidFilters
+  def jim_substitutions(jim, *substitutions) = jim.substitutions(jim, substitutions)
+  def jim_add_substitution(jim, key, value) = jim.add_substitution(key, value)
+  def jim_rm_substitution(jim, key) = jim.rm_substitution(key)
+  def jim_rm_substitutions(jim) = jim.rm_substitutions
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Jim
+module FormatSetupsMixin
   DEFAULT_FORMAT_SETUPS = {
     "": { quality: 75 },
     "image/bmp": { background: 'white' },
@@ -17,7 +17,7 @@ class Jim
   end
 
   def add_format_setup(format, setup)
-    if Validator.check_is_hash(setup, :setup)
+    if Jim::Validator.check_is_hash(setup, :setup)
       setup.each do |key, value|
         add_format_setting(format, key, value)
       end
@@ -26,9 +26,9 @@ class Jim
   end
 
   def add_format_setting(format, key, value)
-    if Validator.check_is_primitive(format, :format) \
-      && Validator.check_is_primitive(key, :key) \
-      && Validator.check_is_primitive(value, :value)
+    if Jim::Validator.check_is_primitive(format, :format) \
+      && Jim::Validator.check_is_primitive(key, :key) \
+      && Jim::Validator.check_is_primitive(value, :value)
       format = format.to_s.downcase
       if value.nil?
         @format_setups[format].delete(key.to_s.downcase)
@@ -48,11 +48,11 @@ class Jim
     end
     self
   end
+end
 
-  module LiquidFilters
-    def jim_format_setups(jim, *format_setups) = jim.format_setups(*format_setups)
-    def jim_add_format_setup(jim, format, setup) = jim.add_format_setup(format, setup)
-    def jim_add_format_setting(jim, format, key, value) = jim.add_format_setting(format, key, value)
-    def jim_reset_format_setups(jim) = jim.reset_format_setups
-  end
+module Jim::LiquidFilters
+  def jim_format_setups(jim, *format_setups) = jim.format_setups(*format_setups)
+  def jim_add_format_setup(jim, format, setup) = jim.add_format_setup(format, setup)
+  def jim_add_format_setting(jim, format, key, value) = jim.add_format_setting(format, key, value)
+  def jim_reset_format_setups(jim) = jim.reset_format_setups
 end

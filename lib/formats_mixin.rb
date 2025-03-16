@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Jim
+module FormatsMixin
   DEFAULT_FORMATS = [].freeze
 
   def formats(*formats)
@@ -27,12 +27,12 @@ class Jim
     @formats = []
     self
   end
+end
 
-  module LiquidFilters
-    def jim_formats(jim, *formats) = jim.formats(formats)
-    def jim_append_formats(jim, *formats) = jim.append_formats(formats)
-    def jim_prepend_formats(jim, *formats) = jim.prepend_formats(formats)
-    def jim_rm_formats(jim, *formats) = jim.rm_formats(formats)
-    def jim_rm_all_formats(jim) = jim.rm_all_formats
-  end
+module Jim::LiquidFilters
+  def jim_formats(jim, *formats) = jim.formats(formats)
+  def jim_append_formats(jim, *formats) = jim.append_formats(formats)
+  def jim_prepend_formats(jim, *formats) = jim.prepend_formats(formats)
+  def jim_rm_formats(jim, *formats) = jim.rm_formats(formats)
+  def jim_rm_all_formats(jim) = jim.rm_all_formats
 end

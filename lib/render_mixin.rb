@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-class Jim
+module RenderMixin
   def render(render = true) # rubocop:disable Style/OptionalBooleanParameter
     attr = compute_source_attr
 
     destination_filename = nil
     generated_images = []
     if attr[:source_is_svg] && @svg_filename_pattern
-      svg_source_image = SvgSourceImage.new(attr[:source_filename], attr[:source_blake3])
+      svg_source_image = Jim::SvgSourceImage.new(attr[:source_filename], attr[:source_blake3])
       if @svg_filename_pattern == '' # inline SVG/SVGZ
         return svg_source_image.convert_to_inline_svg.read if render
       else # copy SVG/SVGZ -> SVG/SVGZ
@@ -52,7 +52,7 @@ class Jim
       resizing_and_watermark_attrs.each do |resizing_and_watermark_attr|
         attr.update(resizing_and_watermark_attr)
 
-        resized_image = ResizedImage.new(**attr.slice(
+        resized_image = Jim::ResizedImage.new(**attr.slice(
           :source_filename, :source_blake3,
           :resizing_width, :resizing_height,
           :watermark_filename, :watermark_blake3, :watermark_width, :watermark_height,
@@ -93,7 +93,7 @@ class Jim
                   ))
       attr.update(compute_output_attr(@fallback_format || attr[:source_extension]))
 
-      resized_image = ResizedImage.new(**attr.slice(
+      resized_image = Jim::ResizedImage.new(**attr.slice(
         :source_filename, :source_blake3,
         :resizing_width, :resizing_height,
         :watermark_filename, :watermark_blake3, :watermark_width, :watermark_height,
@@ -136,8 +136,8 @@ class Jim
       avg_color: attr[:source_avg_color],
       images: generated_images,
       img_sizes: @img_sizes,
-      img_attrs: self.class.substitute_hash(@img_attrs, **style_substitutions),
-      styles: self.class.substitute_hash(@styles, **style_substitutions)
+      img_attrs: RenderMixin.substitute_hash(@img_attrs, **style_substitutions),
+      styles: RenderMixin.substitute_hash(@styles, **style_substitutions)
     }
     output = Jim::Utils.deep_stringify_keys(output)
     if render
@@ -147,24 +147,24 @@ class Jim
     output
   end
 
-  private_class_method
-
-  def self.substitute_hash(hash, **substitutions)
-    replaced_hash = {}
-    hash.each do |property, value|
-      replaced_property = Jim::Sprintf2.deep_substitute(property, **substitutions)
-      replaced_value = Jim::Sprintf2.deep_substitute(value, **substitutions)
-      replaced_hash[replaced_property] = replaced_value
-    end
-    replaced_hash
-  end
-
   private
+
+  class << self
+    def substitute_hash(hash, **substitutions)
+      replaced_hash = {}
+      hash.each do |property, value|
+        replaced_property = Jim::Sprintf2.deep_substitute(property, **substitutions)
+        replaced_value = Jim::Sprintf2.deep_substitute(value, **substitutions)
+        replaced_hash[replaced_property] = replaced_value
+      end
+      replaced_hash
+    end
+  end
 
   RATIONALIZE_TOLERANCE = 0.005
 
   def compute_source_attr
-    source_image = SourceImage.new(@src)
+    source_image = Jim::SourceImage.new(@src)
     {
       source_filename: source_image.filename,
       source_dirname: source_image.dirname,
@@ -231,8 +231,8 @@ class Jim
       output_quality:
     }
   end
+end
 
-  module LiquidFilters
-    def jim_render(jim, render = true) = jim.render(render) # rubocop:disable Style/OptionalBooleanParameter
-  end
+module Jim::LiquidFilters
+  def jim_render(jim, render = true) = jim.render(render) # rubocop:disable Style/OptionalBooleanParameter
 end

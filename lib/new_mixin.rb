@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Jim
+module NewMixin
   def initialize(src, alt = nil, *presets, **preset_options)
     @src = src.to_s
     @alt = alt&.to_s
@@ -8,7 +8,7 @@ class Jim
     self.class.constants
         .filter { |constant| constant.start_with?('DEFAULT_') }
         .each do |constant|
-      method_name = constant[:DEFAULT_.length..].downcase
+      method_name = constant['DEFAULT_'.length..].downcase
       default_value = self.class.const_get(constant)
       method(method_name).call(default_value)
     end
@@ -23,8 +23,8 @@ class Jim
       Jim::System.info("Ignored preset parameter #{method_name} = #{value.inspect}")
     end
   end
+end
 
-  module LiquidFilters
-    def jim_new(src, alt = nil, *presets) = Jim.new(src, alt, *presets)
-  end
+module Jim::LiquidFilters
+  def jim_new(src, alt = nil, *presets) = Jim.new(src, alt, *presets)
 end

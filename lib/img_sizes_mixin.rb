@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Jim
+module ImgSizesMixin
   DEFAULT_IMG_SIZES = {}.freeze
   DEFAULT_DEFAULT_IMG_SIZE = nil
 
@@ -33,13 +33,13 @@ class Jim
   def default_img_size(default_img_size) = add_img_size(nil, default_img_size)
 
   def rm_default_img_size = default_img_size(nil)
+end
 
-  module LiquidFilters
-    def jim_img_sizes(jim, *img_sizes) = jim.img_sizes(img_sizes)
-    def jim_add_img_size(jim, media_condition, img_size) = jim.add_img_size(media_condition, img_size)
-    def jim_rm_img_size(jim, media_condition) = jim.rm_img_size(media_condition)
-    def jim_rm_img_sizes(jim) = jim.rm_img_sizes
-    def jim_default_img_size(jim, default_img_size) = jim.default_img_size(default_img_size)
-    def jim_rm_default_img_size(jim) = jim.rm_default_img_size
-  end
+module Jim::LiquidFilters
+  def jim_img_sizes(jim, *img_sizes) = jim.img_sizes(img_sizes)
+  def jim_add_img_size(jim, media_condition, img_size) = jim.add_img_size(media_condition, img_size)
+  def jim_rm_img_size(jim, media_condition) = jim.rm_img_size(media_condition)
+  def jim_rm_img_sizes(jim) = jim.rm_img_sizes
+  def jim_default_img_size(jim, default_img_size) = jim.default_img_size(default_img_size)
+  def jim_rm_default_img_size(jim) = jim.rm_default_img_size
 end

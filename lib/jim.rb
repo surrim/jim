@@ -6,6 +6,21 @@ class Jim
     File.join(__dir__.to_s, 'jim', '*.rb')
   ].each { |file| require_relative file }
 
+  include FallbackMixin
+  include FilenamePatternsMixin
+  include FormatSetupsMixin
+  include FormatsMixin
+  include ImgAttrsMixin
+  include ImgSizesMixin
+  include NewMixin
+  include NomarkdownMixin
+  include RenderMixin
+  include StylesMixin
+  include SubstitutionsMixin
+  include TemplateMixin
+  include WatermarkMixin
+  include WidthsMixin
+
   Liquid::Template.register_filter(LiquidFilters)
 
   def to_config_h

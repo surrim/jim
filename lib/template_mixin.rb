@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Jim
+module TemplateMixin
   DEFAULT_TEMPLATE = nil
 
   def template(template)
@@ -9,9 +9,9 @@ class Jim
   end
 
   def reset_template = template(nil)
+end
 
-  module LiquidFilters
-    def jim_template(jim, template) = jim.template(template)
-    def jim_reset_template(jim) = jim.reset_template
-  end
+module Jim::LiquidFilters
+  def jim_template(jim, template) = jim.template(template)
+  def jim_reset_template(jim) = jim.reset_template
 end

@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-class Jim
+module FilenamePatternsMixin
   DEFAULT_FILENAME_PATTERN = '%{dirname}/%{basename}-%{width}.%{extension}' # rubocop:disable Style/FormatStringToken
   DEFAULT_SVG_FILENAME_PATTERN = '%{dirname}/%{basename}.svgz' # rubocop:disable Style/FormatStringToken
 
   def filename_pattern(filename_pattern)
     @filename_pattern = filename_pattern.to_s \
-      if Validator.check_is_string(filename_pattern, :filename_pattern)
+      if Jim::Validator.check_is_string(filename_pattern, :filename_pattern)
     self
   end
 
@@ -19,10 +19,10 @@ class Jim
     filename_pattern(filename_pattern)
     svg_filename_pattern(svg_filename_pattern)
   end
+end
 
-  module LiquidFilters
-    def jim_filename_pattern(jim, filename_pattern) = jim.filename_pattern(filename_pattern)
-    def jim_svg_filename_pattern(jim, svg_filename_pattern) = jim.svg_filename_pattern(svg_filename_pattern)
-    def jim_filename_patterns(jim, filename_pattern, svg_filename_pattern) = jim.filename_patterns(filename_pattern, svg_filename_pattern) # rubocop:disable Layout/LineLength
-  end
+module Jim::LiquidFilters
+  def jim_filename_pattern(jim, filename_pattern) = jim.filename_pattern(filename_pattern)
+  def jim_svg_filename_pattern(jim, svg_filename_pattern) = jim.svg_filename_pattern(svg_filename_pattern)
+  def jim_filename_patterns(jim, filename_pattern, svg_filename_pattern) = jim.filename_patterns(filename_pattern, svg_filename_pattern) # rubocop:disable Layout/LineLength
 end
