@@ -2,16 +2,18 @@
 
 module FormatSetupsMixin
   DEFAULT_FORMAT_SETUPS = {
-    "": { quality: 75 },
-    "image/bmp": { background: 'white' },
-    "image/jpeg": { background: 'white', extension: 'jpg' },
-    "image/tiff": { background: 'white' }
+    '': { quality: 75 },
+    'image/bmp': { background: 'white' },
+    'image/jpeg': { background: 'white', extension: 'jpg' },
+    'image/tiff': { background: 'white' }
   }.freeze
 
   def format_setups(*format_setups)
-    reset_format_setups
-    {}.merge(*format_setups.compact).each do |format, setup|
-      add_format_setup(format, setup)
+    @format_setups = {}
+    [DEFAULT_FORMAT_SETUPS].concat(format_setups.flatten.compact).each do |format_setup|
+      format_setup.each do |format, setup|
+        add_format_setup(format, setup)
+      end
     end
     self
   end
@@ -29,25 +31,21 @@ module FormatSetupsMixin
     if Jim::Validator.check_is_primitive(format, :format) \
       && Jim::Validator.check_is_primitive(key, :key) \
       && Jim::Validator.check_is_primitive(value, :value)
-      format = format.to_s.downcase
+      format = Jim::Utils.auto_convert_mime_type(format&.to_s) || format.to_s
+      key = key.to_s.downcase
+      value = value.to_s if value.is_a?(Symbol)
       if value.nil?
-        @format_setups[format].delete(key.to_s.downcase)
+        @format_setups[format].delete(key)
         @format_setups.delete(format) if @format_setups[format].empty?
       else
         @format_setups[format] ||= {}
-        @format_setups[format][key.to_s.downcase] = value
+        @format_setups[format][key] = value
       end
     end
     self
   end
 
-  def reset_format_setups
-    @format_setups = {}
-    DEFAULT_FORMAT_SETUPS.each do |format, setup|
-      add_format_setup(format, setup)
-    end
-    self
-  end
+  def reset_format_setups = format_setups
 end
 
 module Jim::LiquidFilters
