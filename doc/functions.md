@@ -29,6 +29,38 @@ def initialize(src, alt = nil, *presets, **kw_preset) # → jim
 def jim_new(src, alt = nil, *presets) # → jim
 ```
 
+This is always the first step to create the Jim object.
+
+- `src` is the filename of the source image.  
+  Prefer relative filenames. Only use absolute paths with a starting "/" when necessary.  
+  Any [type which is supported by ImageMagick](https://imagemagick.org/script/formats.php#supported) can be used. So you could even use raw formats like DNG, PDF, PSD and more.
+
+- `alt` is used for the `<img alt="...">` attribute, which should be set. If you want omit the attribute use `nil`.
+
+- `*presets` are optional structures which can be stored as a data file. The presets will be sanitized. That means preset attributes like `filename` or `foobar` will be ignored.
+
+- `**kw_preset` can be only used with the ERB syntax to set properties directly on the object.
+
+```liquid
+{% assign jim = "_images/example.png" | jim_new: "My awesome image", site.data.jim_presets, page.jim_overrides %}
+```
+
+```erb
+<% jim = Jim.new('_images/example.png', 'My awesome image', site.data.jim_presets, page.jim_overrides) %>
+```
+
+In the example `jim` would be:
+
+```json
+{
+  "src": "_images/example.png",
+  "alt": "My awesome image",
+  /* applied presets */
+}
+```
+
+The `applied presets` are the result of minimal hard-coded Jim presets that have been deeply merged with [project-wide presets](../index.md#presets), additional `presets`, and `kw_preset`. In this example a data file like `_data/jim_presets.yml` and the front matter variable `jim_overrides` were used as additional presets.
+
 ## Render
 
 ```ruby
