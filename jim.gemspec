@@ -17,8 +17,9 @@ Gem::Specification.new do |spec|
   spec.license       = 'GPLv3'
 
   spec.files         = `/usr/bin/git ls-files -z`.split("\x0").select do |f|
-    f.match(/^(components|lib|LICENSE|README|)/)
+    f.match(/^(components|lib|test|LICENSE|README|)/)
   end
+  spec.test_files    = spec.files.grep(%r!^test/!)
   spec.require_paths = ['lib']
 
   spec.required_ruby_version = '~> 3.3'
@@ -26,6 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'mime-types', '~> 3.4'
   spec.add_runtime_dependency 'rmagick', '~> 5.2'
   spec.add_runtime_dependency 'zlib', '~> 3.1'
-  spec.add_development_dependency 'rspec', '~> 3.0'
+  spec.add_development_dependency 'bundler'
+  spec.add_development_dependency 'rake', '~> 13.2'
   spec.add_development_dependency 'rubocop', '~> 1.66'
 end
