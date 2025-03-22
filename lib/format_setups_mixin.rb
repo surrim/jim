@@ -1,16 +1,19 @@
 # frozen_string_literal: true
 
 module FormatSetupsMixin
-  DEFAULT_FORMAT_SETUPS = {
-    '': { quality: 75 },
-    'image/bmp': { background: 'white' },
-    'image/jpeg': { background: 'white', extension: 'jpg' },
-    'image/tiff': { background: 'white' }
-  }.freeze
+  DEFAULT_FORMAT_SETUPS = Jim::Utils.deep_stringify_keys(
+    {
+      '': { quality: 75 },
+      'image/bmp': { background: 'white' },
+      'image/jpeg': { background: 'white', extension: 'jpg' },
+      'image/tiff': { background: 'white' }
+    }
+  )
 
   def format_setups(*format_setups)
     @format_setups = {}
-    [DEFAULT_FORMAT_SETUPS].concat(format_setups.flatten.compact).each do |format_setup|
+    [DEFAULT_FORMAT_SETUPS].concat(format_setups.flatten.compact).reverse.uniq.reverse.each do |format_setup|
+      # `reverse.uniq.reverse` removes same format_setups in the right order
       format_setup.each do |format, setup|
         add_format_setup(format, setup)
       end

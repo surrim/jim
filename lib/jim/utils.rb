@@ -8,41 +8,26 @@ module Jim::Utils
 
   LOSSLESS_MIME_TYPES = %w[image/bmp image/gif image/png image/svg+xml image/tiff image/vnd.microsoft.icon].freeze
 
-  def deep_stringify_keys(value)
-    case value
-    when Hash then value.map { |k, v| [k.to_s, deep_stringify_keys(v)] }.to_h
-    when Array then value.map { |v| deep_stringify_keys(v) }
-    when Symbol then value.to_s
-    else value
-    end
+  def deep_stringify_keys(object)
+    case object
+    when Hash
+      object.transform_keys(&:to_s)
+            .transform_values { |value| deep_stringify_keys(value) }
+            .delete_if { |_key, value| value.nil? }
+            .then { |h| h.empty? ? nil : h }
+    when Array
+      object.map { |value| deep_stringify_keys(value) }
+    when Symbol
+      object.to_s
+    when NilClass, TrueClass, FalseClass, Numeric, String, Regexp
+      object
+    else
+      Jim::System.warn("Unknown type #{object.class} (#{object.inspect}) to stringify")
+      object
+    end.freeze
   end
 
-  def deep_merge(*hashes)
-    return {} if hashes.empty?
-
-    last_hash = hashes.pop.dup
-    return last_hash unless last_hash.is_a?(Hash)
-
-    last_hash = deep_stringify_keys(last_hash)
-
-    until hashes.empty?
-      hash = hashes.pop.dup
-      break unless hash.is_a?(Hash)
-
-      hash = deep_stringify_keys(hash)
-
-      hash.each_key do |key|
-        unless last_hash.key?(key.to_s)
-          last_hash[key.to_s] = hash[key]
-          next
-        end
-        next unless last_hash[key.to_s].is_a?(Hash)
-
-        last_hash[key.to_s] = deep_merge(hash[key], last_hash[key.to_s])
-      end
-    end
-    last_hash
-  end
+  def deep_merge(*hashes) = deep_stringify_keys(simple_deep_merge(*hashes))
 
   def write_file(filename, content = '')
     prepare_folder(filename)
@@ -126,6 +111,29 @@ module Jim::Utils
   end
 
   private_class_method
+
+  def simple_deep_merge(*hashes)
+    return {} if hashes.empty?
+
+    last_hash = hashes.pop.dup.transform_keys(&:to_s)
+    return last_hash unless last_hash.is_a?(Hash)
+
+    until hashes.empty?
+      hash = hashes.pop
+      break unless hash.is_a?(Hash)
+
+      hash.each_key do |key|
+        unless last_hash.key?(key.to_s)
+          last_hash[key.to_s] = hash[key]
+          next
+        end
+        next unless last_hash[key.to_s].is_a?(Hash)
+
+        last_hash[key.to_s] = deep_merge(hash[key], last_hash[key.to_s])
+      end
+    end
+    last_hash.to_a.reverse.to_h
+  end
 
   def tmp_filename(filename) = Pathname.new(filename.dirname + ".#{filename.basename}.tmp")
 

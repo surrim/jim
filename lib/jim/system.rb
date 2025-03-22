@@ -47,6 +47,6 @@ module Jim::System
     end
 
     root, *config_path = jim_default_preset_path.split('.')
-    @default_preset = (root == 'data' ? site.data : site.config).dig(*config_path)
+    @default_preset = Jim::Utils.deep_stringify_keys((root == 'data' ? site.data : site.config).dig(*config_path))
   end
 end

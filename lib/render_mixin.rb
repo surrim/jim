@@ -151,13 +151,8 @@ module RenderMixin
 
   class << self
     def substitute_hash(hash, **substitutions)
-      replaced_hash = {}
-      hash.each do |property, value|
-        replaced_property = Jim::Sprintf2.deep_substitute(property, **substitutions)
-        replaced_value = Jim::Sprintf2.deep_substitute(value, **substitutions)
-        replaced_hash[replaced_property] = replaced_value
-      end
-      replaced_hash
+      hash&.transform_keys { |key| Jim::Sprintf2.deep_substitute(key, **substitutions) }
+          &.transform_values { |value| Jim::Sprintf2.deep_substitute(value, **substitutions) }
     end
   end
 

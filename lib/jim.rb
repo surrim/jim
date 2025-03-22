@@ -2,8 +2,8 @@
 
 class Jim
   Dir[
-    File.join(__dir__.to_s, '*.rb'),
-    File.join(__dir__.to_s, 'jim', '*.rb')
+    File.join(__dir__.to_s, 'jim', '*.rb'),
+    File.join(__dir__.to_s, '*.rb')
   ].each { |file| require_relative file }
 
   include FallbackMixin
@@ -24,31 +24,36 @@ class Jim
   Liquid::Template.register_filter(LiquidFilters)
 
   def to_preset
-    self.class.preset_keys.map do |preset_key|
-      preset_value = instance_variable_get("@#{preset_key}")
-      [preset_key, preset_value]
-    end.to_h
+    Jim::Utils.deep_stringify_keys(self.class.preset_constants.map do |preset_constant|
+      name = preset_constant[:name]
+      value = instance_variable_get("@#{name}")
+      [name, value]
+    end.to_h)
   end
 
-  def to_h = to_preset.merge(src: @src, alt: @alt)
-  def to_s = Jim::Utils.deep_stringify_keys(to_h).to_s
+  def to_h = Jim::Utils.deep_merge(to_preset, { src: @src, alt: @alt })
+  def to_s = to_h.to_s
   def to_liquid = self
   def to_json(opts = JSON::PRETTY_STATE_PROTOTYPE) = to_h.to_json(opts)
 
-  class << self
-    def hard_coded_preset
-      @hard_coded_preset ||= constant_keys.map do |constant_key|
-        preset_value = const_get(constant_key)
-        preset_key = to_preset_key(constant_key)
-        [preset_key, preset_value]
-      end.to_h.freeze
+  private
+
+  def apply_hard_coded_preset
+    self.class.preset_constants.each do |preset_constant|
+      name = preset_constant[:name]
+      constant_value = preset_constant[:constant_value]
+      public_send(name, constant_value)
     end
+  end
 
-    def constant_keys = @constant_keys ||= constants.filter { |constant| constant.start_with?('DEFAULT_') }.freeze
-    def preset_keys = @preset_keys ||= constant_keys.map { |constant_key| to_preset_key(constant_key) }.freeze
-
-    private
-
-    def to_preset_key(constant_key) = constant_key['DEFAULT_'.length..].downcase
+  class << self
+    def preset_constants
+      @preset_constants ||= constants.filter { |constant_name| constant_name.start_with?('DEFAULT_') }
+                                     .map do |constant_name|
+        constant_value = const_get(constant_name)
+        name = constant_name['DEFAULT_'.length..].downcase.to_sym
+        { constant_name:, constant_value:, name: }
+      end.freeze
+    end
   end
 end

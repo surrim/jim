@@ -5,23 +5,21 @@ module NewMixin
     @src = src.to_s
     @alt = alt&.to_s
 
-    apply_preset = lambda do |preset|
-      preset = preset.to_preset if preset.is_a?(Jim)
-      preset = preset.to_h unless preset.is_a?(Hash)
-      preset.each do |key, value|
-        method(key.to_sym).call(value)
-      rescue NameError
-        Jim::System.info("Ignored preset parameter #{key} = #{value.inspect}")
-      end
-    end
+    apply_hard_coded_preset # set to valid state
+    hard_coded_preset = to_preset
+    merged_presets = Jim::Utils.deep_merge(
+      hard_coded_preset,
+      Jim::System.default_preset,
+      *presets.flatten.compact.map { |preset| preset.is_a?(Jim) ? preset.to_preset : preset.to_h },
+      preset_options
+    )
+    return if merged_presets == hard_coded_preset
 
-    apply_preset.call(Jim.hard_coded_preset) # set to valid state
-    apply_preset.call(Jim::Utils.deep_merge(
-                        Jim.hard_coded_preset,
-                        Jim::System.default_preset,
-                        *presets.flatten.compact,
-                        **preset_options
-                      ))
+    merged_presets.each do |key, value|
+      public_send(key, value)
+    rescue NameError
+      Jim::System.info("Ignored preset parameter #{key} = #{value.inspect}")
+    end
   end
 end
 
