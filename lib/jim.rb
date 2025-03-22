@@ -35,6 +35,7 @@ class Jim
   def to_s = to_h.to_s
   def to_liquid = self
   def to_json(opts = JSON::PRETTY_STATE_PROTOTYPE) = to_h.to_json(opts)
+  def inspect = "#<#{self.class.name}:0x#{object_id.to_s(16)} @src=#{@src.inspect}, @alt=#{@alt.inspect}>"
 
   private
 
