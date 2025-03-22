@@ -97,7 +97,7 @@ module Jim::Utils
   def preferred_extension_for_mime_type(mime_type) = MIME::Types[mime_type]&.first&.preferred_extension
 
   def auto_convert_mime_type(format)
-    return nil if format.nil?
+    return nil if format.to_s.empty?
     return format if format.include?('/')
 
     mime_type(".#{format}")
