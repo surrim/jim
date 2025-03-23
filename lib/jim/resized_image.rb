@@ -56,7 +56,7 @@ class Jim::ResizedImage
       if output_background
         image_list = Magick::ImageList.new
         image_list.new_image(@resizing_width, @resizing_height) do |options|
-          options.background_color = output_background
+          options.background_color = "##{output_background}"
         end
         image_list.push(output_image)
         output_image = image_list.flatten_images

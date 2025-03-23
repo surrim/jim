@@ -63,7 +63,7 @@ module Jim::Utils
   def color(color)
     return nil if color.nil?
 
-    Magick::Pixel.from_color(color).to_color(Magick::AllCompliance, false, 8, true).downcase[1..].to_s
+    Magick::Pixel.from_color(color).to_color(Magick::AllCompliance, true, 8, true).downcase[1..]
   end
 
   def mime_type(filename)
