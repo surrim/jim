@@ -1,0 +1,2 @@
+fallback_format: jpg
+filename_pattern: '%{dirname}/%{basename}-%{width}.%{extension}'
