@@ -6,6 +6,8 @@ Metrics/ParameterLists:
   Enabled: false
 Style/KeywordParametersOrder:
   Enabled: false
+Style/Lambda:
+  Enabled: false
 
 # Fix later
 Style/ClassAndModuleChildren:

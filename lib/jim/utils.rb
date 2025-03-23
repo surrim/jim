@@ -88,6 +88,16 @@ module Jim::Utils
     mime_type(".#{format}")
   end
 
+  # TODO: used for Jim::Validator, refractoring needed for other functions
+  def auto_convert_mime_type2(format)
+    return format if format.include?('/')
+
+    types = MIME::Types.type_for(".#{format}")
+    return nil if types.empty?
+
+    types.first.content_type
+  end
+
   def replace_filename_pattern(
     filename_pattern, user_substitutions,
     source_blake3:, source_extension:, source_dirname:, source_basename:,

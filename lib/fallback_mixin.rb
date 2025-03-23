@@ -4,18 +4,21 @@ module FallbackMixin
   DEFAULT_FALLBACK_FORMAT = nil
   DEFAULT_FALLBACK_WIDTH = nil
 
-  def fallback_format(fallback_format)
-    @fallback_format = fallback_format&.to_s&.downcase
-    self
+  Jim.setter :fallback_format, &->(fallback_format = DEFAULT_FALLBACK_FORMAT) do
+    return @fallback_format = nil if fallback_format.nil?
+
+    assert_all('String', '.+', 'MimeType', fallback_format, :fallback_format)
+    @fallback_format = Jim::Utils.auto_convert_mime_type2(fallback_format)
   end
 
-  def fallback_width(fallback_width)
-    @fallback_width = fallback_width&.to_i \
-      if Jim::Validator.check_nil_or_greater_than_zero(fallback_width, :fallback_width)
-    self
+  Jim.setter :fallback_width, &->(fallback_width = DEFAULT_FALLBACK_WIDTH) do
+    return @fallback_width = nil if fallback_width.nil?
+
+    assert_all('Numeric', '>0', fallback_width, :fallback_width)
+    @fallback_width = fallback_width.to_i
   end
 
-  def fallback(fallback_format, fallback_width)
+  Jim.setter :fallback, &->(fallback_format, fallback_width) do
     fallback_format(fallback_format)
     fallback_width(fallback_width)
   end

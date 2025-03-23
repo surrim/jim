@@ -5,6 +5,7 @@ class Jim
     File.join(__dir__.to_s, 'jim', '*.rb'),
     File.join(__dir__.to_s, '*.rb')
   ].each { |file| require_relative file }
+  include Validator
 
   include FallbackMixin
   include FilenamePatternsMixin
