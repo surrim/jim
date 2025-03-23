@@ -40,22 +40,22 @@ class Jim
 
   private
 
-  def apply_hard_coded_preset
-    self.class.preset_constants.each do |preset_constant|
-      name = preset_constant[:name]
-      constant_value = preset_constant[:constant_value]
-      public_send(name, constant_value)
-    end
-  end
-
   class << self
     def preset_constants
       @preset_constants ||= constants.filter { |constant_name| constant_name.start_with?('DEFAULT_') }
                                      .map do |constant_name|
-        constant_value = const_get(constant_name)
+        constant_value = Jim::Utils.deep_stringify_keys(const_get(constant_name))
         name = constant_name['DEFAULT_'.length..].downcase.to_sym
-        { constant_name:, constant_value:, name: }
+        { constant_name:, constant_value:, name: }.freeze
       end.freeze
+    end
+
+    def hard_coded_preset
+      @hard_coded_preset ||= Jim::Utils.deep_stringify_keys(preset_constants.map do |preset_constant|
+        name = preset_constant[:name]
+        constant_value = preset_constant[:constant_value]
+        [name, constant_value]
+      end.to_h)
     end
   end
 end

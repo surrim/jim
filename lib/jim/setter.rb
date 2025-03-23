@@ -5,7 +5,7 @@ def Jim.setter(method_name, &block)
     instance_exec(*args, **kwargs, &block) if block
     self
   rescue StandardError => e
-    puts "Error in method '#{method_name}':\n#{e.message}"
+    Jim::System.warn("Error in method `#{method_name}`:\n#{e.message}")
     self
   end
 end
