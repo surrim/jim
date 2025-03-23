@@ -4,7 +4,7 @@
 {%-   capture alt %} alt="{{ jim_context.alt | escape }}"{% endcapture %}
 {%- endif %}
 
-{%- if jim_context.img_sizes != empty %}
+{%- if jim_context.img_sizes %}
 {%-   assign sizes_array = "" | split: "" %}
 {%-   for size in jim_context.img_sizes %}
 {%-     if size[0] != "" %}
@@ -17,7 +17,7 @@
 {%-   capture sizes %} sizes="{{ sizes_array | join: ", " }}"{% endcapture %}
 {%- endif %}
 
-{%- if jim_context.styles != empty %}
+{%- if jim_context.styles %}
 {%-   assign styles_array = "" | split: "" %}
 {%-   for style in jim_context.styles %}
 {%-     capture style_line %}{{ style[0] }}: {{ style[1] }}{% endcapture %}
