@@ -4,19 +4,21 @@ module FilenamePatternsMixin
   DEFAULT_FILENAME_PATTERN = '%{dirname}/%{basename}-%{width}.%{extension}' # rubocop:disable Style/FormatStringToken
   DEFAULT_SVG_FILENAME_PATTERN = '%{dirname}/%{basename}.svgz' # rubocop:disable Style/FormatStringToken
 
-  Jim.setter :filename_pattern, &->(filename_pattern = DEFAULT_FILENAME_PATTERN) do
+  def filename_pattern(filename_pattern = DEFAULT_FILENAME_PATTERN)
     assert_all('String', filename_pattern, :filename_pattern)
     @filename_pattern = filename_pattern
   end
 
-  Jim.setter :svg_filename_pattern, &->(svg_filename_pattern = DEFAULT_SVG_FILENAME_PATTERN) do
+  def svg_filename_pattern(svg_filename_pattern = DEFAULT_SVG_FILENAME_PATTERN)
     return @svg_filename_pattern = nil if svg_filename_pattern.nil?
 
     assert_all('String', svg_filename_pattern, :svg_filename_pattern)
     @svg_filename_pattern = svg_filename_pattern
   end
 
-  Jim.setter :filename_patterns, &->(filename_pattern, svg_filename_pattern) do
+  protect_setters(:filename_pattern, :svg_filename_pattern)
+
+  def filename_patterns(filename_pattern, svg_filename_pattern)
     filename_pattern(filename_pattern)
     svg_filename_pattern(svg_filename_pattern)
   end
