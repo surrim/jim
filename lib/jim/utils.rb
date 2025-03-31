@@ -125,9 +125,10 @@ module Jim::Utils
   def simple_deep_merge(*hashes)
     return {} if hashes.empty?
 
-    last_hash = hashes.pop.dup.transform_keys(&:to_s)
+    last_hash = hashes.pop.dup
     return last_hash unless last_hash.is_a?(Hash)
 
+    last_hash.transform_keys!(&:to_s)
     until hashes.empty?
       hash = hashes.pop
       break unless hash.is_a?(Hash)

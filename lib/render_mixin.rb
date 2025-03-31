@@ -207,7 +207,10 @@ module RenderMixin
 
   def compute_output_attr(format)
     output_mime_type = Jim::Utils.auto_convert_mime_type(format)
-    format_setup = (@format_setups[''] || {}).merge(@format_setups[output_mime_type] || {})
+    format_setup = Jim::Utils.deep_merge(
+      @default_format_setup.to_h,
+      @format_setups.to_h[output_mime_type].to_h
+    ).to_h
     output_extension = format_setup['extension'] || Jim::Utils.preferred_extension_for_mime_type(output_mime_type)
     output_background = Jim::Utils.color(format_setup['background'])
     output_is_lossless = Jim::Utils.lossless_mime_type?(output_mime_type)
