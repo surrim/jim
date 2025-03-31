@@ -31,4 +31,5 @@ module Jim::Validator
   define_assert('[a-z]*',    'downcase') { |x| x == x.downcase }
   define_assert('MimeType',  'a MimeType') { |x| !Jim::Utils.auto_convert_mime_type2(x).nil? }
   define_assert('Hash',      'a Hash') { |x| x.is_a?(Hash) }
+  define_assert('Array',     'a Array') { |x| x.is_a?(Array) }
 end
