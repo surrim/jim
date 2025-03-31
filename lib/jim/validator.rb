@@ -31,13 +31,4 @@ module Jim::Validator
   define_assert('[a-z]*',    'downcase') { |x| x == x.downcase }
   define_assert('MimeType',  'a MimeType') { |x| !Jim::Utils.auto_convert_mime_type2(x).nil? }
   define_assert('Hash',      'a Hash') { |x| x.is_a?(Hash) }
-
-  module_function
-
-  def check_is_primitive(parameter, parameter_name)
-    return true if PRIMITIVE_TYPES.include?(parameter.class)
-
-    Jim::System.warn "ArgumentError: `#{parameter_name}` must be a primitive type, but was #{parameter.inspect}"
-    false
-  end
 end
