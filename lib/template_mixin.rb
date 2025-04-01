@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
 module TemplateMixin
-  DEFAULT_TEMPLATE = nil
+  DEFAULT_TEMPLATE = nil # see Jim::System.DEFAULT_TEMPLATE
 
   def template(template)
-    @template = template&.to_s
-    self
+    return @template = nil if template.nil?
+
+    assert_all('String', '.+', template, :template)
+    @template = template
   end
+
+  protect_setters(:template)
 
   def reset_template = template(nil)
 end
