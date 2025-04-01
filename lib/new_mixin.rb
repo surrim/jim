@@ -29,7 +29,7 @@ module NewMixin
   end
 
   def alt(alt)
-    return @alt = nil if alt.nil?
+    return if alt.nil?
 
     assert_all('String', alt, :alt)
     @alt = alt

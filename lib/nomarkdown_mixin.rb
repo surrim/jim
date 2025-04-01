@@ -4,9 +4,11 @@ module NomarkdownMixin
   DEFAULT_NOMARKDOWN = false
 
   def nomarkdown(nomarkdown = true) # rubocop:disable Style/OptionalBooleanParameter
-    @nomarkdown = nomarkdown ? true : false
-    self
+    assert_all('Bool', nomarkdown, :nomarkdown)
+    @nomarkdown = nomarkdown
   end
+
+  protect_setters(:nomarkdown)
 end
 
 module Jim::LiquidFilters
