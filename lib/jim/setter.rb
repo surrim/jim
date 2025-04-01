@@ -14,3 +14,5 @@ def protect_setters(*methods)
     end
   end
 end
+
+UNDEFINED = Object.new.freeze

@@ -36,12 +36,13 @@ module WatermarkMixin
 
   protect_setters(:watermark_src, :watermark_size, :watermark_x, :watermark_y, :watermark_opacity)
 
-  def watermark(watermark_src, **options)
-    watermark_src(watermark_src)
-    watermark_size(options[:watermark_size]) if options.key?(:watermark_size)
-    watermark_x(options[:watermark_x]) if options.key?(:watermark_x)
-    watermark_y(options[:watermark_y]) if options.key?(:watermark_y)
-    watermark_opacity(options[:watermark_opacity]) if options.key?(:watermark_opacity)
+  def watermark(src: UNDEFINED, size: UNDEFINED, x: UNDEFINED, y: UNDEFINED, opacity: UNDEFINED) # rubocop:disable Naming/MethodParameterName
+    watermark_src(src) if src != UNDEFINED
+    watermark_size(size) if size != UNDEFINED
+    watermark_x(x) if x != UNDEFINED
+    watermark_y(y) if y != UNDEFINED
+    watermark_opacity(opacity) if opacity != UNDEFINED
+    self
   end
 
   def rm_watermark = watermark_src(nil)
@@ -54,14 +55,9 @@ module Jim::LiquidFilters
   def jim_watermark_y(jim, watermark_y) = jim.watermark_y(watermark_y)
   def jim_watermark_opacity(jim, watermark_opacity) = jim.watermark_opacity(watermark_opacity)
 
-  def jim_watermark(
-    jim,
-    watermark_src,
-    watermark_size = DEFAULT_WATERMARK_SIZE,
-    watermark_x = DEFAULT_WATERMARK_X,
-    watermark_y = DEFAULT_WATERMARK_Y,
-    watermark_opacity = DEFAULT_WATERMARK_OPACITY
-  ) = jim.watermark(watermark_src, watermark_size:, watermark_x:, watermark_y:, watermark_opacity:)
+  def jim_watermark(jim, src = UNDEFINED, size = UNDEFINED, x = UNDEFINED, y = UNDEFINED, opacity = UNDEFINED) # rubocop:disable Naming/MethodParameterName
+    jim.watermark(src:, size:, x:, y:, opacity:)
+  end
 
   def jim_rm_watermark(jim) = jim.rm_watermark
 end
