@@ -4,16 +4,17 @@
 {%-   capture alt %} alt="{{ jim_context.alt | escape }}"{% endcapture %}
 {%- endif %}
 
+{%- assign sizes_array = "" | split: "" %}
 {%- if jim_context.img_sizes %}
-{%-   assign sizes_array = "" | split: "" %}
 {%-   for size in jim_context.img_sizes %}
-{%-     if size[0] != "" %}
-{%-       capture size_line %}({{ size[0] }}) {{ size[1] }}{% endcapture %}
-{%-     else %}
-{%-       capture size_line %}{{ size[1] }}{% endcapture %}
-{%-     endif %}
+{%-     capture size_line %}({{ size[0] }}) {{ size[1] }}{% endcapture %}
 {%-     assign sizes_array = sizes_array | push: size_line %}
 {%-   endfor %}
+{%- endif %}
+{%- if jim_context.default_img_size %}
+{%-   assign sizes_array = sizes_array | push: jim_context.default_img_size %}
+{%- endif %}
+{%- if sizes_array.size != 0 %}
 {%-   capture sizes %} sizes="{{ sizes_array | join: ", " }}"{% endcapture %}
 {%- endif %}
 

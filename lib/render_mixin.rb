@@ -136,6 +136,7 @@ module RenderMixin
       avg_color: attr[:source_avg_color],
       images: generated_images,
       img_sizes: @img_sizes,
+      default_img_size: @default_img_size,
       img_attrs: RenderMixin.substitute_hash(@img_attrs, **style_substitutions),
       styles: RenderMixin.substitute_hash(@styles, **style_substitutions)
     }
