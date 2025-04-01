@@ -14,8 +14,8 @@ module FallbackMixin
   def fallback_width(fallback_width = DEFAULT_FALLBACK_WIDTH)
     return @fallback_width = nil if fallback_width.nil?
 
-    assert_all('Numeric', '>0', fallback_width, :fallback_width)
-    @fallback_width = fallback_width.to_i
+    assert_all('Integer', '>0', fallback_width, :fallback_width)
+    @fallback_width = fallback_width
   end
 
   protect_setters(:fallback_format, :fallback_width)

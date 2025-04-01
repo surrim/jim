@@ -10,28 +10,23 @@ module WatermarkMixin
   def watermark_src(watermark_src = DEFAULT_WATERMARK_SRC)
     return @watermark_src = nil if watermark_src.nil?
 
-    assert_all('String', '.+', watermark_src, :watermark_src)
-    @watermark_src = watermark_src.to_s
+    @watermark_src = assert_all('String', '.+', watermark_src, :watermark_src)
   end
 
   def watermark_size(watermark_size = DEFAULT_WATERMARK_SIZE)
-    assert_all('Numeric', '>0', '<=1', watermark_size, :watermark_size)
-    @watermark_size = watermark_size.to_f
+    @watermark_size = assert_all('Float', '>0', '<=1', watermark_size, :watermark_size)
   end
 
   def watermark_x(watermark_x = DEFAULT_WATERMARK_X)
-    assert_all('Numeric', '>=0', '<=1', watermark_x, :watermark_x)
-    @watermark_x = watermark_x.to_f
+    @watermark_x = assert_all('Float', '>=0', '<=1', watermark_x, :watermark_x)
   end
 
   def watermark_y(watermark_y = DEFAULT_WATERMARK_Y)
-    assert_all('Numeric', '>=0', '<=1', watermark_y, :watermark_y)
-    @watermark_y = watermark_y.to_f
+    @watermark_y = assert_all('Float', '>=0', '<=1', watermark_y, :watermark_y)
   end
 
   def watermark_opacity(watermark_opacity = DEFAULT_WATERMARK_OPACITY)
-    assert_all('Numeric', '>=0', '<=1', watermark_opacity, :watermark_opacity)
-    @watermark_opacity = watermark_opacity.to_f
+    @watermark_opacity = assert_all('Float', '>0', '<=1', watermark_opacity, :watermark_opacity)
   end
 
   protect_setters(:watermark_src, :watermark_size, :watermark_x, :watermark_y, :watermark_opacity)
