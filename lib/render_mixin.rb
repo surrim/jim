@@ -2,6 +2,8 @@
 
 module RenderMixin
   def render(render = true) # rubocop:disable Style/OptionalBooleanParameter
+    assert_all('Bool', render, :render)
+
     attr = compute_source_attr
 
     destination_filename = nil
@@ -138,7 +140,7 @@ module RenderMixin
       img_sizes: @img_sizes,
       default_img_size: @default_img_size,
       img_attrs: RenderMixin.substitute_hash(@img_attrs, **style_substitutions),
-      styles: RenderMixin.substitute_hash(@styles, **style_substitutions)
+      styles: RenderMixin.substitute_hash(@styles || {}, **style_substitutions)
     }
     output = Jim::Utils.deep_stringify_keys(output)
     if render
