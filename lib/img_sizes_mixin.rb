@@ -36,8 +36,7 @@ module ImgSizesMixin
   end
 
   def default_img_size(default_img_size)
-    assert_valid_img_size(default_img_size)
-    @default_img_size = default_img_size
+    @default_img_size = assert_valid_img_size(default_img_size)
   end
 
   protect_setters(:img_sizes, :img_size, :default_img_size)

@@ -98,6 +98,13 @@ module Jim::Utils
     types.first.content_type
   end
 
+  def mime_type2?(format)
+    return true if format.include?('/')
+
+    types = MIME::Types.type_for(".#{format}")
+    !types.empty?
+  end
+
   def replace_filename_pattern(
     filename_pattern, user_substitutions,
     source_blake3:, source_extension:, source_dirname:, source_basename:,

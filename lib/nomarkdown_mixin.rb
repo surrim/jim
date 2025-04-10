@@ -4,8 +4,7 @@ module NomarkdownMixin
   DEFAULT_NOMARKDOWN = false
 
   def nomarkdown(nomarkdown = true) # rubocop:disable Style/OptionalBooleanParameter
-    assert_all('Bool', nomarkdown, :nomarkdown)
-    @nomarkdown = nomarkdown
+    @nomarkdown = assert_all('Bool', nomarkdown, :nomarkdown)
   end
 
   protect_setters(:nomarkdown)

@@ -5,34 +5,26 @@ require_relative 'jim/version'
 module SubstitutionsMixin
   DEFAULT_SUBSTITUTIONS = { jim_version: Jim::VERSION }.freeze
 
-  def substitutions(*substitutions)
-    rm_substitutions
-    {}.merge(*substitutions.compact).each do |key, value|
-      add_substitution(key, value)
-    end
-    self
+  def substitutions(*substitutions, **kw_substitutions)
+    substitutions = assert_all('Hash', '{String,_}', '{_,Primitive}', substitutions, :substitutions)
+    kw_substitutions = assert_all('Hash', '{String,_}', '{_,Primitive}', kw_substitutions, :kw_substitutions)
+    @substitutions = Jim::Utils.deep_merge(*substitutions, kw_substitutions)
   end
 
-  def add_substitution(key, value)
-    if value.nil?
-      @substitutions.delete(key.to_sym)
-    else
-      @substitutions[key.to_sym] = value
-    end
-    self
-  end
+  protect_setters(:substitutions, :rm_substitutions)
 
-  def rm_substitution(key) = add_substitution(key, nil)
-
-  def rm_substitutions
-    @substitutions = {}
-    self
-  end
+  def add_substitutions(*substitutions, **kw_substitutions) = substitutions(@substitutions, *substitutions, kw_substitutions) # rubocop:disable Layout/LineLength
+  def add_substitution(key, value) = substitutions(@substitutions, { key => value })
+  def rm_substitutions(*keys) = add_substitutions(keys.map { |key| [key, nil] }.to_h)
+  def rm_substitution(key) = rm_substitutions(key)
+  def rm_all_substitutions = substitutions
 end
 
 module Jim::LiquidFilters
-  def jim_substitutions(jim, *substitutions) = jim.substitutions(jim, substitutions)
+  def jim_substitutions(jim, *substitutions) = jim.substitutions(jim, *substitutions)
+  def jim_add_substitutions(jim, *substitutions) = jim.add_substitutions(jim, *substitutions)
   def jim_add_substitution(jim, key, value) = jim.add_substitution(key, value)
+  def jim_rm_substitutions(jim, *keys) = jim.rm_substitutions(*keys)
   def jim_rm_substitution(jim, key) = jim.rm_substitution(key)
-  def jim_rm_substitutions(jim) = jim.rm_substitutions
+  def jim_rm_all_substitutions(jim) = jim.rm_all_substitutions
 end

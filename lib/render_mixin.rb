@@ -2,7 +2,7 @@
 
 module RenderMixin
   def render(render = true) # rubocop:disable Style/OptionalBooleanParameter
-    assert_all('Bool', render, :render)
+    render = assert_all('Bool', render, :render)
 
     attr = compute_source_attr
 

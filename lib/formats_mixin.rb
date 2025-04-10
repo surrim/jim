@@ -3,30 +3,13 @@
 module FormatsMixin
   DEFAULT_FORMATS = [].freeze
 
-  def assert_valid_format(format)
-    return if format.nil?
-
-    assert_all('String', '.+', 'MimeType', format, :format)
-  end
-
-  def assert_valid_formats(formats)
-    assert_all('Array', formats, :formats)
-    formats.each do |format|
-      assert_valid_format(format)
-    end
-  end
-
   def formats(*formats)
-    formats = formats.flatten
-    assert_valid_formats(formats)
-    formats = formats.map { |format| Jim::Utils.auto_convert_mime_type2(format) }.uniq
-    @formats = formats
+    @formats = assert_all('Array', '[MimeType?]', formats, :formats)
+    @formats.uniq
   end
 
   def rm_formats(*formats)
-    formats = formats.flatten
-    assert_valid_formats(formats)
-    formats = formats.map { |format| Jim::Utils.auto_convert_mime_type2(format) }.uniq
+    formats = assert_all('Array', '[MimeType?]', formats, :formats)
     @formats.delete_if { |format| formats.include?(format) }
   end
 
@@ -42,6 +25,9 @@ module FormatsMixin
     formats(*formats, *@formats)
   end
 
+  def append_format(format) = append_formats(format)
+  def prepend_format(format) = prepend_formats(format)
+  def rm_format(format) = rm_formats(format)
   def rm_all_formats = formats
 end
 
@@ -50,5 +36,8 @@ module Jim::LiquidFilters
   def jim_rm_formats(jim, *formats) = jim.rm_formats(*formats)
   def jim_append_formats(jim, *formats) = jim.append_formats(*formats)
   def jim_prepend_formats(jim, *formats) = jim.prepend_formats(*formats)
+  def jim_append_format(jim, format) = jim.append_format(format)
+  def jim_prepend_format(jim, format) = jim.prepend_format(format)
+  def jim_rm_format(jim, format) = jim.rm_format(format)
   def jim_rm_all_formats(jim) = jim.rm_all_formats
 end

@@ -24,15 +24,13 @@ module NewMixin
   private
 
   def src(src)
-    assert_all('String', '.+', src, :src)
-    @src = src
+    @src = assert_all('String', '.+', src, :src)
   end
 
   def alt(alt)
     return if alt.nil?
 
-    assert_all('String', alt, :alt)
-    @alt = alt
+    @alt = assert_all('String', alt, :alt)
   end
 
   def presets(presets)

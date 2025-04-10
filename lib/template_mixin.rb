@@ -6,8 +6,7 @@ module TemplateMixin
   def template(template)
     return @template = nil if template.nil?
 
-    assert_all('String', '.+', template, :template)
-    @template = template
+    @template = assert_all('String', '.+', template, :template)
   end
 
   protect_setters(:template)
