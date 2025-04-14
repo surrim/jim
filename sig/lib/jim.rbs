@@ -1,6 +1,0 @@
-class Jim
-  def to_h: () -> Hash[Symbol, untyped]
-  def to_s: () -> String
-  def to_liquid: () -> Jim
-  def to_json: (?JSON::State opts) -> String
-end

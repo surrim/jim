@@ -1,9 +1,0 @@
-module Jim::Validator
-  PRIMITIVE_TYPES: Array[Class]
-
-  def self?.check_nil_or_greater_than_zero: (untyped parameter, Symbol parameter_name) -> bool
-  def self?.check_nil_or_between_0_and_1: (untyped parameter, Symbol parameter_name) -> bool
-  def self?.check_is_string: (untyped parameter, Symbol parameter_name) -> bool
-  def self?.check_is_hash: (untyped parameter, Symbol parameter_name) -> bool
-  def self?.check_is_primitive: (untyped parameter, Symbol parameter_name) -> bool
-end
