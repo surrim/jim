@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
 module Jim::System
-  JIM_DEFAULT_PRESET_PATH_REGEX = /^(config|data)(\.[_[:alpha:]][_[:alnum:]]*)*$/
+  JIM_PRESET_PATH_REGEX = /^(config|data)(\.[_[:alpha:]][_[:alnum:]]*)*$/
 
   module_function
 
   def info(tag = 'Jim', text) = @logger.info("#{tag}:", text) # rubocop:disable Style/OptionalArguments
   def warn(text) = @logger.warn('Jim:', text)
 
-  def error(text)
+  def error(error_class, text)
     @logger.error('Jim:', text)
-    raise(text)
+    raise error_class, text
   end
 
   def config = @site.config
@@ -25,10 +25,12 @@ module Jim::System
     template = read_template_file(template_src)
     Liquid::Template
       .parse(template, error_mode: :strict)
-      .render!(@site.site_payload.merge({ 'jim_context' => jim_context }), {
-                 registers: { site: @site },
-                 strict_filters: true
-               })
+      .render!(
+        @site.site_payload.merge({ 'jim_context' => jim_context }), {
+          registers: { site: @site },
+          strict_filters: true
+        }
+      )
   end
 
   def init(site, logger)
@@ -42,11 +44,13 @@ module Jim::System
     unless jim_default_preset_path
       return info('jim_default_preset_path not used')
     end
-    unless jim_default_preset_path.match?(JIM_DEFAULT_PRESET_PATH_REGEX)
+    unless jim_default_preset_path.match?(JIM_PRESET_PATH_REGEX)
       return warn('invalid jim_default_preset_path ignored')
     end
 
     root, *config_path = jim_default_preset_path.split('.')
-    @default_preset = Jim::Utils.deep_stringify_keys((root == 'data' ? site.data : site.config).dig(*config_path))
+    @default_preset = Jim::Utils.deep_dup(
+      Jim::Utils.dig_hash(root == 'config' ? site.config : site.data, *config_path)
+    )
   end
 end

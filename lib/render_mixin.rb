@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 module RenderMixin
+  R_RENDER = Jim::Validator.all('Bool')
+
   def render(render = true) # rubocop:disable Style/OptionalBooleanParameter
-    render = assert_all('Bool', render, :render)
+    render = checked(R_RENDER, render, :render)
 
     attr = compute_source_attr
 
@@ -16,7 +18,7 @@ module RenderMixin
         attr.update(
           compute_resizing_attr(attr[:source_width], **attr.slice(:source_width, :source_height))
         )
-        attr.update(compute_output_attr(attr[:source_extension]))
+        attr.update(compute_output_attr(attr[:source_mime_type]))
         destination_filename = Jim::Utils.replace_filename_pattern(
           @svg_filename_pattern,
           @substitutions,
@@ -45,7 +47,7 @@ module RenderMixin
         )))
       end
       output_attrs = @formats
-                     .map { |format| format || attr[:source_extension] }
+                     .map { |format| format || attr[:source_mime_type] }
                      .uniq
                      .map do |format|
         compute_output_attr(format)
@@ -93,7 +95,7 @@ module RenderMixin
       attr.update(compute_watermark_attr(
                     **attr.slice(:source_width, :source_height, :resizing_width, :resizing_height)
                   ))
-      attr.update(compute_output_attr(@fallback_format || attr[:source_extension]))
+      attr.update(compute_output_attr(@fallback_format || attr[:source_mime_type]))
 
       resized_image = Jim::ResizedImage.new(**attr.slice(
         :source_filename, :source_blake3,
@@ -138,14 +140,13 @@ module RenderMixin
       avg_color: attr[:source_avg_color],
       images: generated_images,
       img_sizes: @img_sizes,
-      default_img_size: @default_img_size,
       img_attrs: RenderMixin.substitute_hash(@img_attrs, **style_substitutions),
       styles: RenderMixin.substitute_hash(@styles || {}, **style_substitutions)
     }
     output = Jim::Utils.deep_stringify_keys(output)
     if render
       output = Jim::System.render(@template, output)
-      output = "{::nomarkdown}\n#{output}\n{:/nomarkdown}\n" if @nomarkdown
+      output = "{::nomarkdown}\n#{output}\n{:/nomarkdown}\n" if @no_markdown
     end
     output
   end
@@ -208,16 +209,13 @@ module RenderMixin
     }
   end
 
-  def compute_output_attr(format)
-    output_mime_type = Jim::Utils.auto_convert_mime_type(format)
-    format_setup = Jim::Utils.deep_merge(
-      @default_format_setup.to_h,
-      @format_setups.to_h[output_mime_type].to_h
-    ).to_h
-    output_extension = format_setup['extension'] || Jim::Utils.preferred_extension_for_mime_type(output_mime_type)
-    output_background = Jim::Utils.color(format_setup['background'])
+  def compute_output_attr(mime_type)
+    output_mime_type = mime_type
+    format_setup = Jim::Utils.deep_merge(@format_setups.to_h[nil].to_h, @format_setups.to_h[output_mime_type].to_h).to_h
+    output_extension = format_setup[:extension] || Jim::Utils.preferred_extension_for_mime_type(output_mime_type)
+    output_background = Jim::Utils.color(format_setup[:background])
     output_is_lossless = Jim::Utils.lossless_mime_type?(output_mime_type)
-    output_quality = format_setup['quality']
+    output_quality = format_setup[:quality]
     {
       output_mime_type:,
       output_extension:,

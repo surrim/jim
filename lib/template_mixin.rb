@@ -3,15 +3,15 @@
 module TemplateMixin
   DEFAULT_TEMPLATE = nil # see Jim::System.DEFAULT_TEMPLATE
 
-  def template(template)
-    return @template = nil if template.nil?
+  T_TEMPLATE = Jim::Validator.all('String', '.+', allow_nil: true)
 
-    @template = assert_all('String', '.+', template, :template)
+  def template(template)
+    @template = checked(T_TEMPLATE, template, :template)
   end
 
   protect_setters(:template)
 
-  def reset_template = template(nil)
+  def reset_template = template(DEFAULT_TEMPLATE)
 end
 
 module Jim::LiquidFilters

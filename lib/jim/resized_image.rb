@@ -79,12 +79,13 @@ class Jim::ResizedImage
         output_extension: 'png', output_is_lossless: true, output_quality: nil
       )
       Jim::Utils.write_file_if_not_exist(png_cache_filename) do |filename|
-        system(
+        command = [
           'inkscape', source_filename.to_s,
           '-w', resizing_width.to_s, '-h', resizing_height.to_s,
-          '-o', '-', '--export-type=png', '--export-png-color-mode=RGBA_16',
-          out: filename.to_s, exception: true
-        )
+          '-o', '-', '--export-type=png', '--export-png-color-mode=RGBA_16'
+        ]
+        status = system(*command, out: filename.to_s, err: File::NULL)
+        Jim::System.error(RuntimeError, "command \"#{command.join(' ')}\" failed") if status != true
       end
       Jim::Utils.load_image(png_cache_filename)
     else

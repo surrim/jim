@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module NewMixin
-  def initialize(src, alt = nil, *presets, **preset_options)
+  def initialize(src, alt = nil, *presets, **kw_preset)
     # set to valid state
     Jim.preset_constants.each do |preset_constant|
       name = preset_constant[:name]
@@ -11,26 +11,31 @@ module NewMixin
 
     src(src)
     alt(alt)
+    return if presets.empty? && kw_preset.empty?
+
     presets(
       Jim::Utils.deep_merge(
-        Jim.hard_coded_preset,
-        Jim::System.default_preset,
-        *presets.flatten.compact.map { |preset| preset.is_a?(Jim) ? preset.to_preset : preset.to_h },
-        preset_options
+        Jim::Utils.deep_stringify_keys(Jim.hard_coded_preset),
+        Jim::Utils.deep_stringify_keys(Jim::System.default_preset),
+        *presets.flatten.compact.map do |preset|
+          Jim::Utils.deep_stringify_keys(preset.is_a?(Jim) ? preset.to_preset : preset.to_h)
+        end,
+        Jim::Utils.deep_stringify_keys(kw_preset)
       )
     )
   end
 
   private
 
+  N_SRC = Jim::Validator.all('String', '.+')
+  N_ALT = Jim::Validator.all('String', '.+', allow_nil: true)
+
   def src(src)
-    @src = assert_all('String', '.+', src, :src)
+    @src = checked(N_SRC, src, :src)
   end
 
   def alt(alt)
-    return if alt.nil?
-
-    @alt = assert_all('String', alt, :alt)
+    @alt = checked(N_ALT, alt, :alt)
   end
 
   def presets(presets)

@@ -4,16 +4,15 @@ module FallbackMixin
   DEFAULT_FALLBACK_FORMAT = nil
   DEFAULT_FALLBACK_WIDTH = nil
 
-  def fallback_format(fallback_format = DEFAULT_FALLBACK_FORMAT)
-    return @fallback_format = nil if fallback_format.nil?
+  F_FORMAT = Jim::Validator.all('String', '.+', 'MimeType', allow_nil: true)
+  F_WIDTH  = Jim::Validator.all('Integer', '>0', allow_nil: true)
 
-    @fallback_format = assert_all('String', '.+', 'MimeType', fallback_format, :fallback_format)
+  def fallback_format(fallback_format = DEFAULT_FALLBACK_FORMAT)
+    @fallback_format = checked(F_FORMAT, fallback_format, :fallback_format)
   end
 
   def fallback_width(fallback_width = DEFAULT_FALLBACK_WIDTH)
-    return @fallback_width = nil if fallback_width.nil?
-
-    @fallback_width = assert_all('Integer', '>0', fallback_width, :fallback_width)
+    @fallback_width = checked(F_WIDTH, fallback_width, :fallback_width)
   end
 
   protect_setters(:fallback_format, :fallback_width)

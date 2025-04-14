@@ -5,7 +5,7 @@ require 'singleton'
 class Jim::Sprintf2
   include Singleton
 
-  SPRINTF2_SUBSTITUTION_REGEX = /% *{(?<identifier>[_a-zA-Z]\w*)(\[ *(?<from>-?\d+) *((?<mode>\.\.|,) *(?<to>-?\d+)?)? *\])?}/ # rubocop:disable Layout/LineLength,Lint/MixedRegexpCaptureTypes
+  SPRINTF2_SUBSTITUTION_REGEX = /% *{(?<identifier>[_a-zA-Z]\w*)(\[ *(?<from>-?\d+) *((?<mode>\.\.\.?|,) *(?<to>-?\d+)?)? *\])?}/ # rubocop:disable Layout/LineLength,Lint/MixedRegexpCaptureTypes
 
   def initialize
     @computed_dependencies = {}
@@ -30,12 +30,13 @@ class Jim::Sprintf2
 
       match_begin, match_end = match.offset(0)
       identifier = match[:identifier].to_sym
-      if substitutions.key?(identifier)
-        value = self.class.eval2(substitutions[identifier].to_s, match[:from]&.to_i, match[:mode], match[:to]&.to_i)
-      else
-        Jim::System.warn("KeyError: %{#{identifier}} not found, skipping substitution")
-      end
-      format_string = format_string[0, match_begin].to_s + value.to_s + format_string[match_end..].to_s
+      value = if substitutions.key?(identifier)
+                self.class.eval2(substitutions[identifier].to_s, match[:from]&.to_i, match[:mode], match[:to]&.to_i)
+              else
+                Jim::System.warn("KeyError: %{#{identifier}} not found, skipping substitution")
+                nil
+              end
+      format_string = format_string[0, match_begin] + value.to_s + format_string[match_end..]
       i = match_begin + value.to_s.length
     end
     format_string
@@ -73,9 +74,12 @@ class Jim::Sprintf2
 
   def self.eval2(value, from, mode, to)
     return value if from.nil?
-    return value[from] if mode.nil?
-    return (to.nil? ? value[from,] : value[from, to]).to_s if mode == ','
 
-    (to.nil? ? value[from..] : value[from..to]).to_s
+    case mode
+    when nil  then value[from]
+    when ','  then to.nil? ? value[from,] : value[from, to]
+    when '..' then to.nil? ? value[from..] : value[from..to]
+    else           to.nil? ? value[from...] : value[from...to]
+    end
   end
 end

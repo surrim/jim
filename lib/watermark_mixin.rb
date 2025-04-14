@@ -7,26 +7,30 @@ module WatermarkMixin
   DEFAULT_WATERMARK_Y = 0.5
   DEFAULT_WATERMARK_OPACITY = 0.5
 
-  def watermark_src(watermark_src = DEFAULT_WATERMARK_SRC)
-    return @watermark_src = nil if watermark_src.nil?
+  W_WATERMARK_SRC     = Jim::Validator.all('String', '.+', allow_nil: true)
+  W_WATERMARK_SIZE    = Jim::Validator.all('Float', '>0', '<=1')
+  W_WATERMARK_X       = Jim::Validator.all('Float', '>=0', '<=1')
+  W_WATERMARK_Y       = Jim::Validator.all('Float', '>=0', '<=1')
+  W_WATERMARK_OPACITY = Jim::Validator.all('Float', '>0', '<=1')
 
-    @watermark_src = assert_all('String', '.+', watermark_src, :watermark_src)
+  def watermark_src(watermark_src = DEFAULT_WATERMARK_SRC)
+    @watermark_src = checked(W_WATERMARK_SRC, watermark_src, :watermark_src)
   end
 
   def watermark_size(watermark_size = DEFAULT_WATERMARK_SIZE)
-    @watermark_size = assert_all('Float', '>0', '<=1', watermark_size, :watermark_size)
+    @watermark_size = checked(W_WATERMARK_SIZE, watermark_size, :watermark_size)
   end
 
   def watermark_x(watermark_x = DEFAULT_WATERMARK_X)
-    @watermark_x = assert_all('Float', '>=0', '<=1', watermark_x, :watermark_x)
+    @watermark_x = checked(W_WATERMARK_X, watermark_x, :watermark_x)
   end
 
   def watermark_y(watermark_y = DEFAULT_WATERMARK_Y)
-    @watermark_y = assert_all('Float', '>=0', '<=1', watermark_y, :watermark_y)
+    @watermark_y = checked(W_WATERMARK_Y, watermark_y, :watermark_y)
   end
 
   def watermark_opacity(watermark_opacity = DEFAULT_WATERMARK_OPACITY)
-    @watermark_opacity = assert_all('Float', '>0', '<=1', watermark_opacity, :watermark_opacity)
+    @watermark_opacity = checked(W_WATERMARK_OPACITY, watermark_opacity, :watermark_opacity)
   end
 
   protect_setters(:watermark_src, :watermark_size, :watermark_x, :watermark_y, :watermark_opacity)

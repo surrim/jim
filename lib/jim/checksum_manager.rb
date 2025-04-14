@@ -15,7 +15,7 @@ class Jim::ChecksumManager
   def blake3(filename)
     unless filename.exist?
       @checksums.delete(filename.to_s.to_sym)
-      Jim::System.error("FilesystemError: #{filename} not found")
+      Jim::System.error(IOError, "#{filename} not found")
     end
 
     stat = filename.stat

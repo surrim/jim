@@ -1,75 +1,139 @@
 # frozen_string_literal: true
 
 module Jim::Validator
-  PRIMITIVE_TYPES = [NilClass, TrueClass, FalseClass, Integer, Float, String].freeze
-
   class << self
-    def asserts = @asserts ||= {}
+    def named_validators = @named_validators ||= {}
 
-    def define_assert(id, condition, converter = nil)
-      asserts[id] = lambda do |parameter, parameter_name|
-        if block_given? && !yield(parameter)
-          raise ArgumentError, "`#{parameter_name}` must be #{condition}, but was #{parameter.inspect}"
-        end
-
-        converter ? converter.call(parameter) : parameter
+    def validator(name, validate, convert)
+      Object.new.tap do |obj|
+        obj.define_singleton_method(:name) { name }
+        obj.define_singleton_method(:validate) { |object| validate ? validate.call(object) : true }
+        obj.define_singleton_method(:convert) { |object| convert ? convert.call(object) : object }
       end
     end
-  end
 
-  def assert_all(*ids, parameter, parameter_name)
-    ids.each do |id|
-      parameter = Jim::Validator.asserts[id].call(parameter, parameter_name)
+    def name_validator(id, name, validate, convert)
+      named_validators[id] = validator(name, validate, convert)
     end
-    parameter
-  end
 
-  def float?(value) = value.is_a?(Numeric) || (value.is_a?(String) && value.match?(/^-?[0-9]+(\.[0-9]*)?$/))
-  def int?(value) = value.is_a?(Numeric) || (x.is_a?(String) && x.match?(/^-?[0-9]+$/))
-  def mime_type?(value) = Jim::Utils.mime_type2?(value)
-  def primitive? = PRIMITIVE_TYPES.include?(x.class)
+    def to_validator(validator)
+      return named_validators[validator] if validator.is_a?(String)
+      return validator unless validator.is_a?(Array)
 
-  def filled_with_optional_positive_ints?(value)
-    value.all do |elem|
-      elem.nil? || (int?(elem) && elem.to_i.positive?)
+      validator.last.is_a?(Hash) ? all(*validator[0...-1], **validator.last) : all(*validator)
+    end
+
+    def to_bool(value) = ![nil, false, 0, '', 'false'].include?(value)
+    def to_float(value) = Float(value) rescue nil # rubocop:disable Style/RescueModifier
+    def to_mime_type(value) = Jim::Utils.auto_convert_mime_type(value)
+
+    def list_to_string(value0, value1, *more_values, last_separator:)
+      values = [value0, value1, *more_values]
+      "#{values[0..-2].join(', ')} #{last_separator} #{values[-1]}"
+    end
+
+    def all(*validators, allow_nil: false)
+      validators = validators.map { |validator| to_validator(validator) }
+      return Jim::Validator.validator('something', nil, nil) if validators.empty?
+      return validators.first if validators.size == 1
+
+      Jim::Validator.validator(
+        list_to_string(*validators.map(&:name), last_separator: 'and'),
+        lambda { |x|
+          return allow_nil if x.nil?
+
+          validators.each do |validator|
+            return false unless validator.validate(x)
+
+            x = validator.convert(x)
+          end
+          true
+        },
+        lambda { |x|
+          return nil if x.nil?
+
+          validators.each do |validator|
+            x = validator.convert(x)
+          end
+          x
+        }
+      )
+    end
+
+    def any(value0, value1, *more_values)
+      values = [value0, value1, *more_values].uniq
+      Jim::Validator.validator(
+        list_to_string(*values.map(&:inspect), last_separator: 'or'),
+        ->(x) { values.any? { |value| value.is_a?(Class) ? x.is_a?(value) : x == value } },
+        nil
+      )
+    end
+
+    def array(validator, flatten: false, compact: false, allow_nils: false, uniq: false, sort: false)
+      validator = to_validator(validator)
+      Jim::Validator.validator(
+        'an Array(' \
+          "each value #{validator.name}#{' or nil' if allow_nils}" \
+        ')',
+        lambda do |x|
+          return false unless x.is_a?(Array)
+
+          x = x.flatten if flatten
+          x.all? { |value| value.nil? ? allow_nils : validator.validate(value) }
+        end,
+        lambda do |x|
+          x = flatten ? x.flatten : x
+          x = compact ? x.compact : x
+          x = x.map { |value| value.nil? ? nil : validator.convert(value) }
+          x = uniq ? x.uniq : x
+          sort ? x.sort(&sort) : x
+        end
+      )
+    end
+
+    def hash(key_validator, value_validator, allow_nil_key: false, allow_nil_values: false)
+      key_validator = to_validator(key_validator)
+      value_validator = to_validator(value_validator)
+      Jim::Validator.validator(
+        'a Hash(' \
+          "each key #{key_validator.name}#{' or nil' if allow_nil_key}, " \
+          "each value #{value_validator.name}#{' or nil' if allow_nil_values}" \
+        ')',
+        lambda do |x|
+          return false unless x.is_a?(Hash)
+
+          x.all? do |key, value|
+            (value.nil? ? allow_nil_values : value_validator.validate(value)) &&
+            (key.nil? ? allow_nil_key : key_validator.validate(key))
+          end
+        end,
+        lambda do |x|
+          x.map do |key, value|
+            [key.nil? ? nil : key_validator.convert(key), value.nil? ? nil : value_validator.convert(value)]
+          end.to_h
+        end
+      )
     end
   end
 
-  def filled_with_optional_mime_types?(value)
-    value.all do |elem|
-      elem.nil? || mime_type?(elem)
+  name_validator('Bool',      'true or false', nil, ->(x) { to_bool(x) })
+  name_validator('Integer',   'an Integer', ->(x) { !to_float(x).nil? }, ->(x) { to_float(x).round })
+  name_validator('Float',     'a Float', ->(x) { !to_float(x).nil? }, ->(x) { to_float(x) })
+  name_validator('>0',        'greater than zero', lambda(&:positive?), nil)
+  name_validator('>=0',       'greater or equal than zero', ->(x) { x >= 0 }, nil)
+  name_validator('<=1',       'less or equal than one', ->(x) { x <= 1 }, nil)
+  name_validator('String',    'a String', nil, lambda(&:to_s))
+  name_validator('Symbol',    'a Symbol', nil, ->(x) { x.to_s.to_sym })
+  name_validator('.+',        'not empty', ->(x) { !x.empty? }, nil)
+  name_validator('[a-z]*',    'downcase', nil, lambda(&:downcase))
+  name_validator('MimeType',  'a MimeType', ->(x) { !to_mime_type(x).nil? }, ->(x) { to_mime_type(x) })
+
+  def checked(validator, value, value_name)
+    validator = Jim::Validator.to_validator(validator)
+    unless validator.validate(value)
+      raise ArgumentError, "#{value_name} must be #{validator.name}, but was #{value.inspect}"
     end
+
+    validator.convert(value)
   end
-
-  def filled_with_string_keys?(value) = value.keys.all { |elem| !elem.nil? }
-  def filled_with_primitive_values?(value) = value.values.all { |elem| primitive?(elem) }
-
-  def to_optional_int_values(value) = value.map { |elem| elem&.to_f }
-  def to_mime_type(value) = Jim::Utils.auto_convert_mime_type2(value)
-
-  def to_optional_mime_type_values(value)
-    value.map do |elem|
-      elem.nil? ? nil : to_mime_type(elem)
-    end
-  end
-
-  def to_string_keys(value) = value.transform_keys(&:to_s)
-
-  define_assert('Primitive', 'nil, true, false, Integer, Float or String', nil, &primitive?)
-  define_assert('Float',     'a Float', lambda(&:to_f), &float?)
-  define_assert('Integer',   'an Integer', lambda(&:to_i), &int?)
-  define_assert('>0',        'greater than zero', nil, &:positive?)
-  define_assert('>=0',       'greater or equal than zero') { |x| x >= 0 }
-  define_assert('<=1',       'less or equal than one') { |x| x <= 1 }
-  define_assert('String',    'a String', lambda(&:to_s)) { |x| !x.nil? }
-  define_assert('.+',        'not empty') { |x| !x.empty? }
-  define_assert('[a-z]*',    'downcase', lambda(&:downcase))
-  define_assert('MimeType',  'a MimeType', to_mime_type, &mime_type?)
-  define_assert('Hash',      'a Hash') { |x| x.is_a?(Hash) }
-  define_assert('Array',     'a Array') { |x| x.is_a?(Array) }
-  define_assert('Bool',      'true or false', ->(x) { x ? true : false })
-  define_assert('[Integer>0?]', 'filled with positive Integers or nil values', to_optional_int_values, &filled_with_optional_positive_ints?) # rubocop:disable Layout/LineLength
-  define_assert('[MimeType?]', 'filled with MimeTypes or nil values', to_optional_mime_type_values, &filled_with_optional_mime_types?) # rubocop:disable Layout/LineLength
-  define_assert('{String,_}', 'filled with String keys', to_string_keys, &filled_with_string_keys?)
-  define_assert('{_,Primitive}', 'filled with String or nil values', nil, &filled_with_primitive_values?)
 end

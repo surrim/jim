@@ -3,13 +3,15 @@
 module FormatsMixin
   DEFAULT_FORMATS = [].freeze
 
+  F_FORMAT       = Jim::Validator.all('String', '.+', 'MimeType', allow_nil: true)
+  F_FORMAT_ARRAY = Jim::Validator.array(F_FORMAT, flatten: true, allow_nils: true, uniq: true)
+
   def formats(*formats)
-    @formats = assert_all('Array', '[MimeType?]', formats, :formats)
-    @formats.uniq
+    @formats = checked(F_FORMAT_ARRAY, formats, :formats)
   end
 
   def rm_formats(*formats)
-    formats = assert_all('Array', '[MimeType?]', formats, :formats)
+    formats = checked(F_FORMAT_ARRAY, formats, :formats)
     @formats.delete_if { |format| formats.include?(format) }
   end
 

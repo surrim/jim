@@ -4,6 +4,7 @@ def protect_setters(*methods)
   methods.each do |method_name|
     safe_method = "#{method_name}_unsafe".to_sym
     alias_method safe_method, method_name
+    send(:private, safe_method)
 
     define_method(method_name) do |*args, **kwargs|
       send(safe_method, *args, **kwargs)
