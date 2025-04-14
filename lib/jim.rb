@@ -17,8 +17,8 @@ class Jim
   include NewMixin
   include NoMarkdownMixin
   include RenderMixin
+  include S10nsMixin
   include StylesMixin
-  include SubstitutionsMixin
   include TemplateMixin
   include WatermarkMixin
   include WidthsMixin

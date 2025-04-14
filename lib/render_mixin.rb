@@ -21,7 +21,7 @@ module RenderMixin
         attr.update(compute_output_attr(attr[:source_mime_type]))
         destination_filename = Jim::Utils.replace_filename_pattern(
           @svg_filename_pattern,
-          @substitutions,
+          @s10ns,
           **attr.slice(
             :source_blake3, :source_extension, :source_dirname, :source_basename,
             :resizing_width, :resizing_height,
@@ -72,7 +72,7 @@ module RenderMixin
           ))
           generated_filename = Jim::Utils.replace_filename_pattern(
             @filename_pattern,
-            @substitutions,
+            @s10ns,
             **attr.slice(
               :source_blake3, :source_extension, :source_dirname, :source_basename,
               :resizing_width, :resizing_height,
@@ -108,7 +108,7 @@ module RenderMixin
       ))
       destination_filename = Jim::Utils.replace_filename_pattern(
         @filename_pattern,
-        @substitutions,
+        @s10ns,
         **attr.slice(
           :source_blake3, :source_extension, :source_dirname, :source_basename,
           :resizing_width, :resizing_height,
@@ -118,7 +118,7 @@ module RenderMixin
       Jim::System.add_external_file(fallback_cache_filename, destination_filename)
     end
 
-    style_substitutions = @substitutions.merge(
+    style_substitutions = @s10ns.merge(
       blake3: attr[:source_blake3],
       width: attr[:resizing_width],
       height: attr[:resizing_height],
