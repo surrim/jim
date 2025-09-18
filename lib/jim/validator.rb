@@ -60,6 +60,22 @@ module Jim::Validator
       )
     end
 
+    def tuple(validator0, validator1, *more_validators)
+      validators = [validator0, validator1, *more_validators].map { |validator| to_validator(validator) }
+
+      Jim::Validator.validator(
+        'a tuple(' + validators.each_with_index.map { |validator, i| "#{i}: #{validator.name}" }.join(', ') + ')',
+        lambda do |x|
+          return false if !x.is_a?(Array) || x.count != validators.count
+
+          x.each_with_index.all? { |value, i| validators[i].validate(value) }
+        end,
+        lambda do |x|
+          x.each_with_index.map { |value, i| validators[i].convert(value) }
+        end
+      )
+    end
+
     def any(value0, value1, *more_values)
       values = [value0, value1, *more_values].uniq
       Jim::Validator.validator(

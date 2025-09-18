@@ -7,7 +7,7 @@
 {%- if jim_context.img_sizes %}
 {%-   assign sizes_array = "" | split: "" %}
 {%-   for size in jim_context.img_sizes %}
-{%-     if size[0] != "" %}
+{%-     if size[0] %}
 {%-       capture size_line %}({{ size[0] }}) {{ size[1] }}{% endcapture %}
 {%-     else %}
 {%-       capture size_line %}{{ size[1] }}{% endcapture %}
