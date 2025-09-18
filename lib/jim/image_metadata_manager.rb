@@ -28,7 +28,7 @@ module Jim::ImageMetadataManager
     image
       .resize(1, 1)
       .pixel_color(0, 0)
-      .to_color(Magick::AllCompliance, true, 8, true)
+      .to_color(Magick::NoCompliance, true, 8, true)
       .downcase[1..].to_s
   end
 end
