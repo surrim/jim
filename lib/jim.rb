@@ -43,7 +43,7 @@ class Jim
 
   class << self
     def preset_constants
-      Jim::Utils::deep_dup(@preset_constants ||= constants.filter { |constant_name| constant_name.start_with?('DEFAULT_') }
+      Jim::Utils.deep_dup(@preset_constants ||= constants.filter { |constant_name| constant_name.start_with?('DEFAULT_') }
                                      .map do |constant_name|
         constant_value = const_get(constant_name)
         name = constant_name['DEFAULT_'.length..].downcase.to_sym

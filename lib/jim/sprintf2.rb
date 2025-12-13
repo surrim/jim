@@ -77,7 +77,7 @@ class Jim::Sprintf2
 
     case mode
     when nil  then value[from]
-    when ','  then to.nil? ? value[from,] : value[from, to]
+    when ','  then to.nil? ? value[from] : value[from, to]
     when '..' then to.nil? ? value[from..] : value[from..to]
     else           to.nil? ? value[from...] : value[from...to]
     end
