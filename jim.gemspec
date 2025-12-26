@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r!^test/!)
   spec.require_paths = ['lib']
 
-  spec.required_ruby_version = '~> 3.3'
+  spec.required_ruby_version = '>= 3.3', '< 4.1'
   spec.add_runtime_dependency 'blake3-rb', '~> 1.5'
   spec.add_runtime_dependency 'mime-types', '~> 3.4'
   spec.add_runtime_dependency 'rmagick', '>= 5.2', '< 7.0'
