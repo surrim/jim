@@ -198,7 +198,7 @@ def no_markdown(no_markdown = true) # → jim
 def jim_no_markdown(jim, no_markdown = true) # → jim
 ```
 
-## S10ns
+## S10ns (Substitutions)
 
 ```ruby
 def s10ns(*s10ns, **kw_s10ns) # → jim
