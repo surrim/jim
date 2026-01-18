@@ -1,4 +1,4 @@
-<image src="jim.webp" alt="Jim" width="400" height="500" style="width: auto; height: 50vh; image-rendering: pixelated; background: purple">
+<image src="https://raw.githubusercontent.com/surrim/jim/main/jim.webp" alt="Jim" width="400" height="500" style="width: auto; height: 50vh; image-rendering: pixelated; background: purple">
 
 # Jim for Jekyll and Bridgetown
 
