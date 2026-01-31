@@ -67,6 +67,33 @@ I'm already using this plugin for some websites. So don't assume you've found a 
 
 ## Quick Installation
 
+### Prerequisites
+
+Jim requires [ImageMagick](https://imagemagick.org/) and [blake3-rb](https://github.com/Shopify/blake3-rb) with their native dependencies installed on your system.
+
+- **ImageMagick** (required by the `rmagick` gem)
+  
+  ```bash
+  # Debian / Ubuntu
+  sudo apt install libmagickwand-dev
+  
+  # Fedora
+  sudo dnf install ImageMagick-devel
+  
+  # macOS
+  brew install imagemagick
+  ```
+
+- **Rust toolchain** (required by the `blake3-rb` gem to compile native extensions)
+  
+  ```bash
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  ```
+  
+  See [rustup.rs](https://rustup.rs/) for details.
+
+### Installation
+
 - Add the following line to your `Gemfile`
   
   ```ruby
