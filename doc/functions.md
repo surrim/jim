@@ -11,7 +11,7 @@ The functions are listed in detail with a regular syntax and a small example.
 - [Filename Patterns](#filename-patterns)
 - [Format Setups](#format-setups)
 - [Formats](#formats)
-- [Image Attrs](#image-attris)
+- [Image Attrs](#image-attrs)
 - [Image Sizes](#image-sizes)
 - [No Markdown](#no-markdown)
 - [S10ns](#s10ns)
@@ -175,15 +175,17 @@ def jim_rm_all_img_attrs(jim) # → jim
 ## Image Sizes
 
 ```ruby
-def img_sizes(*img_sizes, **kw_img_sizes) # → jim
-def img_size(media_condition, img_size) # → jim
+def img_sizes(img_sizes) # → jim
+def append_img_size(media_condition, img_size) # → jim
+def prepend_img_size(media_condition, img_size) # → jim
 def rm_img_size(media_condition) # → jim
 def rm_img_sizes(*media_conditions) # → jim
 def rm_all_img_sizes # → jim
 
 # liquid
 def jim_img_sizes(jim, *img_sizes) # → jim
-def jim_img_size(jim, media_condition, img_size) # → jim
+def jim_append_img_size(jim, media_condition, img_size) # → jim
+def jim_prepend_img_size(jim, media_condition, img_size) # → jim
 def jim_rm_img_size(jim, media_condition) # → jim
 def jim_rm_img_sizes(jim, *media_conditions) # → jim
 def jim_rm_all_img_sizes(jim) # → jim

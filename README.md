@@ -134,8 +134,8 @@ The `jim_render` / `render` function starts the image processing and outputs a `
 {{ "_images/example.png" | jim_new: "My awesome image"
   | jim_formats: "avif", "webp"
   | jim_widths: 960, 1440, 1920
-  | jim_add_img_size: "min-width: 576px", "540px"
-  | jim_add_img_size: nil, "100vw"
+  | jim_append_img_size: "min-width: 576px", "540px"
+  | jim_append_img_size: nil, "100vw"
   | jim_render
 }}
 ```
@@ -144,8 +144,8 @@ The `jim_render` / `render` function starts the image processing and outputs a `
 <%== Jim.new('_images/example.png', 'My awesome image')
   .formats('avif', 'webp')
   .widths(960, 1440, 1920)
-  .add_img_size('min-width: 576px', '540px')
-  .add_img_size(nil, '100vw')
+  .append_img_size('min-width: 576px', '540px')
+  .append_img_size(nil, '100vw')
   .render
 %>
 ```
@@ -155,7 +155,7 @@ The `jim_render` / `render` function starts the image processing and outputs a `
 ```liquid
 {%- assign jim = "_images/example.png" | jim_new: "My awesome image" %}
 {%- if site.use_lazyloading %}
-{%-   assign jim = jim | jim_add_img_attr: "loading", "lazy" %}
+{%-   assign jim = jim | jim_img_attr: "loading", "lazy" %}
 {%- endif %}
 {{ jim | jim_render }}
 ```
@@ -163,7 +163,7 @@ The `jim_render` / `render` function starts the image processing and outputs a `
 ```erb
 <% jim = Jim.new('_images/example.png', 'My awesome image') %>
 <% if site.use_lazyloading %>
-<%   jim.add_img_attr('loading', 'lazy') %>
+<%   jim.img_attr('loading', 'lazy') %>
 <% end %>
 <%== jim.render %>
 ```
