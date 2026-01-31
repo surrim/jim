@@ -11,7 +11,7 @@ The functions are listed in detail with a regular syntax and a small example.
 - [Filename Patterns](#filename-patterns)
 - [Format Setups](#format-setups)
 - [Formats](#formats)
-- [Image Attrs](#image-attris)
+- [Image Attrs](#image-attrs)
 - [Image Sizes](#image-sizes)
 - [No Markdown](#no-markdown)
 - [S10ns](#s10ns)
@@ -134,22 +134,22 @@ def jim_reset_format_setups(jim) # → jim
 
 ```ruby
 def formats(*formats) # → jim
-def append_format(format) # → jim
-def append_formats(*formats) # → jim
-def prepend_format(format) # → jim
-def prepend_formats(*formats) # → jim
-def rm_format(format) # → jim
 def rm_formats(*formats) # → jim
+def append_formats(*formats) # → jim
+def prepend_formats(*formats) # → jim
+def append_format(format) # → jim
+def prepend_format(format) # → jim
+def rm_format(format) # → jim
 def rm_all_formats # → jim
 
 # liquid
 def jim_formats(jim, *formats) # → jim
-def jim_append_format(jim, format) # → jim
-def jim_append_formats(jim, *formats) # → jim
-def jim_prepend_format(jim, format) # → jim
-def jim_prepend_formats(jim, *formats) # → jim
-def jim_rm_format(jim, format) # → jim
 def jim_rm_formats(jim, *formats) # → jim
+def jim_append_formats(jim, *formats) # → jim
+def jim_prepend_formats(jim, *formats) # → jim
+def jim_append_format(jim, format) # → jim
+def jim_prepend_format(jim, format) # → jim
+def jim_rm_format(jim, format) # → jim
 def jim_rm_all_formats(jim) # → jim
 ```
 
@@ -157,10 +157,10 @@ def jim_rm_all_formats(jim) # → jim
 
 ```ruby
 def img_attrs(*img_attrs, **kw_img_attrs) # → jim
+def rm_img_attrs(*keys) # → jim
 def merge_img_attrs(*img_attrs, **kw_img_attrs) # → jim
 def img_attr(key, value) # → jim
 def rm_img_attr(key) # → jim
-def rm_img_attrs(*keys) # → jim
 def rm_all_img_attrs # → jim
 
 # liquid
@@ -175,17 +175,19 @@ def jim_rm_all_img_attrs(jim) # → jim
 ## Image Sizes
 
 ```ruby
-def img_sizes(*img_sizes, **kw_img_sizes) # → jim
-def img_size(media_condition, img_size) # → jim
-def rm_img_size(media_condition) # → jim
+def img_sizes(img_sizes) # → jim
 def rm_img_sizes(*media_conditions) # → jim
+def append_img_size(media_condition, img_size) # → jim
+def prepend_img_size(media_condition, img_size) # → jim
+def rm_img_size(media_condition) # → jim
 def rm_all_img_sizes # → jim
 
 # liquid
 def jim_img_sizes(jim, *img_sizes) # → jim
-def jim_img_size(jim, media_condition, img_size) # → jim
-def jim_rm_img_size(jim, media_condition) # → jim
 def jim_rm_img_sizes(jim, *media_conditions) # → jim
+def jim_append_img_size(jim, media_condition, img_size) # → jim
+def jim_prepend_img_size(jim, media_condition, img_size) # → jim
+def jim_rm_img_size(jim, media_condition) # → jim
 def jim_rm_all_img_sizes(jim) # → jim
 ```
 
@@ -202,16 +204,16 @@ def jim_no_markdown(jim, no_markdown = true) # → jim
 
 ```ruby
 def s10ns(*s10ns, **kw_s10ns) # → jim
-def add_s10n(key, value) # → jim
-def add_s10ns(*s10ns, **kw_s10ns) # → jim
-def rm_s10n(key) # → jim
 def rm_s10ns(*keys) # → jim
+def add_s10ns(*s10ns, **kw_s10ns) # → jim
+def add_s10n(key, value) # → jim
+def rm_s10n(key) # → jim
 def rm_all_s10ns # → jim
 
 # liquid
 def jim_s10ns(jim, *s10ns) # → jim
-def jim_add_s10n(jim, key, value) # → jim
 def jim_add_s10ns(jim, *s10ns) # → jim
+def jim_add_s10n(jim, key, value) # → jim
 def jim_rm_s10n(jim, key) # → jim
 def jim_rm_s10ns(jim, *keys) # → jim
 def jim_rm_all_s10ns(jim) # → jim
@@ -221,9 +223,9 @@ def jim_rm_all_s10ns(jim) # → jim
 
 ```ruby
 def styles(*styles, **kw_style) # → jim
+def rm_styles(*properties) # → jim
 def style(property, value) # → jim
 def rm_style(property) # → jim
-def rm_styles(*properties) # → jim
 def rm_all_styles # → jim
 
 # liquid
@@ -270,17 +272,17 @@ def jim_rm_watermark(jim) # → jim
 
 ```ruby
 def widths(*widths) # → jim
-def add_width(width) # → jim
-def add_widths(*widths) # → jim
-def rm_width(width) # → jim
 def rm_widths(*widths) # → jim
+def add_widths(*widths) # → jim
+def add_width(width) # → jim
+def rm_width(width) # → jim
 def rm_all_widths # → jim
 
 # liquid
 def jim_widths(jim, *widths) # → jim
-def jim_add_width(jim, width) # → jim
-def jim_add_widths(jim, *widths) # → jim
-def jim_rm_width(jim, width) # → jim
 def jim_rm_widths(jim, *widths) # → jim
+def jim_add_widths(jim, *widths) # → jim
+def jim_add_width(jim, width) # → jim
+def jim_rm_width(jim, width) # → jim
 def jim_rm_all_widths(jim) # → jim
 ```
