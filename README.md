@@ -39,12 +39,38 @@ I'm already using this plugin for some websites. So don't assume you've found a 
 
 **Table of Contents**
 
+- [Prerequisites](#prerequisites)
 - [Comparison with Related Projects](#comparison-with-related-projects)
 - [Quick Installation](#quick-installation)
 - [Jim Basics](#jim-basics)
 - [Presets](#presets)
 - [Caching](#caching)
 - [Frequently Asked Questions](#frequently-asked-questions)
+
+## Prerequisites
+
+Jim requires [ImageMagick](https://imagemagick.org/) and [blake3-rb](https://github.com/Shopify/blake3-rb) with their native dependencies installed on your system.
+
+- **ImageMagick** (required by the `rmagick` gem)
+
+  ```bash
+  # Debian / Ubuntu
+  sudo apt install libmagickwand-dev
+
+  # Fedora
+  sudo dnf install ImageMagick-devel
+
+  # macOS
+  brew install imagemagick
+  ```
+
+- **Rust toolchain** (required by the `blake3-rb` gem to compile native extensions)
+
+  ```bash
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  ```
+
+  See [rustup.rs](https://rustup.rs/) for details.
 
 ## Comparison with Related Projects
 
@@ -134,8 +160,8 @@ The `jim_render` / `render` function starts the image processing and outputs a `
 {{ "_images/example.png" | jim_new: "My awesome image"
   | jim_formats: "avif", "webp"
   | jim_widths: 960, 1440, 1920
-  | jim_add_img_size: "min-width: 576px", "540px"
-  | jim_add_img_size: nil, "100vw"
+  | jim_append_img_size: "min-width: 576px", "540px"
+  | jim_append_img_size: nil, "100vw"
   | jim_render
 }}
 ```
@@ -144,8 +170,8 @@ The `jim_render` / `render` function starts the image processing and outputs a `
 <%== Jim.new('_images/example.png', 'My awesome image')
   .formats('avif', 'webp')
   .widths(960, 1440, 1920)
-  .add_img_size('min-width: 576px', '540px')
-  .add_img_size(nil, '100vw')
+  .append_img_size('min-width: 576px', '540px')
+  .append_img_size(nil, '100vw')
   .render
 %>
 ```
@@ -155,7 +181,7 @@ The `jim_render` / `render` function starts the image processing and outputs a `
 ```liquid
 {%- assign jim = "_images/example.png" | jim_new: "My awesome image" %}
 {%- if site.use_lazyloading %}
-{%-   assign jim = jim | jim_add_img_attr: "loading", "lazy" %}
+{%-   assign jim = jim | jim_img_attr: "loading", "lazy" %}
 {%- endif %}
 {{ jim | jim_render }}
 ```
@@ -163,7 +189,7 @@ The `jim_render` / `render` function starts the image processing and outputs a `
 ```erb
 <% jim = Jim.new('_images/example.png', 'My awesome image') %>
 <% if site.use_lazyloading %>
-<%   jim.add_img_attr('loading', 'lazy') %>
+<%   jim.img_attr('loading', 'lazy') %>
 <% end %>
 <%== jim.render %>
 ```
