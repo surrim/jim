@@ -315,6 +315,32 @@ jim_cache: ~/.jimcache
 
 The BLAKE3 hashes of the images are also cached by filename, size, and modification time with nanosecond resolution. This "blake3 cache" is stored in the local Jekyll or Bridgetown cache folder because filenames and modification times depend on the host machine. The second-level cache ensures that hashing is insanely fast - even with several thousand high-resolution TIFF files.
 
+## Contribute
+
+<p><img src="https://www.bridgetownrb.com/images/center/bridgetown-center-badge.svg" alt="Bridgetown Center program" width="200" /></p>
+
+Jim is part of the [Bridgetown Center](https://www.bridgetownrb.com/plugins/center) plugins program.
+
+To test changes to Jim, you need
+
+- a Git clone from Jim:
+  
+  ```ssh
+  git clone git@github.com:surrim/jim.git
+  ```
+
+- a working Jekyll or Bridgetown project using Jim with the following change in your `Gemfile`:
+
+```ruby
+gem 'jim',
+  :path => '/path/to/cloned/jim'
+```
+
+Now you can edit Jim's source code and test. Make sure to restart the server (and delete Jim's image cache).  
+To write Rake tests for your changes, use other `test/test_*.rb` files as a template.
+
+If everything works fine, feel free submit a public pull or merge request.
+
 ## Frequently Asked Questions
 
 ### Which image types are supported?
