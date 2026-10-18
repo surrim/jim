@@ -72,7 +72,7 @@ module Jim::Utils
   end
 
   def read_json_file(filename)
-    JSON.parse(filename.read, { symbolize_names: true })
+    JSON.parse(filename.read, symbolize_names: true)
   rescue JSON::ParserError
     Jim::System.error(JSON::ParserError, "#{filename} does not contain valid JSON data")
   end
